@@ -1,0 +1,549 @@
+﻿@model List<ProviderViewModel>
+
+<!-- Top Actions -->
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+    
+    <div class="d-flex gap-2">
+        <button type="button"
+                class="btn btn-outline-secondary"
+                onclick="openDynamicModal('/admin/settings/providers/add')">
+            Add provider
+        </button>
+        
+        <form asp-controller="Settings" asp-action="SyncAllProvidersBalance" method="post" class="m-0" onsubmit="showSyncLoading(this)">
+            <button type="submit" class="btn btn-outline-secondary">
+                <i class="mb-1 fas fa-sync-alt" id="syncIcon"></i>
+                Synchronize All
+            </button>
+        </form>
+    </div>
+
+    <!-- Search Box -->
+    <div style="max-width: 300px; width: 100%;">
+        <div class="position-relative">
+            <!-- text-muted yerine temaya uyumlu text-body-secondary kullandık -->
+            <label for="providers-search"
+                   class="position-absolute top-50 start-0 translate-middle-y ms-3 text-body-secondary">
+                <i class="fas fa-search"></i>
+            </label>
+
+            <input type="text"
+                   id="providers-search"
+                   class="form-control ps-5"
+                   placeholder="Search"
+                   autocomplete="off"
+                   onkeyup="filterProvidersTable()" />
+        </div>
+    </div>
+</div>
+
+<!-- Totals -->
+<div class="d-flex align-items-center my-3">
+    <hr class="flex-grow-1">
+    <!-- text-body ekledik ki karanlık modda beyaz, aydınlıkta siyah olsun -->
+    <button type="button" class="btn btn-link text-decoration-none text-body px-3">
+        Show totals
+    </button>
+    <hr class="flex-grow-1">
+</div>
+
+<!-- Table -->
+<div class="table-responsive">
+    <!-- Tabloya id verdik ki JS ile arama yapabilelim -->
+    <table class="table table-hover align-middle mb-4" id="providersTable">
+        <thead>
+            <tr>
+                <th style="width: 45%;">Provider</th>
+                <th>Alias</th>
+                <th style="width: 3%;"></th>
+                <th>
+                    <!-- text-dark'ı text-body yaptık. Karanlık modda patlamaması için kritik nokta -->
+                    <a href="#" class="text-decoration-none text-body">
+                        Balance
+                        <i class="fas fa-sort ms-1 text-body-secondary"></i>
+                    </a>
+                </th>
+                <th class="text-end"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <!-- Arama için provider adını kontrol edeceğiz -->
+                    <td class="provider-name">@item?.Name</td>
+                    <td>@item?.Alias</td>
+
+                    <td>
+                        @if (item?.LowBalanceNotificationEnabled == true)
+                        {
+                            <i class="fas fa-bell text-warning"></i>
+                        }
+                        else
+                        {
+                            <!-- text-body-secondary, karanlık modda daha okunaklı bir gri verir -->
+                            <span class="text-body-secondary">
+                                <i class="fas fa-bell-slash"></i>
+                            </span>
+                        }
+                    </td>
+
+                    <td>
+                        @(item?.CurrentBalance?.ToString("0.00"))
+                        @(item?.CurrentBalance != null ? item.Currency : "")
+                    </td>
+
+                    <td class="text-end">
+                        <button type="button"
+                                class="btn btn-sm btn-outline-secondary"
+                                onclick="openDynamicModal('/admin/settings/providers/edit/@(item?.Id ?? 0)')">
+                            Edit
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Dinamik Modal İskeleti -->
+<div class="modal fade" id="dynamicModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <!-- data-bs-theme mirasını bozmasın diye modal-content standart kalıyor -->
+        <div class="modal-content border-0 shadow" id="dynamicModalBody">
+            <div class="text-center p-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Yükleniyor...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript Kodları -->
+<script>
+    // 1. Senkronizasyon Butonu Yükleniyor Efekti
+    function showSyncLoading(form) {
+        const btn = form.querySelector('button');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Synchronizing...';
+    }
+
+    // 2. Tabloda Anlık Arama (Filtreleme) Fonksiyonu
+    function filterProvidersTable() {
+        const input = document.getElementById("providers-search");
+        const filter = input.value.toLowerCase();
+        const table = document.getElementById("providersTable");
+        const rows = table.getElementsByTagName("tr");
+
+        // Başlığı (thead) atlamak için döngüye 1'den başlıyoruz
+        for (let i = 1; i < rows.length; i++) {
+            // Sağlayıcı adının bulunduğu ilk sütunu hedef alıyoruz
+            let nameColumn = rows[i].querySelector(".provider-name");
+            
+            if (nameColumn) {
+                let nameValue = nameColumn.textContent || nameColumn.innerText;
+                // Aranan kelime sağlayıcı adında varsa satırı göster, yoksa gizle
+                if (nameValue.toLowerCase().indexOf(filter) > -1) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+
+
+
+<script>
+    function openDynamicModal(url) {
+
+        const modalElement = document.getElementById("dynamicModal");
+
+        if (!modalElement) return;
+
+        const modal = new bootstrap.Modal(modalElement);
+
+        document.getElementById("dynamicModalBody").innerHTML =
+            `<div class="text-center p-5">
+                <div class="spinner-border" role="status"></div>
+            </div>`;
+
+        modal.show();
+
+        fetch(url)
+            .then(response => response.text())
+            .then(res => {
+                document.getElementById("dynamicModalBody").innerHTML = res;
+            })
+            .catch(error => {
+                document.getElementById("dynamicModalBody").innerHTML = `
+                    <div class="p-4 text-danger">
+                        Bir hata oluştu.
+                    </div>
+                `;
+                console.error(error);
+            });
+    }
+</script>
+
+
+<script>
+    function changeApiKeyConfirm() {
+    const result = confirm("API key düzenlemek istiyor musunuz?");
+    const input = document.getElementsByName("apiKey")[0];
+    const ChangeApi = document.getElementById("changeid");
+
+    if (result) {
+    input.disabled = false;
+    input.value = "";
+    input.focus();
+    ChangeApi.style.display = "none";
+    }
+    }
+</script>
+
+
+<script>
+    function toggleAliasInput() {
+        const checkbox = document.getElementsByName("alias_checkbox")[0];
+        const input = document.getElementsByName("alias_style")[0];
+
+        input.disabled = !checkbox.checked;
+        input.style.display = checkbox.checked ? "block" : "none";
+
+    }
+</script>
+
+<script>
+    function toggleBalanceInput() {
+        const checkbox = document.getElementsByName("balance_checkbox")[0];
+        const input = document.getElementsByName("balance_style")[0];
+
+        input.disabled = !checkbox.checked;
+        input.style.display = checkbox.checked ? "block" : "none";
+    }
+</script>
+
+
+@if (TempData["AddProviderModal"] is true)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            openDynamicModal('/admin/settings/providers/add');
+        });
+    </script>
+}
+
+@if (TempData["EditProviderModal"] is true)
+{
+    <script>
+         document.addEventListener("DOMContentLoaded", function () {
+            openDynamicModal('/admin/settings/providers/edit/@TempData["EditProviderId"]');
+        });
+    </script>
+}
+
+
+@* 
+<div class="modal fade" id="editProviderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content border-0 shadow">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <h5 class="modal-title">Edit provider</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["Success"]
+
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                    </div>
+
+                    
+                }
+
+                <form>
+
+                    <!-- Provider -->
+                    <div class="mb-3">
+                        <label class="form-label">Provider</label>
+                        <input type="text"
+                               class="form-control"
+                               value="@TempData["Alias"]"
+                               readonly
+                               disabled>
+                    </div>
+
+                    
+                        <!-- API Key -->
+                    <div class="mb-2">
+                        <label for="login" class="form-label">API Key</label>
+                        <input type="text"
+                               id="login"
+                               name="login"
+                               class="form-control"
+                               value="********************************"
+                               disabled>
+                    </div>
+
+                    <div class="mb-4">
+                        <button type="button"
+                                class="btn btn-link p-0"
+                                id="changeid"
+                                onclick="changeApiKeyConfirm()">
+                            Change API key
+                        </button>
+                    </div>
+
+                    @if (TempData["Success"] != null)
+                    {
+                        <script>
+                                                (function () {
+
+                                                    const button = document.getElementById("changeid");
+                                                    const input = document.getElementById("login");
+
+                                                    if (!button || !input) return;
+
+                                                    input.disabled = false;
+                                                    input.value = "";
+                                                    input.focus();
+
+                                                    button.style.display = "none";
+
+                                                })();
+                        </script>
+                    }
+                     else
+                     {
+                        <script>
+                                                function changeApiKeyConfirm() {
+                                                    const result = confirm("API key düzenlemek istiyor musunuz?");
+                                                    const input = document.getElementById("login");
+                                                    const ChangeApi = document.getElementById("changeid");
+
+                                                    if (result) {
+                                                        input.disabled = false;
+                                                        input.value = "";
+                                                        input.focus();
+                                                        ChangeApi.style.display = "none";
+                                                    }
+                                                }
+                        </script>
+
+                     }
+
+                    
+
+                    <!-- Options -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Options</label>
+                    </div>
+
+                    <!-- Alias Name -->
+                    <div class="card border mb-3">
+                        <div class="card-body">
+
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       id="alias_enabled"
+                                       onchange="toggleAliasInput()">
+
+                                <label class="form-check-label" for="alias_enabled">
+                                    Alias name
+                                    <i class="fas fa-info-circle ms-1"></i>
+                                </label>
+                            </div>
+
+                            <div class="ps-1 mt-3" id="alias"
+                                 name="alias">
+                                <input type="text"
+                                       class="form-control"
+                                       value="1xpanel.com"
+                                       disabled>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <script>
+                                            function toggleAliasInput() {
+                                                const checkbox = document.getElementById("alias_enabled");
+                                                const input = document.getElementById("alias");
+
+                                                input.disabled = !checkbox.checked;
+                                                input.style.display = checkbox.checked ? "block" : "none";
+                                            }
+                    </script>
+
+                    <!-- Low Balance Notification -->
+                    <div class="card border">
+                        <div class="card-body">
+
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       id="balance_enabled"
+                                       onchange="toggleBalanceInput()">
+                                       
+                                <label class="form-check-label" for="balance_enabled">
+                                    Low balance notification
+                                    <i class="fas fa-info-circle ms-1"></i>
+                                </label>
+                            </div>
+
+                            <div class="ps-1 mt-3" id="balance"
+                                 name="balance">
+                                <label for="balance_limit" class="form-label">
+                                    Notify if the provider’s balance is lower than
+                                    <span class="text-muted">USD</span>
+                                </label>
+
+                                <input type="text"
+                                       
+                                       class="form-control"
+                                       placeholder="0"
+                                       value="0"
+                                       disabled>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <script>
+                                            function toggleBalanceInput() {
+                                                const checkbox = document.getElementById("balance_enabled");
+                                                const input = document.getElementById("balance");
+
+                                                input.disabled = !checkbox.checked;
+                                                input.style.display = checkbox.checked ? "block" : "none";
+                                            }
+                    </script>
+                </form>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer d-flex justify-content-between">
+
+                <div>
+                    <button type="button" class="btn btn-link text-danger p-0">
+                        Delete
+                    </button>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        Save changes
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addProviderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+    <form asp-action="addProvider" asp-controller="Admin" method="post">           
+        <div class="modal-content border-0 shadow">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <h5 class="modal-title">Add provider</h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["Error"]
+
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                        </div>
+                    }
+
+                <form>
+                    <div class="mb-3">
+                        <label for="link" class="form-label">Provider URL</label>
+                        <input name="link"
+                               type="text"
+                               id="link"
+                               class="form-control">
+                    </div>
+                </form>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">
+                    Add provider
+                </button>
+
+                <button type="button"
+                        class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal">
+                    Cancel
+                </button>
+            </div>
+
+        </div>
+        </form>
+    </div>
+</div>
+
+@if (TempData["OpenAddProviderModal"]?.ToString() == "addProvider")
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            new bootstrap.Modal(document.getElementById('addProviderModal')).show();
+        });
+    </script>
+}
+
+@if (TempData["OpenEditProviderModal"]?.ToString() == "editProvider")
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            new bootstrap.Modal(document.getElementById('editProviderModal')).show();
+        });
+       
+
+
+        
+    </script>
+} *@

@@ -1,0 +1,159 @@
+﻿@model AnatoliaSmmPanel.Areas.Admin.ViewModels.SettingsViewModel
+@{
+    ViewData["Title"] = "Settings";
+    var path = Context.Request.Path.Value.ToLower();
+}
+
+
+
+
+@* <script>
+    function loadSettings(e, section) {
+    e.preventDefault(); // <- # olayını tamamen keser
+
+    fetch('/Admin/Settings/LoadSection?section=' + section)
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById("settings-content").innerHTML = html;
+        });
+}
+    
+    </Script> *@
+
+<div class="wrapper" id="page-wrapper">
+    <div id="wrapper-alerts">
+        <div class="wrapper-alerts"></div>
+    </div>
+
+    <div class="page" style="padding-top: 90px;">
+        <div class="settings container py-4">
+            <div class="row g-4">
+
+                <!-- Left Sidebar -->
+                <div class="col-lg-3">
+                    <ul class="nav nav-pills flex-column gap-2 page-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link
+                                @(path == "/admin/settings" || path == "/admin/settings/" || path == "/admin/settings/general" ? "active" : "")"
+                                   href="/admin/settings/general">
+                                General
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(path.Contains("/settings/providers") ? "active" : "")"
+                                href="/admin/settings/providers"
+                                   @* asp-action="Providers"
+                                   asp-controller="Admin"*@> 
+                                Providers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(path.Contains("/settings/payments") ? "active" : "")"
+                                   href="/admin/settings/payments">
+                                Payments
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(path.Contains("/settings/modules") ? "active" : "")"
+                               href="/admin/settings/modules">Modules</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(path.Contains("/settings/integrations") ? "active" : "")"
+                               href="/admin/settings/integrations">Integrations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(path.Contains("/settings/notifications") ? "active" : "")"
+                               href="/admin/settings/notifications">Notifications</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(path.Contains("/settings/bonuses") ? "active" : "")"
+                               href="/admin/settings/bonuses">Bonuses</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(path.Contains("/settings/signup-form") ? "active" : "")"
+                               href="/admin/settings/signup-form">Signup form</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(path.Contains("/settings/ticket-form") ? "active" : "")"
+                               href="/admin/settings/ticket-form">Ticket form</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Right Content -->
+                <div class="col-lg-9 d-flex">
+                    <div id="settings-content" class="w-100">
+                        
+                        <div class="card shadow-sm border-0 w-100">
+                            <div class="card-body p-4">
+
+                                @if (path.Contains("/settings/general"))
+                                {
+                                    <div>
+                                        @await Html.PartialAsync("Settings/_GeneralSettings", Model.General)
+                                    </div>
+                                }
+                                else if (path.Contains("/settings/providers"))
+                                {
+                                    <div>
+                                        @await Html.PartialAsync("Settings/_ProvidersSettings", Model.Providers)
+                                    </div>
+                                }
+                                else if (path.Contains("/settings/payments"))
+                                {
+                                    <div>
+                                        @Html.Partial("Settings/_PaymentsSettings")
+                                    </div>
+                                }
+                                else if (path.Contains("/settings/modules"))
+                                {
+                                    <div>
+                                        @Html.Partial("Settings/_ModulesSettings")
+                                    </div>
+                                }
+                                else if (path.Contains("/settings/integrations"))
+                                {
+                                    <div>
+                                        @Html.Partial("Settings/_IntegrationsSettings")
+                                    </div>
+                                }
+                                else if (path.Contains("/settings/notifications"))
+                                {
+                                    <div>
+                                        @Html.Partial("Settings/_NotificationsSettings")
+                                    </div>
+                                }
+                                else if (path.Contains("/settings/bonuses"))
+                                {
+                                    <div>
+                                        @Html.Partial("Settings/_BonusesSettings")
+                                    </div>
+                                }
+                                else if (path.Contains("/settings/signup-form"))
+                                {
+                                    <div>
+                                        @Html.Partial("Settings/_SignupFormSettings")
+                                    </div>
+                                }
+                                else if (path.Contains("/settings/ticket-form"))
+                                {
+                                    <div>
+                                        @Html.Partial("Settings/_TicketFormSettings")
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div>
+                                        @await Html.PartialAsync("Settings/_GeneralSettings", Model.General)
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

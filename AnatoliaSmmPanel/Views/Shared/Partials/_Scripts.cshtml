@@ -1,0 +1,125 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://unpkg.com/@@lottiefiles/lottie-player@@latest/dist/lottie-player.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+
+<script>
+    const swiper = new Swiper(".mySwiper", {
+    slidesPerView: 3,
+    spaceBetween: 20,
+
+    navigation: {
+    nextEl: ".swiper-next",
+    prevEl: ".swiper-prev",
+    },
+
+    breakpoints: {
+    0: { slidesPerView: 1 },
+    768: { slidesPerView: 2 },
+    1200: { slidesPerView: 3 }
+    }
+    });
+</script>
+
+<script src="~/js/script.js"></script>
+
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+        const el = document.querySelector(".nwo-categories");
+
+        if (!el) return;
+
+        new Swiper(el, {
+        slidesPerView: "auto",
+        spaceBetween: 10
+        });
+        });
+    </script>
+
+
+   
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        const serviceId = params.get("select_service_id");
+
+        if (!serviceId) return;
+
+        const services = window.modules?.siteOrder?.services;
+        if (!services || !services[serviceId]) return;
+
+        const catId = services[serviceId].cid;
+
+        const catSelect = document.getElementById("orderform-category");
+        const serSelect = document.getElementById("orderform-service");
+
+        if (!catSelect || !serSelect) return;
+
+        // CATEGORY SET
+        const catOption = catSelect.querySelector(`option[value="${catId}"]`);
+        if (catOption) {
+        catSelect.value = catId;
+        catSelect.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+
+        // SERVICE SET (delay required because category change reloads options)
+        setTimeout(() => {
+        const serOption = serSelect.querySelector(`option[value="${serviceId}"]`);
+
+        if (serOption) {
+        serSelect.value = serviceId;
+        serSelect.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+        }, 300);
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+        const items = document.querySelectorAll(".g-sitem");
+
+        if (!items.length) return;
+
+        items.forEach(item => {
+        const span = item.querySelector(".g-stitle .avgtime span.sUpd");
+        if (!span) return;
+
+        const text = span.textContent?.toLowerCase() || "";
+
+        span.classList.remove("priceDown", "priceUp", "newServ", "priceCare");
+
+        if (text.includes("decreased")) {
+        span.classList.add("priceDown");
+        }
+
+        if (text.includes("new") || text.includes("enabled")) {
+        span.classList.add("newServ");
+        }
+
+        if (text.includes("increased")) {
+        span.classList.add("priceUp");
+        }
+
+        if (text.includes("disabled")) {
+        span.classList.add("priceCare");
+        }
+        });
+        });
+    </script>
+
+   
+}
+else
+{
+ 
+}

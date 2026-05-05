@@ -1,0 +1,131 @@
+﻿@model AnatoliaSmmPanel.Areas.Admin.ViewModels.GeneralSettingsViewModel
+
+<h4 class="mb-4">General Settings</h4>
+
+<form method="post" asp-action="UpdateGeneral" asp-controller="Settings" enctype="multipart/form-data">
+    
+    <!-- Favicon -->
+    <div class="mb-4">
+        <label asp-for="FaviconFile" class="form-label"></label>
+        <div class="row align-items-center g-3">
+            <div class="col-md-10">
+                <input type="file"
+                       asp-for="FaviconFile"
+                       class="form-control"
+                       accept=".ico,.png"
+                       onchange="previewFavicon(this)">
+                <div class="form-text">32 x 32px .ico recommended</div>
+            </div>
+            <div class="col-md-2 text-center">
+                <img id="faviconPreview"
+                     src="/favicon.ico?v=@DateTime.Now.Ticks"
+                     alt="Favicon"
+                     class="img-fluid rounded border bg-light"
+                     style="max-width:60px; min-height:60px; object-fit: contain;"
+                     onerror="this.style.display='none';">
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Timezone -->
+    <div class="mb-3">
+        <label asp-for="Timezone" class="form-label"></label>
+        <select asp-for="Timezone"
+                asp-items="Html.GetEnumSelectList<AnatoliaSmmPanel.Areas.Admin.Enums.TimezoneType>()"
+                class="form-select">
+        </select>
+    </div>
+
+    <!-- Currency Format -->
+    <div class="mb-3">
+        <label asp-for="CurrencyFormat" class="form-label"></label>
+        <select asp-for="CurrencyFormat"
+                asp-items="Html.GetEnumSelectList<AnatoliaSmmPanel.Areas.Admin.Enums.CurrencyFormatType>()"
+                class="form-select">
+        </select>
+    </div>
+
+    <!-- Ticket System -->
+    <div class="mb-3">
+        <label asp-for="TicketSystem" class="form-label"></label>
+        <select asp-for="TicketSystem"
+                asp-items="Html.GetEnumSelectList<AnatoliaSmmPanel.Areas.Admin.Enums.TicketSystemType>()"
+                class="form-select">
+        </select>
+    </div>
+
+    <!-- Signup Page -->
+    <div class="mb-3">
+        <label asp-for="SignupPage" class="form-label"></label>
+        <select asp-for="SignupPage"
+                asp-items="Html.GetEnumSelectList<AnatoliaSmmPanel.Areas.Admin.Enums.SignupPageStatus>()"
+                class="form-select">
+        </select>
+    </div>
+
+    <!-- Google Verification -->
+    <div class="mb-3">
+        <label asp-for="GoogleVerificationCode" class="form-label"></label>
+        <input asp-for="GoogleVerificationCode"
+               class="form-control"
+               placeholder="Enter verification code">
+    </div>
+
+    <!-- Custom Header -->
+    <div class="mb-3">
+        <label asp-for="CustomHeader" class="form-label"></label>
+        <textarea asp-for="CustomHeader"
+                  rows="6"
+                  class="form-control"
+                  placeholder="<style>...</style>"></textarea>
+    </div>
+
+    <!-- Custom Footer -->
+    <div class="mb-4">
+        <label asp-for="CustomFooter" class="form-label"></label>
+        <textarea asp-for="CustomFooter"
+                  rows="8"
+                  class="form-control"
+                  placeholder="<script>...</script>"></textarea>
+    </div>
+
+    <!-- Custom sitemap -->
+    <div class="mb-4">
+        <label asp-for="CustomSitemapFile" class="form-label"></label>
+        <input type="file" asp-for="CustomSitemapFile" class="form-control" accept=".xml">
+        <div class="form-text">
+            Default sitemap.xml exists automatically. Upload custom file only if needed.
+        </div>
+    </div>
+
+    <!-- Custom robots -->
+    <div class="mb-4">
+        <label asp-for="CustomRobotsFile" class="form-label"></label>
+        <input type="file" asp-for="CustomRobotsFile" class="form-control" accept=".txt">
+        <div class="form-text">
+            Default robots.txt exists automatically. Upload custom file only if needed.
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary px-4">
+        Save Changes
+    </button>
+</form>
+
+@section Scripts {
+    <script>
+        function previewFavicon(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var img = document.getElementById('faviconPreview');
+                    img.src = e.target.result;
+                    img.style.display = 'inline-block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}

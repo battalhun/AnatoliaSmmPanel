@@ -1,0 +1,42 @@
+﻿@model List<MenuViewModel>
+@using AnatoliaSmmPanel.Enums
+@using AnatoliaSmmPanel.ViewModels
+
+@foreach (var menu in Model)
+{
+    <li class="nmenu-item">
+
+        @switch (menu.NavigationTarget.MenuConnect)
+        {
+            case MenuConnect.Mvc:
+                <a asp-controller="@menu.NavigationTarget.Controller"
+                       asp-action="@menu.NavigationTarget.Action"
+                       class="nmenu-link d-flex align-items-center gap-2 fs-6 @(menu.IsVisible ? "active" : "")"
+                       target="@(menu.OpenInNewTab ? "_blank" : null)">
+                    <i class="@menu.Icon"></i>
+                    @menu.Name
+                </a>
+                break;
+
+            case MenuConnect.RazorPage:
+                <a asp-area="@menu.NavigationTarget.Area"
+                       asp-page="@menu.NavigationTarget.Page"
+                       class="nmenu-link d-flex align-items-center gap-2 fs-6 @(menu.IsVisible ? "active" : "")"
+                       target="@(menu.OpenInNewTab ? "_blank" : null)">
+                    <i class="@menu.Icon"></i>
+                    @menu.Name
+                </a>
+                break;
+
+            case MenuConnect.External:
+                <a href="@menu.NavigationTarget.Url"
+                       class="nmenu-link d-flex align-items-center gap-2 fs-6 @(menu.IsVisible ? "active" : "")"
+                       target="@(menu.OpenInNewTab ? "_blank" : null)">
+                    <i class="@menu.Icon"></i>
+                    @menu.Name
+                </a>
+                break;
+        }
+
+    </li>
+}

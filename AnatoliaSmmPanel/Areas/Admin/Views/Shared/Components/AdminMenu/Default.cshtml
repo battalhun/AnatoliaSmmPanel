@@ -1,0 +1,77 @@
+﻿@model List<AdminMenuViewModel>
+@using AnatoliaSmmPanel.Enums
+
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+        const currentPath = window.location.pathname.toLowerCase();
+
+        const links = document.querySelectorAll("a[data-name]");
+
+        links.forEach(link => {
+
+            const name = link.getAttribute("data-name").toLowerCase();
+
+            if (currentPath.includes(name)) {
+                link.classList.add("active");
+                link.classList.add("fw-bold"); 
+            }
+
+        });
+
+    });
+</script>
+
+<div class="collapse navbar-collapse" id="mainNavbar">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        @foreach (var AdminMenu in Model)
+        {
+
+
+    
+
+
+            @switch (AdminMenu.NavigationTarget.MenuConnect)
+            {
+
+                case MenuConnect.Mvc:
+                    <li class="nav-item">
+                        <a data-name="@AdminMenu.Name"
+                            asp-controller="@AdminMenu.NavigationTarget.Controller"
+                               asp-action="@AdminMenu.NavigationTarget.Action"
+                               class="nav-link @(AdminMenu.Icon != null ? $"icon-{AdminMenu.Icon}" : "")"
+                               target="@(AdminMenu.OpenInNewTab ? "_blank" : "_self")">
+                            @AdminMenu.Name
+                        </a>
+                    </li>
+               
+                    break;
+
+                case MenuConnect.RazorPage:
+                    <li class="nav-item">
+                        <a data-name="@AdminMenu.Name"
+                            asp-area="@AdminMenu.NavigationTarget.Area"
+                               asp-page="@AdminMenu.NavigationTarget.Page"
+                               class="nav-link @(AdminMenu.Icon != null ? $"icon-{AdminMenu.Icon}" : "")"
+                               target="@(AdminMenu.OpenInNewTab ? "_blank" : "_self")">
+                            @AdminMenu.Name
+                        </a>
+                    </li>
+                    break;
+
+                case MenuConnect.External:
+                    <li class="nav-item">
+                        <a data-name="@AdminMenu.Name"
+                            href="@AdminMenu.NavigationTarget.Url"
+                               class="nav-link @(AdminMenu.Icon != null ? $"icon-{AdminMenu.Icon}" : "")"
+                            @(AdminMenu.OpenInNewTab ? "target=\"_blank\" rel=\"noopener noreferrer\"" : "")>
+                            @AdminMenu.Name
+                        </a>
+                    </li>
+                    break;
+            }
+
+    
+        }
+    </ul>
+</div>

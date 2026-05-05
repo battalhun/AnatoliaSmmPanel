@@ -1,0 +1,185 @@
+﻿@{
+    Layout = null;
+}
+@model ProviderViewModel
+@using System.Globalization
+
+<!-- Modelinizi buraya tanımlayın -->
+<!-- Header -->
+<div class="modal-header">
+    <h5 class="modal-title">Edit provider</h5>
+    <button type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close">
+    </button>
+</div>
+
+
+
+<form id="editProviderForm" asp-action="EditProvider" asp-controller="Settings" method="post">
+    <!-- Body -->
+    <div class="modal-body">
+
+        @if(TempData["SuccessProvider" + Model.Id] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["SuccessProvider" + Model.Id]
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                @TempData["Error"]
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+            </div>
+        }
+
+        <input type="hidden" asp-for="Id" />
+        
+        <div class="mb-3">
+            <label class="form-label">Provider</label>
+            <input type="text" class="form-control" value="@Model.Name" readonly disabled>
+        </div>
+        
+        <!-- API Key -->
+        <div class="mb-2">
+            <label for="apikey" class="form-label">API Key</label>
+            <input type="text"
+                   name="apiKey"
+                   class="form-control"
+                   value="@(Model.ApiKey != null ? "***************************" : "")"
+            @(Model.ApiKey != null ? "disabled" : "")>
+        </div>
+
+        <div class="mb-4" style="@(Model.ApiKey != null ? "display:block;" : "display:none;")">
+            <button type="button"
+                    class="btn btn-link p-0"
+                    id="changeid"
+                    onclick="changeApiKeyConfirm()">
+                Change API key
+            </button>
+        </div>
+
+             
+        <!-- Options -->
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Options</label>
+        </div>
+
+
+        
+        <!-- Alias Name -->
+        <div class="card border mb-3">
+            <div class="card-body">
+                
+                <div class="form-check form-switch">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           name="alias_checkbox"
+                           value="true"
+                           onchange="toggleAliasInput()"
+                    @(Model.Alias != null ? "checked" : "")>
+
+                    <label class="form-check-label" for="alias_checkbox">
+                        Alias name
+                        <i class="fas fa-info-circle ms-1 text-muted"
+                               data-bs-toggle="tooltip"
+                               data-bs-placement="top"
+                               title="This name will be displayed instead of the provider's URL in the admin area interface for all admins">
+                        </i>
+                    </label>
+                </div>
+
+                <div class="ps-1 mt-3" name="alias_style"
+                     style="display:@(Model.Alias != null ? "block" : "none" ?? "none")">
+                    <input type="text"
+                           class="form-control"
+                           value="@(Model.Alias != null ? Model.Alias.ToString() : "" ?? "")"
+                           placeholder="Enter alias name"
+                           name="alias">
+                       
+                </div>
+            
+            </div>
+        </div>
+
+            
+        <!-- Low Balance Notification -->
+        <div class="card border">
+            <div class="card-body">
+              
+                <div class="form-check form-switch">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           name="balance_checkbox"
+                           value="true"
+                           onchange="toggleBalanceInput()"
+                    @(Model.LowBalanceNotificationEnabled ? "checked" : "" ?? "")>
+                                       
+                    <label class="form-check-label" for="balance_checkbox">
+                        Low balance notification
+                        <i class="fas fa-info-circle ms-1 text-muted"
+                               data-bs-toggle="tooltip"
+                               data-bs-placement="top"
+                               title="This notification will be displayed via the bell icon in your admin area when the provider balance is lower than the set limit.">
+                        </i>
+                    </label>
+                </div>
+
+                <div class="ps-1 mt-3" name="balance_style"
+                     style="display:@(Model.LowBalanceNotificationEnabled ? "block" : "none" ?? "none")">
+                    <label for="balance_limit" class="form-label">
+                        Notify if the provider’s balance is lower than
+                        <span class="text-muted">USD</span>
+                    </label>
+
+                    <input name="balance_limit"
+                           type="text"
+                           class="form-control"
+                           placeholder="0"
+                           value="@(Model.LowBalanceNotificationEnabled ? Model.BalanceLimit.ToString("0.00") : "" ?? "")">
+                </div>
+            </div>
+
+       
+
+
+        </div>
+
+
+        <div class="modal-footer d-flex justify-content-between">
+            <div>
+                <button type="submit"
+                        class="btn btn-link text-danger p-0"
+                        asp-action="DeleteProvider"
+                        asp-controller="Settings"
+                        asp-route-id="@Model.Id">
+                    Delete
+                </button>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+
+
+

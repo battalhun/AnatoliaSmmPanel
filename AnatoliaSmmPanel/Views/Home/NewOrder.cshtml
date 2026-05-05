@@ -1,0 +1,652 @@
+﻿@{
+	ViewData["Title"] = "Home Page";
+}
+
+
+
+<div class="g-dash-content">
+            <section class="mt-4 mb-2">
+               <div class="container-fluid">
+                  <div class="row mb-5">
+					<div class="col-lg-7">
+						<div class="row">
+							 <div class="col-lg-6">
+								<div class="gcard-2 gcard-shadow fade-2">
+									  <div class="gcardc">
+										 <div class="row align-items-center">
+											<div class="col">
+											   <h2>Balance</h2>
+											   <h3>{{ user['balance_formatted'] }}</h3>
+											</div>
+											<div class="col-auto">
+											   <div class="gny-circle">
+												  <i class="ri-wallet-3-line"></i>
+											   </div>
+											</div>
+										 </div>
+									  </div>
+								</div>
+							 </div>
+							 <div class="col-lg-6 d-none d-md-block">
+								<div class="gcard-2 gcard-shadow fade-4">
+									  <div class="gcardc">
+										 <div class="row align-items-center">
+											<div class="col">
+											   <h2>Spent</h2>
+											   <h3>{{ user['spent_formatted'] }}</h3>
+											</div>
+											<div class="col-auto">
+											   <div class="gny-circle">
+												  <i class="ri-line-chart-line"></i>
+											   </div>
+											</div>
+										 </div>
+									  </div>
+								</div>
+							 </div>
+						</div>
+                    </div>
+					 
+					<div class="col-lg-5 d-none taranseviye" style="display: none!important">
+                        <div class="gcard-2 gcard-shadow fade-1">
+                              <div class="gcardc">
+                                 <div class="row align-items-center">
+								  <div class="col-lg mb-4 mb-lg-0">
+									 <div class="row">
+										<div class="col">
+										   <p style="display: none;" id="spent">{{ user['spent'] }}</p>
+										   <span class="progress-title">Account level:
+											<span id="atual" class="primary-color"><span id="currentStatus"></span></span>
+										   </span>  
+										</div>
+										<div class="col-auto">
+										   <span class="progress-percent"><span id="placePercent"></span></span>
+										</div>
+									 </div>
+									 <div class="progress mt-1 mb-2">
+										<div id="statusProgress" class="progress-bar" role="progressbar" style="width:0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div> 
+									 </div>
+									 <div class="progress-next">Next level:
+										<strong id="proximo"><span id="nextStatus"></span></strong>
+									 </div>
+								  </div>
+								  
+								  <div class="col-lg-auto">
+									 <div class="nop-box">
+										<div class="progress-btn">
+										   <a href="/userranks" class="btn btn-primary d-flex align-items-center"><span>Benefits</span> <i class="ri-arrow-drop-right-line"></i></a>
+										</div>
+									 </div>
+								  </div>
+                                 </div>
+                              </div>
+                        </div>
+                    </div>
+                  </div>
+               </div>
+            </section>
+            <section class="nwoMain mt-3">
+            	<div class="container-fluid">
+					<div id="new-order-cats" class="swiper nwo-categories">
+						<div class="swiper-wrapper">	
+                        	<div class="swiper-slide">
+						  <button class="nwo-cat-btn active" style="gap: 15px;" data-change-cat="">
+							<span class="g-ticon">
+							  <i class="fal fa-stream" style="display: block !important;"></i>  
+							</span>	
+                            	<span class="text" style="font-size: 13px !important;left: auto !important;position: static;">All</span>
+						  </button>
+						</div>
+              				<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Instagram">
+							<span class="g-ticon">
+							  <i class="fab fa-instagram"></i>  
+							</span>	
+                            	<span class="text">Instagram</span> 
+						  </button>
+						</div>
+							<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Twitter">
+							<span class="g-ticon">
+							  <i class="fab fa-twitter"></i>
+							</span>
+                            <span class="text">Twitter</span>
+						  </button>
+						</div>
+							<div class="swiper-slide">
+						  <button class="nwo-cat-btn"  data-change-cat="TikTok">
+							<span class="g-ticon">
+							  <i class="fab fa-tiktok"></i>
+							</span>
+                            <span class="text">Tiktok</span>
+						  </button>
+						</div>
+							<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Youtube">
+							<span class="g-ticon">
+							  <i class="fab fa-youtube"></i>
+							</span>
+                            	<span class="text">Youtube</span> 
+						  </button>
+						</div>
+							<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Facebook">
+							<span class="g-ticon">
+							  <i class="fab fa-facebook-f"></i>
+							</span>
+                            <span class="text">Facebook</span> 
+						  </button>
+						</div>
+							<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Telegram">
+							<span class="g-ticon">
+							  <i class="fab fa-telegram-plane"></i>
+							</span>
+                              <span class="text">Telegram</span> 
+						  </button>
+						</div>         
+							<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Twitch">
+							<span class="g-ticon">
+							  <i class="fab fa-twitch"></i>
+							</span>
+                               <span class="text">Twitch</span> 
+						  </button>
+						</div> 
+							<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Discord">
+							<span class="g-ticon">
+							  <i class="fab fa-discord"></i>
+							</span>
+                               <span class="text">Discord</span> 
+						  </button>
+						</div>                     
+                        	<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Linkedin">
+							<span class="g-ticon">
+							  <i class="fab fa-linkedin"></i>
+							</span>
+                               <span class="text">Linkedin</span> 
+						  </button>
+						</div>    
+							<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="SoundCloud">
+							<span class="g-ticon">
+							  <i class="fab fa-soundcloud"></i>
+							</span>
+                               <span class="text">SoundCloud</span> 
+						  </button>
+						</div> 
+                        	<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Spotify">
+							<span class="g-ticon">
+							  <i class="fab fa-spotify"></i>
+							</span>
+                               <span class="text">Spotify</span> 
+						  </button>
+						</div> 					 
+							<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Vk">
+							<span class="g-ticon">
+							  <i class="fab fa-vk"></i>
+							</span>
+                               <span class="text">Vk</span> 
+						  </button>
+						</div>  
+                        	<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Snapchat">
+							<span class="g-ticon">
+							  <i class="fab fa-snapchat-ghost"></i>
+							</span>
+                               <span class="text">Snapchat</span> 
+						  </button>
+						</div> 
+							<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Tumblr">
+							<span class="g-ticon">
+							  <i class="fab fa-tumblr"></i>
+							</span>
+                               <span class="text">Tumblr</span> 
+						  </button>
+						</div> 
+					 		<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Vimeo">
+							<span class="g-ticon">
+							  <i class="fab fa-vimeo"></i>
+							</span>
+                               <span class="text">Vimeo</span> 
+						  </button>
+						</div> 
+					 		<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Reddit">
+							<span class="g-ticon">
+							  <i class="fab fa-reddit-square"></i>
+							</span>
+                               <span class="text">Reddit</span> 
+						  </button>
+						</div> 
+					 		<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Whatsapp">
+							<span class="g-ticon">
+							  <i class="fab fa-whatsapp-square"></i>
+							</span>
+                               <span class="text">Whatsapp</span> 
+						  </button>
+						</div> 
+					  		<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Deezer">
+							<span class="g-ticon">
+							  <i class="fab fa-deezer"></i>
+							</span>
+                               <span class="text">Deezer</span> 
+						  </button>
+						</div> 
+					 		<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Odnoklassniki">
+							<span class="g-ticon">
+							  <i class="fab fa-odnoklassniki"></i>
+							</span>
+                               <span class="text">Odnoklassniki</span> 
+						  </button>
+						</div> 	
+					 		<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Google">
+							<span class="g-ticon">
+							  <i class="fab fa-google"></i>
+							</span>
+                               <span class="text">Google</span> 
+						  </button>
+						</div> 
+					 		<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Pinterest">
+							<span class="g-ticon">
+							  <i class="fab fa-pinterest"></i>
+							</span>
+                             <span class="text">Pinterest</span> 
+						  </button>
+						</div> 
+					  		<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Quora">
+							<span class="g-ticon">
+							  <i class="fab fa-quora"></i>
+							</span>
+                               <span class="text">Quora</span> 
+						  </button>
+						</div> 
+					 		<div class="swiper-slide">
+						  <button class="nwo-cat-btn" data-change-cat="Foursquare">
+							<span class="g-ticon">
+							  <i class="fab fa-foursquare"></i>
+							</span>
+                               <span class="text">Foursquare</span> 
+						  </button>
+						</div> 
+                     	</div>
+					  	<div class="swiper-button-prev"></div>
+					  	<div class="swiper-button-next"></div>
+					</div> 
+                  <div class="row mt-3">
+                     <div class="col-lg-7 mb-4 mb-lg-0">
+                        <div class="gcard">
+                           <div class="gcard-header">
+                              <div class="row align-items-center">
+								<div class="col d-flex align-items-center">
+									<div class="ch-g-ticon">
+									  <div class="gcard-head-icon">
+										<i class="ri-dashboard-2-line"></i>
+									  </div>
+									</div>
+									<div class="ch-text">
+									  <h3 class="gcard-title">Create an order</h3>
+									</div>
+								</div>
+                              </div>
+                           </div>
+                           <div class="gcard-body">
+									
+								
+                             		<div class="gnyNeworder">
+									<form {% if site['rtl'] %} class="rtl-form"{% endif %} action="{{ page['url'] }}" method="post" id="order-form">
+									  {% if error %}
+										<div class="alert alert-dismissible alert-danger {% if site['rtl'] %} rtl-alert {% endif %}">
+										  <button type="button" class="close" data-dismiss="alert">&times;</button>
+										  {{ errorMessage }}
+										</div>
+									  {% endif %}
+
+									  {% if 1 == success %}
+										<div class="alert alert-success alert-dismissible" role="alert">
+										  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										  <h4>{{lang('neworder.message.success')}}</h4>
+										  {{lang('neworder.id')}}: {{order['id']}}<br>
+										  {{lang('neworder.service')}}: {{order['service']}}
+										  <br>
+										  {{lang('neworder.link')}}: {{order['link']}}<br>
+										  {{lang('neworder.quantity')}}: {{order['quantity']}}<br>
+										  {{ lang('neworder.charge') }}: {% if order.converted %} <span data-toggle="tooltip" data-placement="top" title="{{ order.original_charge }}">{{ order['charge'] }}</span> {% else %} {{ order['charge'] }} {% endif %}<br>
+										  {{ lang('neworder.balance') }}: {% if order.converted %} <span data-toggle="tooltip" data-placement="top" title="{{ order.original_balance }}">{{ order['balance'] }}</span> {% else %} {{ order['balance'] }} {% endif %}<br>
+                                        
+										</div>
+									  {%endif%}
+
+									  {% if 2 == success %}
+										<div class="alert alert-success alert-dismissible" role="alert">
+										  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										  <h4>{{lang('neworder.message.success')}}</h4>
+										  {{lang('neworder.subscription_id')}}: {{order['id']}}<br>
+										  {{lang('neworder.service')}}: {{order['service']}}
+										  <br>
+										  {{lang('neworder.username')}}: {{order['link']}}<br>
+										  {{lang('neworder.quantity')}}:
+										  {% if order['quantity_min'] == order['quantity_max'] %}
+											{{order['quantity_max']}}
+										  {% else %}
+											{{order['quantity_min']}}-{{order['quantity_max']}}
+										  {%endif%}
+										  <br>
+										  {{lang('neworder.new_posts')}}:
+										  {{order['posts']}}
+										  <br>
+										  {{lang('neworder.old_posts')}}:
+										  {{order['old_posts']}}
+										  <br>
+										  {{lang('neworder.delay')}}:
+										  {{order['delay']}}
+										  <br>
+                                      
+										</div>
+									  {%endif%}
+                                     	{% if categories %}
+                                     {% if services_search %}
+                             			    	<div class="form-group mb-4">
+                                  			<label for="orderform-category" class="control-label">{{ lang('general.search.placeholder') }}</label>
+                                          <div class="search-dropdown" id="new-order-search" style="position: relative;" data-lang-placeholder="{{ lang('general.search.placeholder') }}" {% if site['rtl'] %} data-dir="rtl" {% endif %}>
+                  						<div class="input-wrapper" style="position: relative;">
+                    						<button style="position: absolute;top: 50%;transform: translateY(-50%);padding: 0px 2px;background: none;border: none;{% if site['rtl'] %}right: 12px;left: auto;{% else %}left: 12px;{% endif %}" type="button">
+                        					<span class="fas fa-search"></span>
+                    </button>
+                    <input type="text" class="form-control" id="template-input" value="" placeholder="{{ lang('general.search.placeholder') }}">
+                  </div>
+                </div>
+              </div>
+            					      {% endif %}
+  
+                                      		<div class="form-group mb-4">
+										  <label for="orderform-category" class="control-label">{{ lang('neworder.category') }}</label>
+										  <select
+											  class="form-control"
+											  id="orderform-category"
+											  name="OrderForm[category]"
+											  data-select="true"
+											  data-select-search="true"
+											  data-select-search-placeholder="{{ lang('general.search.placeholder') }}"
+											  {% if site['rtl'] %} data-select-dir="rtl" {% endif %}
+										  >
+											@* {% for category in extended_categories %}
+											  <option
+												  value="{{ category.id }}"
+												  {% if category.icon %}
+													data-icon="
+													  {% if category.icon['icon_type'] == 'icon' %}
+														<span class='{{ category.icon['icon'] }}'></span>
+													  {% elseif category.icon['icon_type'] == 'emoji' %}
+														<span>{{ category.icon['icon'] }}</span>
+													  {% elseif category.icon['icon_type'] == 'image' %}
+														<img src='{{ category.icon['url'] }}' alt='{{ category.name }}' class='img-responsive btn-group-vertical'>
+													  {% endif %}
+													"
+												  {% endif %}
+												  {% if category.id == data['category'] %} selected {% endif %}
+											  >
+												  {{ category.name }}
+											  </option>
+											{% endfor %} *@
+										  </select>
+										</div>
+									  	{% endif %}
+									  <div class="form-group mb-4">
+										<label for="orderform-service" class="control-label">{{ lang('neworder.service') }}</label>
+										<select
+										  class="form-control"
+										  id="orderform-service"
+										  name="OrderForm[service]"
+										  data-select="true"
+										  data-select-search="true"
+										  data-select-search-placeholder="{{ lang('general.search.placeholder') }}"
+										  {% if site['rtl'] %} data-select-dir="rtl" {% endif %}
+										></select>
+									  </div>
+                                      
+
+									  <div class="form-group hidden fields mb-4 g-desc description mb-4" id="service_description">
+										<label for="service_description" class="control-label">{{ lang('neworder.description') }}</label>
+										<div class="panel-body border-solid border-rounded text" style="line-height: 24px" id="gnySdesc">
+											{{service['description']}}
+										</div>
+									  </div>
+
+									  <div id="fields"></div>
+
+									  <div class="form-group mb-4">
+										<label for="charge" class="control-label">{{ lang('neworder.charge') }}</label>
+										<input type="text" class="form-control" id="charge" value="{{ order['charge'] }}" readonly>
+									  </div>
+                                      
+                                    
+                                      
+									  {% if check_agreement %}
+										<div class="form-group mb-4">
+										  <label class="control-label terms">
+											<input type="checkbox"  name="OrderForm[termsofservice]" class="terms-accept-checkbox" value="1" id="terms" {{data['termsofservice'] ? 'checked' : ''}}> {{lang('signup.accept_terms_text')}}
+											<a  href="{{ page_url('terms') }}" target="_blank">{{ lang('terms.signup_checkbox') }}</a>
+										  </label>
+										</div>
+									  {%endif%}
+
+									  <input type="hidden" name="_csrf" value="{{ csrftoken }}">
+									  <button type="submit" class="btn btn-primary btn-block">{{ lang('neworder.button') }}</button>
+									</form>
+                                    </div>
+
+                                 </div>
+							</div>
+                       </div>
+   <div class="col-lg-5">
+						 <div class="gcard">
+							   <div class="gcard-header">
+								  <div class="row align-items-center">
+									<div class="col d-flex align-items-center">
+										<div class="ch-g-ticon">
+										  <div class="gcard-head-icon">
+											<i class="ri-pushpin-2-line"></i>
+										  </div>
+										</div>
+										<div class="ch-text">
+										  <h3 class="gcard-title">Announcements</h3>
+										</div>
+									</div>
+                              
+								  </div>
+							   </div>
+							    <div class="align-items-center gap-1">
+                              </div>
+                           <div class="gcard-body news-item" style="max-height: 500px; overflow-y: scroll">
+<!-- DUYURU 1 -->
+								<div class="gcard-2 gcard-shadow fade-1">
+
+								 <div class="row aling-items-center">
+									<div class="col-auto">
+									  <div class="news-icon news-bg1">
+										  <i class="far fa-bullhorn"></i>
+									  </div>
+									</div>
+									<div class="col">
+									   <div class="news-text">
+										  <h6 class="service">Important Announcement Regarding Access Issues</h6>
+										  <p class="desc">
+                                          Dear Valued Customers<br>
+                                            <br>
+                                          We would like to sincerely apologize for the recent inconvenience you may have experienced while trying to access our SMM panel.<br>
+<br>
+The domain provider we were using was unfortunately subjected to a cyberattack. We want to assure you that this attack was not targeted at our company specifically, and there has been no breach of your personal data or any security-related issue on our side.<br>
+<br>
+As a precaution and to ensure uninterrupted service moving forward, we have moved our domain to a more secure and reliable provider. This transition may cause temporary accessibility issues on some browsers. If you are experiencing difficulties accessing the panel, we kindly recommend that you clear your browser cache and cookies, and then try again.<br>
+<br>
+We deeply appreciate your patience and understanding during this process. Keeping your trust and providing you with reliable service remain our highest priorities.<br>
+<br>
+Thank you for being with us.<br>
+<br>
+Warm regards,<br>
+<br>
+SMMHELL TEAM
+                                            
+                                         </p>
+										  <span class="time"><i class="fas fa-history pr-2"></i>20.05.2025</span>
+									   </div>
+									</div>
+								 </div>
+								</div>
+								<!-- DUYURU 1 SON -->
+                             
+								<!-- DUYURU 1 -->
+								<div class="gcard-2 gcard-shadow fade-1">
+
+								 <div class="row aling-items-center">
+									<div class="col-auto">
+									  <div class="news-icon news-bg1">
+										  <i class="far fa-bullhorn"></i>
+									  </div>
+									</div>
+									<div class="col">
+									   <div class="news-text">
+										  <h6 class="service">Important Update: Instagram Followers Services</h6>
+										  <p class="desc">
+                                          Due to the recent Instagram update, many follower services have been disrupted. We have created a new category, "Instagram Followers | Working Services," which we are continuously updating with the services that are currently functioning.<br>
+<br>
+Please Note:<br>
+To ensure smooth service, make sure to:<br>
+👉 Turn off the "Flag for Review" button.<br>
+👉 Go to: Settings and privacy -> Follow and Invite Friends -> Turn off Flag for Review (Filter spam followers).<br>
+
+Thank you for your understanding and patience.<br>
+                                         </p>
+										  <span class="time"><i class="fas fa-history pr-2"></i>18.08.2024</span>
+									   </div>
+									</div>
+								 </div>
+								</div>
+								<!-- DUYURU 1 SON -->
+                                <!-- DUYURU 1 -->
+								<div class="gcard-2 gcard-shadow fade-1">
+
+								 <div class="row aling-items-center">
+									<div class="col-auto">
+									  <div class="news-icon news-bg1">
+										  <i class="far fa-bullhorn"></i>
+									  </div>
+									</div>
+									<div class="col">
+									   <div class="news-text">
+										  <h6 class="service">New Services</h6>
+										  <p class="desc">
+                                            787 👤 Facebook Page Followers | ♻️ Active Refill Button: Lifetime | Speed: 50K/Day | No Drop | Super Fast⚡🆕<br>
+       <br>
+                                           
+                                            579 👤 Telegram Channel/Group Members | ♻️ Active Refill Button: 3 Days | Fast Start | ⛔ Active Cancelation Button 🆕<br>
+       <br>
+                                            578 👤 Telegram Channel/Group Members | ♻️ Active Refill Button: 30 Days | Fast Start | ⛔ Active Cancelation Button 🆕
+    </p>
+										  <span class="time"><i class="fas fa-history pr-2"></i>15.06.2024</span>
+									   </div>
+									</div>
+								 </div>
+								</div>
+								<!-- DUYURU 1 SON -->
+								<!-- DUYURU 1 -->
+								<div class="gcard-2 gcard-shadow fade-1">
+
+								 <div class="row aling-items-center">
+									<div class="col-auto">
+									  <div class="news-icon news-bg1">
+										  <i class="far fa-bullhorn"></i>
+									  </div>
+									</div>
+									<div class="col">
+									   <div class="news-text">
+										  <h6 class="service">We added new features to the Tickets Section.</h6>
+										  <p class="desc">Thanks to the new features we added to the Tickets section, you can submit your requests much faster.</p>
+										  <span class="time"><i class="fas fa-history pr-2"></i>04.01.2021</span>
+									   </div>
+									</div>
+								 </div>
+								</div>
+								<!-- DUYURU 1 SON -->
+<!-- DUYURU 2 -->
+								<div class="gcard-2 gcard-shadow fade-1">
+
+								 <div class="row aling-items-center">
+									<div class="col-auto">
+									  <div class="news-icon news-bg1">
+										  <i class="far fa-bullhorn"></i>
+									  </div>
+									</div>
+									<div class="col">
+									   <div class="news-text">
+										  <h6 class="service">We updated the orders section.
+</h6>
+										  <p class="desc">We fixed bugs and added new features in the Orders section.</p>
+										  <span class="time"><i class="fas fa-history pr-2"></i>03.12.2023</span>
+									   </div>
+									</div>
+								 </div>
+								</div>
+								<!-- DUYURU 2 SON -->
+
+
+								<!-- DUYURU 3 -->
+								<div class="gcard-2 gcard-shadow fade-1">
+
+								 <div class="row aling-items-center">
+									<div class="col-auto">
+									  <div class="news-icon news-bg2">
+										  <i class="far fa-bullhorn"></i>
+									  </div>
+									</div>
+									<div class="col">
+									   <div class="news-text">
+										  <h6 class="service">Our new theme is live!</h6>
+										  <p class="desc">We are at your service with our new interface this year, where we aim the best for you.</p>
+										  <span class="time"><i class="fas fa-history pr-2"></i>10.11.2023</span>
+
+									   </div>
+									</div>
+								 </div>
+								</div>
+								<!-- DUYURU 3 SON -->     
+                                
+                                
+                                
+						  </div>
+						 </div>
+                     </div>
+                  </div>
+               </div>
+            </section>
+         </div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

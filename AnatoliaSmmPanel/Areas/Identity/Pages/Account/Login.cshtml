@@ -1,0 +1,789 @@
+﻿@page "/signin"
+
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<section class="homeHeader">
+    <div class="homeBg">
+        <img src="">
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-lg-7 font-18 title-dark mt-4 mb-5 mt-md-0">
+                <div class="mb-5">
+                    <h1>Top SMM Panel Worldwide: SmmHELL!</h1>
+
+                    <p class="h3 fw-light mw-100 mb-4" style="font-size: 2rem;">
+                        Revolutionize your social media growth with SmmHELL – together; we lead, they follow!
+                    </p>
+
+                    <p style="color: var(--text-color-transparent)">
+                        In the online world, industry leaders understand their customers' needs...
+                    </p>
+                </div>
+
+                <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Register">Join Us Now</a>
+            </div>
+
+            <div class="col-md-6 col-lg-5 text-center">
+                <div class="d-flex flex-wrap justify-content-center gap-2" style="font-size: 70px;">
+
+                    <span class="badge rounded-pill">
+                        <i class="fab fa-instagram"></i>
+                    </span>
+
+                    <span class="badge rounded-pill">
+                        <i class="fab fa-youtube"></i>
+                    </span>
+
+                    <span class="badge rounded-pill">
+                        <i class="fab fa-facebook-square"></i>
+                    </span>
+
+                    <span class="badge rounded-pill">
+                        <i class="fab fa-twitter"></i>
+                    </span>
+
+                    <span class="badge rounded-pill">
+                        <i class="fab fa-tiktok"></i>
+                    </span>
+
+                    <span class="badge rounded-pill">
+                        <i class="fab fa-spotify"></i>
+                    </span>
+
+                    <span class="badge rounded-pill">
+                        <i class="fab fa-telegram-plane"></i>
+                    </span>
+
+                    <span class="badge rounded-pill">
+                        <i class="fab fa-linkedin"></i>
+                    </span>
+
+                    <span class="badge rounded-pill">
+                        <i class="fab fa-discord"></i>
+                    </span>
+
+                    <span class="badge rounded-pill">
+                        <i class="fab fa-snapchat-ghost"></i>
+                    </span>
+
+                    <span class="badge rounded-pill">
+                        <i class="fab fa-reddit"></i>
+                    </span>
+
+                    <span class="badge rounded-pill">
+                        <i class="fab fa-whatsapp"></i>
+                    </span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<div class="homeSection">
+    <div class="container" style="background: var(--background-1-row); padding: 60px; border: 1px solid var(--border-color-1); border-radius: 10px;">
+        
+        <div class="text-center mb-5">
+            <p class="h2">Sign In</p>
+        </div>
+
+        <div class="well">
+            <form id="account" method="post">
+                
+                <!-- Hata mesajları -->
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="singin-row hmFlex-col">
+
+                    <!-- EMAIL -->
+                    <div class="form-group mb-3">
+                        <label asp-for="Input.Email" class="control-label mb-2">Email</label>
+                        <input asp-for="Input.Email"
+                               class="form-control form-control-singin mb-2"
+                               style="height: 50px; width: 350px;" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" asp-for="Input.RememberMe" />
+                            <label class="form-check-label" asp-for="Input.RememberMe">
+                                Remember Me
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- PASSWORD -->
+                    <div class="form-group form-group__password mb-3">
+                        <label asp-for="Input.Password" class="control-label mb-2">Password</label>
+                        <input asp-for="Input.Password"
+                               class="form-control form-control-singin mb-2"
+                               style="height: 50px; width: 350px;" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+
+                        <a asp-page="./ForgotPassword" class="forgot-password">
+                            Forgot password?
+                        </a>
+                    </div>
+
+                    <!-- BUTTON -->
+                    <div class="form-group">
+                        <button id="login-submit" type="submit" class="singin-btn">
+                            Sign In
+                        </button>
+                    </div>
+                </div>
+
+                <!-- REGISTER -->
+                <div class="singin-row hmFlex-col" style="justify-content: left; margin-left: 180px;">
+                    <span class="mt-4" style="color: var(--text-color-transparent)">
+                        Don’t have an account?
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">
+                            Sign Up
+                        </a>
+                    </span>
+                </div>
+
+                <!-- EXTERNAL LOGIN -->
+                @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+                {
+                    <div class="mt-4">
+                        <form asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                            @foreach (var provider in Model.ExternalLogins)
+                            {
+                                <button type="submit"
+                                        class="btn btn-outline-primary me-2 mt-2"
+                                        name="provider"
+                                        value="@provider.Name">
+                                    @provider.DisplayName ile giriş yap
+                                </button>
+                            }
+                        </form>
+                    </div>
+                }
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="homeSection">
+    <div class="container">
+        <div class="mb-4 mb-md-5">
+            <h2>How Does SmmHELL - SMM Panel Works?</h2>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mt-4">
+                <div class="singintab2" style="height: 324px;">
+                    <div class="flex-grow-0">
+                        <div class="singintab2icon">
+                            <a class="singintab2icon-font">I</a>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <p>
+                            You only need a few clicks to sign up for the Social Media panel. Once registered, all the services will be ready for you to choose from.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mt-4">
+                <div class="singintab2" style="height: 324px;">
+                    <div class="flex-grow-0">
+                        <div class="singintab2icon">
+                            <a class="singintab2icon-font">II</a>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <p>
+                            Take your time to pick what you need; we have plenty of options available.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mt-4">
+                <div class="singintab2" style="height: 324px;">
+                    <div class="flex-grow-0">
+                        <div class="singintab2icon">
+                            <a class="singintab2icon-font">III</a>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <p>
+                            Paste the URL of the account, post, or website you’d like to boost using the SMM provider panel of SmmHELL
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mt-4">
+                <div class="singintab2" style="height: 324px;">
+                    <div class="flex-grow-0">
+                        <div class="singintab2icon">
+                            <a class="singintab2icon-font">IV</a>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <p>Check all the details provided about the order.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mt-4">
+                <div class="singintab2" style="height: 324px;">
+                    <div class="flex-grow-0">
+                        <div class="singintab2icon">
+                            <a class="singintab2icon-font">V</a>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <p>If everything looks perfect, submit your order.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mt-4">
+                <div class="singintab2" style="height: 324px;">
+                    <div class="flex-grow-0">
+                        <div class="singintab2icon">
+                            <a class="singintab2icon-font">VI</a>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1">
+                        <p>We'll start working immediately.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="homeSection">
+    <div class="container">
+
+        <div class="mb-4 mb-md-5">
+            <h2>Why Choose SmmHELL?</h2>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+
+            <!-- Prev Button -->
+            <button class="navButton swiper-prev">‹</button>
+
+            <!-- Swiper -->
+            <div class="swiper mySwiper flex-grow-1">
+                <div class="swiper-wrapper">
+
+                    <div class="swiper-slide">
+                        <div class="singintab2 singintab2_width singintab2_height">
+                            <p class="h3 mb-5">Cheapest SMM Panel: SmmHELL</p>
+                            <p>SmmHELL is the cheapest SMM panel, offering unbeatable prices for all your social media marketing needs. Whether you’re a small business, a large enterprise, or an individual, our affordable packages are designed to fit any budget. Ensure you get the best possible results at a fraction of the cost with SmmHELL. Enhance your social media strategy and stay ahead of the competition with our top-notch services!</p>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <div class="singintab2 singintab2_width singintab2_height">
+                            <p class="h3 mb-5">Secure Payment Methods</p>
+                            <p>At SmmHELL, we prioritize secure payments, offering a variety of payment options including PayTR, Mastercard, Visa, Bitcoin, USDT, and more. Our platform ensures that all transactions are safe and secure, keeping your financial data anonymous and protected from any potential threats. Choose SmmHELL for a secure and reliable social media marketing experience.</p>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <div class="singintab2 singintab2_width singintab2_height">
+                            <p class="h3 mb-5">Fastest SMM Services</p>
+                            <p>Our user-friendly dashboard allows you to manage all your campaigns in one place, providing real-time results and enabling you to make necessary adjustments instantly. With SmmHELL, you don't have to wait for days or weeks to see the progress of your campaigns. Experience the fastest SMM services and stay ahead of the competition with our efficient and reliable platform.</p>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <div class="singintab2 singintab2_width singintab2_height">
+                            <p class="h3 mb-5">24/7 Customer Support</p>
+                            <p>SmmHELL offers round-the-clock customer support, available 24/7 to assist you. We take pride in our responsiveness, ensuring every query receives a prompt response. Contact us anytime using our live chat feature or by emailing us through the form on our Contact page. Discover more about our dedication to providing exceptional service.</p>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <div class="singintab2 singintab2_width singintab2_height">
+                            <p class="h3 mb-5">API Support</p>
+                            <p>SmmHELL provides robust API support for resellers, enabling seamless integration of our products and services into your business. Our comprehensive API documentation and tutorials simplify the process of creating custom social media growth services tailored to your specific needs. Explore the possibilities with SmmHELL's reseller API support today.</p>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <div class="singintab2 singintab2_width singintab2_height">
+                            <p class="h3 mb-5">Affiliate System at SmmHELL</p>
+                            <p>Join SmmHELL's affiliate program and earn up to 15% commission on referrals. Invite your friends to join and earn from what they spend. Our affiliate system offers a straightforward way to increase your earnings while assisting others in improving their social media presence. Start earning with SmmHELL's affiliate program today!</p>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <div class="singintab2 singintab2_width singintab2_height">
+                            <p class="h3 mb-5">Quality and Affordable Services at SmmHELL</p>
+                            <p>Discover SmmHELL's commitment to delivering high-quality services at unbeatable prices. Whether you're a small business, large enterprise, or individual, our affordable packages ensure you receive exceptional results without breaking the bank. Trust SmmHELL for quality and cost-effective solutions to enhance your social media presence. Explore our services today!</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Next Button -->
+            <button class="navButton swiper-next">›</button>
+
+        </div>
+    </div>
+</div>
+
+<div class="homeSection">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 offset-lg-1">
+                <div class="sectionText text-center pb-5">
+                    <h1>Why <span class="underline">choose us?</span></h1>
+                </div>
+                <div class="EURXs">
+                    <div class="eam3 homeBant-1">
+                        <div class="homeBant-4">
+                            <span class="default-text">{{ totals['ordersAll'] }} Completed Orders</span>
+                            <span class="hover-text">Completed Orders</span>
+                        </div>
+                        <div class="homeBant-4 homeBant-transform-right">
+                            <span class="default-text">24/7 Customer Support</span>
+                            <span class="hover-text">Always Here for You</span>
+                        </div>
+                    </div>
+                    <div class="eam3 fga-ddb">
+                        <div class="homeBant-4">
+                            <span class="default-text">Multiple Payment Methods</span>
+                            <span class="hover-text">Secure Payments Available</span>
+                        </div>
+                        <div class="homeBant-4 homeBant-transform-center">
+                            <span class="default-text">Affiliates System</span>
+                            <span class="hover-text">Earn with our Affiliate Program</span>
+                        </div>
+                        <div class="homeBant-4 homeBant-transform-right">
+                            <span class="default-text">Child Panels</span>
+                            <span class="hover-text">Manage Multiple Accounts Easily</span>
+                        </div>
+                    </div>
+                    <div class="eam3 homeBant-2">
+                        <div class="homeBant-4">
+                            <span class="default-text">{{ totals['servicesAll'] }} Quality and Cheap Services</span>
+                            <span class="hover-text">Wide Range of Quality Services</span>
+                        </div>
+                        <div class="homeBant-4 homeBant-transform-right">
+                            <span class="default-text">
+                                @(await Component.InvokeAsync("UserStats")) Happy Customers
+                            </span>
+
+                            <span class="hover-text">Join Our Happy Customers</span>
+                        </div>
+                    </div>
+                    <div class="eam3 homeBant-3">
+                        <div class="homeBant-4 homeBant-transform-center">
+                            <span class="default-text">Customer Friendly Interface</span>
+                            <span class="hover-text">User-Friendly Interface</span>
+                        </div>
+                    </div>
+                </div>
+
+					
+
+	
+                          
+              
+              
+              
+            </div>
+        </div>
+    </div>
+</div>
+<div class="homeSection">
+    <div class="container">
+        <div class="col-12">
+            <div class="offset-md-1 divfadeInRight animate__animated animate__slow">
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-lg-6 mb-3">
+                        <div class="card text-center bg-transparent" style="border: 1px solid var(--border-color-1);border-radius: 5px;">
+                            <div class="card-body sectionText">
+                                <h2>Total + <span class="underline number-customer">@await Component.InvokeAsync("UserStats")</span><br>Customer</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-3">
+                        <div class="card text-center bg-transparent" style="border: 1px solid var(--border-color-1);border-radius: 5px;">
+                            <div class="card-body sectionText">
+                                <h2>Total + <span class="underline number-order">{{ totals['ordersAll'] }}</span><br>order</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-3">
+                        <div class="card text-center bg-transparent" style="border: 1px solid var(--border-color-1);border-radius: 5px;">
+                            <div class="card-body sectionText">
+                                <h2>Total + <span class="underline number-service">{{ totals['servicesAll'] }}</span><br>active service</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+          			
+            </div>
+        </div>
+      
+    </div>
+</div>
+<div class="homeSection">
+    <div class="container">
+        <div class="col-12">
+            <div class="sectionText text-center pb-5">
+                <h1 style="font-size: 55px;display: flex;justify-content: center;flex-direction: column;align-content: center;align-items: center;">Payment <span class="underline">Methods</span></h1>
+            </div>
+            <div class="divfadeInRight animate__animated animate__slow" style="display: flex;justify-content: center;flex-wrap: wrap;flex-direction: column;">
+                <div class="row justify-content-center mt-5">
+            		
+                    <span class="badge badge-pill m-2 pymts homePaymentsRow">
+                        <svg class="paymentslogo" viewBox="0 -28.5 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid">
+                            <g>
+                                <path d="M46.5392504,198.011312 L46.5392504,184.839826 C46.5392504,179.790757 43.4659038,176.497885 38.1973096,176.497885 C35.5630125,176.497885 32.7091906,177.375984 30.7334678,180.229806 C29.1967945,177.815034 27.0015469,176.497885 23.7086756,176.497885 C21.513428,176.497885 19.3181804,177.15646 17.5619824,179.571233 L17.5619824,176.936935 L12.9519625,176.936935 L12.9519625,198.011312 L17.5619824,198.011312 L17.5619824,186.3765 C17.5619824,182.644579 19.5377052,180.888381 22.6110518,180.888381 C25.6843984,180.888381 27.2210717,182.864103 27.2210717,186.3765 L27.2210717,198.011312 L31.8310916,198.011312 L31.8310916,186.3765 C31.8310916,182.644579 34.0263392,180.888381 36.880161,180.888381 C39.9535076,180.888381 41.490181,182.864103 41.490181,186.3765 L41.490181,198.011312 L46.5392504,198.011312 L46.5392504,198.011312 Z M114.81145,176.936935 L107.347608,176.936935 L107.347608,170.570717 L102.737589,170.570717 L102.737589,176.936935 L98.566618,176.936935 L98.566618,181.107905 L102.737589,181.107905 L102.737589,190.766995 C102.737589,195.59654 104.713311,198.450362 109.981906,198.450362 C111.957628,198.450362 114.152876,197.791787 115.689549,196.913688 L114.372401,192.962243 C113.055252,193.840341 111.518579,194.059866 110.420955,194.059866 C108.225708,194.059866 107.347608,192.742718 107.347608,190.54747 L107.347608,181.107905 L114.81145,181.107905 L114.81145,176.936935 L114.81145,176.936935 Z M153.886857,176.497885 C151.25256,176.497885 149.496362,177.815034 148.398738,179.571233 L148.398738,176.936935 L143.788718,176.936935 L143.788718,198.011312 L148.398738,198.011312 L148.398738,186.156975 C148.398738,182.644579 149.935411,180.668856 152.789233,180.668856 C153.667332,180.668856 154.764956,180.888381 155.643055,181.107905 L156.960204,176.71741 C156.082105,176.497885 154.764956,176.497885 153.886857,176.497885 L153.886857,176.497885 L153.886857,176.497885 Z M94.834697,178.693133 C92.6394495,177.15646 89.566103,176.497885 86.2732315,176.497885 C81.0046375,176.497885 77.492241,179.132183 77.492241,183.303153 C77.492241,186.81555 80.1265385,188.791272 84.736558,189.449847 L86.931806,189.669371 C89.346578,190.10842 90.6637265,190.766995 90.6637265,191.864619 C90.6637265,193.401292 88.9075285,194.498916 85.834182,194.498916 C82.7608355,194.498916 80.346063,193.401292 78.8093895,192.303668 L76.614142,195.816065 C79.0289145,197.572262 82.321786,198.450362 85.614657,198.450362 C91.7613505,198.450362 95.2737465,195.59654 95.2737465,191.645094 C95.2737465,187.913173 92.4199245,185.937451 88.0294295,185.278876 L85.834182,185.059351 C83.858459,184.839826 82.321786,184.400777 82.321786,183.083629 C82.321786,181.546955 83.858459,180.668856 86.2732315,180.668856 C88.9075285,180.668856 91.5418255,181.76648 92.858974,182.425054 L94.834697,178.693133 L94.834697,178.693133 Z M217.329512,176.497885 C214.695215,176.497885 212.939017,177.815034 211.841393,179.571233 L211.841393,176.936935 L207.231373,176.936935 L207.231373,198.011312 L211.841393,198.011312 L211.841393,186.156975 C211.841393,182.644579 213.378066,180.668856 216.231888,180.668856 C217.109987,180.668856 218.207611,180.888381 219.08571,181.107905 L220.402859,176.71741 C219.52476,176.497885 218.207611,176.497885 217.329512,176.497885 L217.329512,176.497885 L217.329512,176.497885 Z M158.496877,187.474123 C158.496877,193.840341 162.887372,198.450362 169.69264,198.450362 C172.765986,198.450362 174.961234,197.791787 177.156481,196.035589 L174.961234,192.303668 C173.205036,193.620817 171.448838,194.279391 169.473115,194.279391 C165.741194,194.279391 163.106897,191.645094 163.106897,187.474123 C163.106897,183.522678 165.741194,180.888381 169.473115,180.668856 C171.448838,180.668856 173.205036,181.32743 174.961234,182.644579 L177.156481,178.912658 C174.961234,177.15646 172.765986,176.497885 169.69264,176.497885 C162.887372,176.497885 158.496877,181.107905 158.496877,187.474123 L158.496877,187.474123 L158.496877,187.474123 Z M201.08468,187.474123 L201.08468,176.936935 L196.47466,176.936935 L196.47466,179.571233 C194.937987,177.595509 192.742739,176.497885 189.888917,176.497885 C183.961749,176.497885 179.351729,181.107905 179.351729,187.474123 C179.351729,193.840341 183.961749,198.450362 189.888917,198.450362 C192.962264,198.450362 195.157512,197.352737 196.47466,195.377015 L196.47466,198.011312 L201.08468,198.011312 L201.08468,187.474123 Z M184.181274,187.474123 C184.181274,183.742202 186.596046,180.668856 190.547492,180.668856 C194.279413,180.668856 196.91371,183.522678 196.91371,187.474123 C196.91371,191.206044 194.279413,194.279391 190.547492,194.279391 C186.596046,194.059866 184.181274,191.206044 184.181274,187.474123 L184.181274,187.474123 Z M129.080559,176.497885 C122.933866,176.497885 118.543371,180.888381 118.543371,187.474123 C118.543371,194.059866 122.933866,198.450362 129.300084,198.450362 C132.373431,198.450362 135.446777,197.572262 137.861549,195.59654 L135.666302,192.303668 C133.910104,193.620817 131.714856,194.498916 129.519609,194.498916 C126.665787,194.498916 123.811965,193.181768 123.153391,189.449847 L138.739648,189.449847 L138.739648,187.693648 C138.959173,180.888381 135.007727,176.497885 129.080559,176.497885 L129.080559,176.497885 L129.080559,176.497885 Z M129.080559,180.449331 C131.934381,180.449331 133.910104,182.20553 134.349153,185.498401 L123.372916,185.498401 C123.811965,182.644579 125.787688,180.449331 129.080559,180.449331 L129.080559,180.449331 Z M243.452958,187.474123 L243.452958,168.594995 L238.842938,168.594995 L238.842938,179.571233 C237.306265,177.595509 235.111017,176.497885 232.257196,176.497885 C226.330027,176.497885 221.720007,181.107905 221.720007,187.474123 C221.720007,193.840341 226.330027,198.450362 232.257196,198.450362 C235.330542,198.450362 237.52579,197.352737 238.842938,195.377015 L238.842938,198.011312 L243.452958,198.011312 L243.452958,187.474123 Z M226.549552,187.474123 C226.549552,183.742202 228.964324,180.668856 232.91577,180.668856 C236.647691,180.668856 239.281988,183.522678 239.281988,187.474123 C239.281988,191.206044 236.647691,194.279391 232.91577,194.279391 C228.964324,194.059866 226.549552,191.206044 226.549552,187.474123 L226.549552,187.474123 Z M72.443172,187.474123 L72.443172,176.936935 L67.833152,176.936935 L67.833152,179.571233 C66.2964785,177.595509 64.101231,176.497885 61.247409,176.497885 C55.3202405,176.497885 50.7102205,181.107905 50.7102205,187.474123 C50.7102205,193.840341 55.3202405,198.450362 61.247409,198.450362 C64.3207555,198.450362 66.5160035,197.352737 67.833152,195.377015 L67.833152,198.011312 L72.443172,198.011312 L72.443172,187.474123 Z M55.3202405,187.474123 C55.3202405,183.742202 57.735013,180.668856 61.6864585,180.668856 C65.4183795,180.668856 68.0526765,183.522678 68.0526765,187.474123 C68.0526765,191.206044 65.4183795,194.279391 61.6864585,194.279391 C57.735013,194.059866 55.3202405,191.206044 55.3202405,187.474123 Z" fill="var(--color-4)">
+
+                                </path>
+                                <rect fill="#FF5F00" x="93.2980455" y="16.9034088" width="69.1502985" height="124.251009">
+
+                                </rect>
+                                <path d="M97.688519,79.0288935 C97.688519,53.783546 109.542856,31.3920209 127.763411,16.9033869 C114.3724,6.3661985 97.468994,-1.94737475e-05 79.0289145,-1.94737475e-05 C35.3434877,-1.94737475e-05 1.7258174e-06,35.3434665 1.7258174e-06,79.0288935 C1.7258174e-06,122.71432 35.3434877,158.057806 79.0289145,158.057806 C97.468994,158.057806 114.3724,151.691588 127.763411,141.1544 C109.542856,126.88529 97.688519,104.274241 97.688519,79.0288935 Z" fill="#EB001B">
+
+                                </path>
+                                <path d="M255.746345,79.0288935 C255.746345,122.71432 220.402859,158.057806 176.717432,158.057806 C158.277352,158.057806 141.373945,151.691588 127.982936,141.1544 C146.423015,126.665766 158.057827,104.274241 158.057827,79.0288935 C158.057827,53.783546 146.20349,31.3920209 127.982936,16.9033869 C141.373945,6.3661985 158.277352,-1.94737475e-05 176.717432,-1.94737475e-05 C220.402859,-1.94737475e-05 255.746345,35.5629913 255.746345,79.0288935 Z" fill="#F79E1B">
+
+                                </path>
+                            </g>
+                        </svg>
+                    </span>
+                    <span class="badge badge-pill m-2 pymts homePaymentsRow">
+                        <svg class="paymentslogo" viewBox="0 0 750 471" xmlns="http://www.w3.org/2000/svg">
+                            <g id="Page-1" fill="none" fill-rule="evenodd">
+                                <g id="visa" fill-rule="nonzero">
+                                    <rect id="Rectangle-1" fill="#0E4595" x="0" y="0" width="750" height="471" rx="40" />
+                                    <polygon id="Shape" fill="#FFFFFF" points="278.1975 334.2275 311.5585 138.4655 364.9175 138.4655 331.5335 334.2275" />
+                                    <path d="M524.3075,142.6875 C513.7355,138.7215 497.1715,134.4655 476.4845,134.4655 C423.7605,134.4655 386.6205,161.0165 386.3045,199.0695 C386.0075,227.1985 412.8185,242.8905 433.0585,252.2545 C453.8275,261.8495 460.8105,267.9695 460.7115,276.5375 C460.5795,289.6595 444.1255,295.6545 428.7885,295.6545 C407.4315,295.6545 396.0855,292.6875 378.5625,285.3785 L371.6865,282.2665 L364.1975,326.0905 C376.6605,331.5545 399.7065,336.2895 423.6355,336.5345 C479.7245,336.5345 516.1365,310.2875 516.5505,269.6525 C516.7515,247.3835 502.5355,230.4355 471.7515,216.4645 C453.1005,207.4085 441.6785,201.3655 441.7995,192.1955 C441.7995,184.0585 451.4675,175.3575 472.3565,175.3575 C489.8055,175.0865 502.4445,178.8915 512.2925,182.8575 L517.0745,185.1165 L524.3075,142.6875" fill="#FFFFFF" />
+                                    <path d="M661.6145,138.4655 L620.3835,138.4655 C607.6105,138.4655 598.0525,141.9515 592.4425,154.6995 L513.1975,334.1025 L569.2285,334.1025 C569.2285,334.1025 578.3905,309.9805 580.4625,304.6845 C586.5855,304.6845 641.0165,304.7685 648.7985,304.7685 C650.3945,311.6215 655.2905,334.1025 655.2905,334.1025 L704.8025,334.1025 L661.6145,138.4655 Z M596.1975,264.8725 C600.6105,253.5935 617.4565,210.1495 617.4565,210.1495 C617.1415,210.6705 621.8365,198.8155 624.5315,191.4655 L628.1385,208.3435 C628.1385,208.3435 638.3555,255.0725 640.4905,264.8715 L596.1975,264.8715 L596.1975,264.8725 Z" fill="#FFFFFF" />
+                                    <path d="M45.878906 138.46484 L 45.197266 142.53906 C 66.288263 147.64458 85.126465 155.03257 101.61914 164.22461 L 148.96484 333.91602 L 205.41992 333.84961 L 289.42383 138.46484 L 232.90234 138.46484 L 180.66211 271.96094 L 175.0957 244.83203 C 174.83824 244.00408 174.55942 243.17304 174.27344 242.3418 L 156.10742 154.99219 C 152.87742 142.59619 143.50892 138.89684 131.91992 138.46484 L 45.878906 138.46484 z " fill="#FFFFFF" />
+                                </g>
+                            </g>
+                        </svg>
+                    </span>
+                    <span class="badge badge-pill m-2 pymts homePaymentsRow">
+                        <svg class="paymentslogo" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve">
+                            <path style="fill:#306FC5;" d="M512,402.281c0,16.716-13.55,30.267-30.265,30.267H30.265C13.55,432.549,0,418.997,0,402.281V109.717
+                            c0-16.715,13.55-30.266,30.265-30.266h451.47c16.716,0,30.265,13.551,30.265,30.266V402.281L512,402.281z" />
+                            <path style="opacity:0.15;fill:#202121;enable-background:new    ;" d="M21.517,402.281V109.717
+                            c0-16.715,13.552-30.266,30.267-30.266h-21.52C13.55,79.451,0,93.001,0,109.717v292.565c0,16.716,13.55,30.267,30.265,30.267h21.52
+                            C35.07,432.549,21.517,418.997,21.517,402.281z" />
+                            <g>
+                                <polygon style="fill:#FFFFFF;" points="74.59,220.748 89.888,220.748 82.241,201.278 	" />
+                                <polygon style="fill:#FFFFFF;" points="155.946,286.107 155.946,295.148 181.675,295.148 181.675,304.885 155.946,304.885
+                                155.946,315.318 184.455,315.318 197.666,300.712 185.151,286.107 	" />
+                                <polygon style="fill:#FFFFFF;" points="356.898,201.278 348.553,220.748 364.548,220.748 	" />
+                                <polygon style="fill:#FFFFFF;" points="230.348,320.875 230.348,281.241 212.268,300.712 	" />
+                                <path style="fill:#FFFFFF;" d="M264.42,292.368c-0.696-4.172-3.48-6.261-7.654-6.261h-14.599v12.516h15.299
+                                C261.637,298.624,264.42,296.539,264.42,292.368z" />
+                                <path style="fill:#FFFFFF;" d="M313.09,297.236c1.391-0.697,2.089-2.785,2.089-4.867c0.696-2.779-0.698-4.172-2.089-4.868
+                                c-1.387-0.696-3.476-0.696-5.559-0.696h-13.91v11.127h13.909C309.613,297.932,311.702,297.932,313.09,297.236z" />
+                                <path style="fill:#FFFFFF;" d="M413.217,183.198v8.344l-4.169-8.344H376.37v8.344l-4.174-8.344h-44.502
+                                c-7.648,0-13.909,1.392-19.469,4.173v-4.173h-31.289v0.696v3.477c-3.476-2.78-7.648-4.173-13.211-4.173h-111.95l-7.652,17.384
+                                l-7.647-17.384h-25.031h-10.431v8.344l-3.477-8.344h-0.696H66.942l-13.909,32.68L37.042,251.34l-0.294,0.697h0.294h35.463h0.444
+                                l0.252-0.697l4.174-10.428h9.039l4.172,11.125h40.326v-0.697v-7.647l3.479,8.343h20.163l3.475-8.343v7.647v0.697h15.993h79.965
+                                h0.696v-18.08h1.394c1.389,0,1.389,0,1.389,2.087v15.297h50.065v-4.172c4.172,2.089,10.426,4.172,18.771,4.172h20.863l4.172-11.123
+                                h9.732l4.172,11.123h40.328v-6.952v-3.476l6.261,10.428h1.387h0.698h30.595v-68.143h-31.291l0,0H413.217z M177.501,241.609h-6.955
+                                h-4.171v-4.169v-34.076l-0.696,1.595v-0.019l-16.176,36.669h-0.512h-3.719h-6.017l-16.687-38.245v38.245h-23.64l-4.867-10.43
+                                H70.417l-4.868,10.43H53.326l20.57-48.675h17.382l19.469,46.587v-46.587h4.171h14.251l0.328,0.697h0.024l8.773,19.094l6.3,14.306
+                                l0.223-0.721l13.906-33.375H177.5v48.674H177.501L177.501,241.609z M225.481,203.364h-27.119v9.039h26.423v9.734h-26.423v9.738
+                                h27.119v10.427h-38.939v-49.367h38.939V203.364L225.481,203.364z M275.076,221.294c0.018,0.016,0.041,0.027,0.063,0.042
+                                c0.263,0.278,0.488,0.557,0.68,0.824c1.332,1.746,2.409,4.343,2.463,8.151c0.004,0.066,0.007,0.131,0.011,0.197
+                                c0,0.038,0.007,0.071,0.007,0.11c0,0.022-0.002,0.039-0.002,0.06c0.016,0.383,0.026,0.774,0.026,1.197v9.735h-10.428v-5.565
+                                c0-2.781,0-6.954-2.089-9.735c-0.657-0.657-1.322-1.09-2.046-1.398c-1.042-0.675-3.017-0.686-6.295-0.686h-12.52v17.384h-11.818
+                                v-48.675h26.425c6.254,0,10.428,0,13.906,2.086c3.407,2.046,5.465,5.439,5.543,10.812c-0.161,7.4-4.911,11.46-8.326,12.829
+                                C270.676,218.662,272.996,219.129,275.076,221.294z M298.491,241.609h-11.822v-48.675h11.822V241.609z M434.083,241.609h-15.3
+                                l-22.25-36.855v30.595l-0.073-0.072v6.362h-11.747v-0.029h-11.822l-4.172-10.43H344.38l-4.172,11.123h-13.211
+                                c-5.559,0-12.517-1.389-16.687-5.561c-4.172-4.172-6.256-9.735-6.256-18.773c0-6.953,1.389-13.911,6.256-19.472
+                                c3.474-4.175,9.735-5.562,17.382-5.562h11.128v10.429h-11.128c-4.172,0-6.254,0.693-9.041,2.783
+                                c-2.082,2.085-3.474,6.256-3.474,11.123c0,5.564,0.696,9.04,3.474,11.821c2.091,2.089,4.87,2.785,8.346,2.785h4.867l15.991-38.243
+                                h6.957h10.428l19.472,46.587v-2.376v-15.705v-1.389v-27.116h17.382l20.161,34.07v-34.07h11.826v47.977h0.002L434.083,241.609
+                                L434.083,241.609z" />
+                                <path style="fill:#FFFFFF;" d="M265.161,213.207c0.203-0.217,0.387-0.463,0.543-0.745c0.63-0.997,1.352-2.793,0.963-5.244
+                                c-0.016-0.225-0.057-0.433-0.105-0.634c-0.013-0.056-0.011-0.105-0.026-0.161l-0.007,0.001c-0.346-1.191-1.229-1.923-2.11-2.367
+                                c-1.394-0.693-3.48-0.693-5.565-0.693h-13.909v11.127h13.909c2.085,0,4.172,0,5.565-0.697c0.209-0.106,0.395-0.25,0.574-0.413
+                                l0.002,0.009C264.996,213.389,265.067,213.315,265.161,213.207z" />
+                                <path style="fill:#FFFFFF;" d="M475.105,311.144c0-4.867-1.389-9.736-3.474-13.212v-31.289h-0.032v-2.089c0,0-29.145,0-33.483,0
+                                c-4.336,0-9.598,4.171-9.598,4.171v-4.171h-31.984c-4.87,0-11.124,1.392-13.909,4.171v-4.171h-57.016v2.089v2.081
+                                c-4.169-3.474-11.824-4.171-15.298-4.171h-37.549v2.089v2.081c-3.476-3.474-11.824-4.171-15.998-4.171H215.05l-9.737,10.431
+                                l-9.04-10.431h-2.911h-4.737h-54.93v2.089v5.493v62.651h61.19l10.054-10.057l8.715,10.057h0.698h35.258h1.598h0.696h0.692v-6.953
+                                v-9.039h3.479c4.863,0,11.124,0,15.991-2.089v17.382v1.394h31.291v-1.394V317.4h1.387c2.089,0,2.089,0,2.089,2.086v14.6v1.394
+                                h94.563c6.263,0,12.517-1.394,15.993-4.175v2.781v1.394h29.902c6.254,0,12.517-0.695,16.689-3.478
+                                c6.402-3.841,10.437-10.64,11.037-18.749c0.028-0.24,0.063-0.48,0.085-0.721l-0.041-0.039
+                                C475.087,312.043,475.105,311.598,475.105,311.144z M256.076,306.973h-13.91v2.081v4.174v4.173v7.649h-22.855l-13.302-15.299
+                                l-0.046,0.051l-0.65-0.748l-15.297,15.996h-44.501v-48.673h45.197l12.348,13.525l2.596,2.832l0.352-0.365l14.604-15.991h36.852
+                                c7.152,0,15.161,1.765,18.196,9.042c0.365,1.441,0.577,3.043,0.577,4.863C276.237,304.189,266.502,306.973,256.076,306.973z
+                                M325.609,306.276c1.389,2.081,2.085,4.867,2.085,9.041v9.732h-11.819v-6.256c0-2.786,0-7.65-2.089-9.739
+                                c-1.387-2.081-4.172-2.081-8.341-2.081H292.93v18.077h-11.82v-49.369h26.421c5.559,0,10.426,0,13.909,2.084
+                                c3.474,2.088,6.254,5.565,6.254,11.128c0,7.647-4.865,11.819-8.343,13.212C322.829,303.49,324.914,304.885,325.609,306.276z
+                                M373.589,286.107h-27.122v9.04h26.424v9.737h-26.424v9.736h27.122v10.429H334.65V275.68h38.939V286.107z M402.791,325.05h-22.252
+                                v-10.429h22.252c2.082,0,3.476,0,4.87-1.392c0.696-0.697,1.387-2.085,1.387-3.477c0-1.394-0.691-2.778-1.387-3.475
+                                c-0.698-0.695-2.091-1.391-4.176-1.391c-11.126-0.696-24.337,0-24.337-15.296c0-6.954,4.172-14.604,16.689-14.604h22.945v11.819
+                                h-21.554c-2.085,0-3.478,0-4.87,0.696c-1.387,0.697-1.387,2.089-1.387,3.478c0,2.087,1.387,2.783,2.778,3.473
+                                c1.394,0.697,2.783,0.697,4.172,0.697h6.259c6.259,0,10.43,1.391,13.211,4.173c2.087,2.087,3.478,5.564,3.478,10.43
+                                C420.869,320.179,414.611,325.05,402.791,325.05z M462.59,320.179c-2.778,2.785-7.648,4.871-14.604,4.871H425.74v-10.429h22.245
+                                c2.087,0,3.481,0,4.87-1.392c0.693-0.697,1.391-2.085,1.391-3.477c0-1.394-0.698-2.778-1.391-3.475
+                                c-0.696-0.695-2.085-1.391-4.172-1.391c-11.122-0.696-24.337,0-24.337-15.295c0-6.609,3.781-12.579,13.106-14.352
+                                c1.115-0.154,2.293-0.253,3.583-0.253h22.948v11.819h-15.3h-5.561h-0.696c-2.087,0-3.476,0-4.865,0.696
+                                c-0.7,0.697-1.396,2.089-1.396,3.478c0,2.087,0.696,2.783,2.785,3.473c1.389,0.697,2.78,0.697,4.172,0.697h0.691h5.565
+                                c3.039,0,5.337,0.375,7.44,1.114c1.926,0.697,8.302,3.549,9.728,10.994c0.124,0.78,0.215,1.594,0.215,2.495
+                                C466.761,313.925,465.37,317.401,462.59,320.179z" />
+                            </g>
+                        </svg>
+                    </span>
+                    <span class="badge badge-pill m-2 pymts homePaymentsRow">
+                        <svg class="paymentslogo" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                            <style>
+                                                            .st1 {
+                                                                fill: #fff
+                                                            }
+                            </style>
+                            <g id="Icon">
+                                <circle cx="512" cy="512" r="512" style="fill:#f3ba2f" />
+                                <path class="st1" d="M404.9 468 512 360.9l107.1 107.2 62.3-62.3L512 236.3 342.6 405.7z" />
+                                <path transform="rotate(-45.001 298.629 511.998)" class="st1" d="M254.6 467.9h88.1V556h-88.1z" />
+                                <path class="st1" d="M404.9 556 512 663.1l107.1-107.2 62.4 62.3h-.1L512 787.7 342.6 618.3l-.1-.1z" />
+                                <path transform="rotate(-45.001 725.364 512.032)" class="st1" d="M681.3 468h88.1v88.1h-88.1z" />
+                                <path class="st1" d="M575.2 512 512 448.7l-46.7 46.8-5.4 5.3-11.1 11.1-.1.1.1.1 63.2 63.2 63.2-63.3z" />
+                            </g>
+                        </svg>
+                    </span>
+                    <span class="badge badge-pill m-2 pymts homePaymentsRow">
+                        <svg class="paymentslogo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 480.6 480.6" version="1.1">
+                            <g id="surface1">
+                                <path style=" stroke:none;fill-rule:evenodd;fill:rgb(94.139099%,6.272888%,6.272888%);fill-opacity:1;" d="M 240.335938 -0.03125 C 373.035156 -0.03125 480.609375 107.539063 480.609375 240.238281 C 480.609375 372.9375 373.035156 480.507813 240.335938 480.507813 C 107.640625 480.507813 0.0664063 372.9375 0.0664063 240.238281 C 0.0664063 107.539063 107.640625 -0.03125 240.335938 -0.03125 Z M 240.335938 -0.03125 " />
+                                <path style=" stroke:none;fill-rule:evenodd;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 230.105469 162.34375 L 209.75 162.34375 C 206.417969 161.964844 202.347656 161.964844 198.28125 161.601563 C 197.175781 161.964844 196.792969 163.089844 196.421875 164.566406 C 196.054688 166.050781 196.421875 167.160156 197.175781 168.265625 L 201.613281 168.640625 C 207.152344 169.738281 211.222656 170.851563 213.828125 171.972656 C 216.410156 173.445313 218.253906 176.039063 219.003906 179.371094 C 219.742188 182.703125 220.109375 187.136719 219.742188 192.695313 C 219.363281 200.464844 219.003906 209.710938 218.632813 220.445313 C 218.253906 231.191406 217.519531 242.289063 216.773438 253.769531 C 216.042969 271.515625 214.449219 314.753906 209.625 327.554688 C 208.507813 330.515625 206.664063 332.371094 204.441406 333.496094 C 201.84375 334.589844 198.871094 335.703125 195.171875 336.085938 L 189.234375 336.824219 C 188.128906 337.554688 187.753906 338.679688 188.128906 340.53125 C 188.128906 341.644531 188.496094 342.746094 189.609375 343.863281 C 194.421875 343.496094 198.871094 343.121094 203.691406 342.746094 L 232.980469 342.746094 C 238.53125 343.121094 243.355469 343.496094 247.800781 343.863281 C 248.917969 343.121094 249.65625 342.011719 249.65625 340.53125 C 249.65625 339.039063 249.289063 337.933594 248.167969 336.824219 L 237.796875 336.085938 C 234.453125 335.703125 231.859375 334.96875 230.011719 333.496094 C 229.082031 332.742188 228.335938 331.710938 227.78125 330.453125 C 225.59375 325.191406 225.546875 316.289063 225.660156 310.761719 C 225.898438 299.289063 226.039063 287.820313 226.402344 276.34375 C 226.773438 264.871094 227.144531 254.867188 227.507813 246.359375 C 227.867188 238.589844 228.628906 230.4375 228.988281 222.296875 C 229.359375 214.164063 229.722656 206.011719 230.105469 197.871094 L 230.839844 197.871094 C 233.804688 204.160156 236.769531 210.453125 239.359375 217.484375 C 242.324219 224.152344 245.28125 230.816406 248.234375 237.113281 L 273.035156 290.023438 C 275.269531 294.480469 277.851563 300.03125 280.804688 306.691406 C 284.144531 313.722656 287.464844 320.378906 290.433594 327.039063 C 292 330.566406 293.355469 333.871094 294.503906 336.980469 C 294.800781 336.980469 296.875 343.800781 297.105469 344.59375 C 298.53125 346.039063 300.867188 346.003906 302.296875 344.59375 C 304.597656 339.078125 307 333.496094 309.675781 328.160156 C 316.6875 312.425781 324 297.398438 332.257813 282.265625 L 356.316406 234.519531 C 358.171875 230.4375 360.015625 225.996094 362.605469 221.191406 C 365.199219 216.011719 367.785156 211.199219 370.011719 207.128906 C 371.859375 202.683594 373.335938 199.726563 374.070313 198.613281 L 374.445313 198.613281 L 375.195313 312.992188 C 375.554688 318.90625 375.195313 323.328125 374.824219 326.664063 C 374.527344 329.3125 373.78125 331.828125 371.238281 333.121094 C 369.746094 334.96875 366.785156 335.703125 361.96875 336.085938 L 353.8125 336.824219 C 353.070313 337.554688 352.703125 338.679688 353.070313 340.53125 C 353.070313 341.644531 353.445313 342.746094 354.5625 343.863281 C 360.113281 343.496094 366.035156 343.121094 371.597656 342.746094 L 403.484375 342.746094 C 409.035156 343.121094 414.59375 343.496094 420.167969 343.863281 C 421.28125 343.121094 421.644531 342.011719 421.644531 340.53125 C 422.011719 339.039063 421.644531 337.933594 420.90625 336.824219 L 412.007813 336.085938 C 407.929688 335.703125 404.964844 334.589844 403.101563 332.738281 C 401.269531 330.890625 399.78125 328.664063 399.410156 325.699219 C 399.03125 322.371094 398.660156 318.28125 398.660156 313.839844 C 397.902344 300.070313 397.386719 286.078125 397.027344 272.277344 C 396.652344 257.453125 395.910156 243.402344 395.546875 230.089844 L 395.546875 194.914063 C 395.546875 188.621094 395.910156 183.8125 396.652344 180.105469 C 397.40625 176.78125 399.253906 173.824219 401.835938 171.972656 C 404.433594 170.492188 408.867188 169.371094 414.789063 168.640625 L 420.347656 168.265625 C 421.09375 167.523438 421.457031 166.414063 421.09375 164.566406 C 421.09375 163.449219 420.71875 162.34375 419.980469 161.601563 C 415.535156 161.964844 411.089844 161.964844 407.023438 162.34375 L 387.039063 162.34375 C 383.699219 161.964844 379.992188 161.964844 375.195313 161.601563 C 374.824219 167.882813 372.601563 174.929688 369.269531 183.074219 C 365.199219 191.570313 360.394531 201.953125 354.472656 214.164063 L 328.554688 266.34375 C 321.835938 280.550781 315.714844 294.070313 307.480469 307.539063 L 306.742188 307.539063 C 300.191406 295.179688 294.152344 282.355469 288.210938 269.683594 L 256.757813 206.753906 C 252.691406 197.871094 248.984375 189.367188 246.023438 181.59375 C 243.429688 173.824219 242.324219 167.160156 242.691406 161.601563 C 238.253906 161.964844 234.175781 161.964844 230.105469 162.34375 Z M 78.234375 303.039063 C 78.234375 312.464844 77.863281 319.640625 77.109375 324.554688 C 76.363281 334.070313 70.082031 337.1875 61.226563 337.796875 L 55.554688 338.550781 C 53.730469 340.382813 53.871094 344.351563 55.949219 345.722656 C 67.644531 344.996094 78.21875 344.585938 89.953125 344.585938 C 102.464844 344.585938 114.128906 345.136719 126.601563 345.722656 C 127.355469 344.96875 127.746094 343.835938 128.121094 342.328125 C 128.121094 340.441406 127.746094 339.296875 126.984375 338.550781 L 119.425781 337.796875 C 113.378906 337.40625 109.226563 336.273438 106.960938 334.382813 C 106.824219 334.285156 106.6875 334.183594 106.554688 334.078125 C 104.269531 332.179688 102.632813 329.28125 101.945313 324.789063 C 101.195313 319.882813 100.816406 312.71875 101.195313 303.304688 L 101.195313 276.871094 C 92.890625 277.253906 85.347656 276.871094 78.550781 275.742188 Z M 54.019531 165.195313 C 53.648438 166.699219 54.40625 167.828125 55.539063 168.96875 L 65.351563 170.085938 C 69.496094 170.476563 72.519531 171.601563 74.402344 173.492188 C 76.285156 174.996094 77.425781 177.644531 77.796875 181.789063 C 78.179688 185.9375 78.550781 191.988281 78.550781 199.898438 L 78.550781 255.742188 C 86.097656 256.121094 93.640625 256.121094 101.195313 255.742188 L 101.195313 178.769531 C 100.816406 175.753906 101.195313 173.492188 101.945313 171.601563 C 102.320313 170.476563 103.832031 169.328125 105.714844 168.96875 C 107.980469 168.589844 111.761719 168.589844 116.664063 168.589844 C 130.996094 168.96875 141.941406 172.734375 149.863281 180.660156 C 157.410156 188.574219 161.179688 199.523438 161.179688 213.117188 C 161.570313 225.183594 158.546875 235.371094 152.132813 243.664063 C 146.472656 250.847656 138.171875 256.121094 126.847656 258.761719 C 115.910156 261.40625 100.441406 262.539063 79.683594 262.152344 C 61.570313 261.796875 41.953125 260.65625 20.445313 258.394531 C 44.222656 263.296875 61.949219 266.6875 73.277344 267.816406 C 91.753906 270.09375 109.867188 269.703125 126.847656 267.074219 C 135.523438 265.929688 143.449219 263.675781 150.621094 261.035156 C 157.410156 258.019531 164.207031 253.867188 171.375 248.953125 C 175.523438 245.941406 179.296875 241.019531 182.699219 234.617188 C 185.34375 228.578125 186.847656 221.410156 187.21875 212.726563 C 186.847656 203.289063 184.582031 195.007813 180.4375 187.828125 C 176.28125 180.660156 171.375 174.996094 164.957031 170.859375 C 158.546875 167.078125 150.621094 164.050781 141.566406 162.164063 C 132.886719 160.660156 122.695313 159.902344 111.003906 159.902344 C 99.679688 159.902344 89.492188 159.902344 80.441406 160.277344 C 71.382813 160.660156 63.082031 161.035156 55.90625 161.789063 C 54.78125 162.550781 54.019531 163.679688 54.019531 165.195313 Z M 54.019531 165.195313 " />
+                            </g>
+                        </svg>
+                    </span>
+                  
+                </div>
+                <div class="row justify-content-center mt-2">
+                    <span class="badge badge-pill m-2 pymts homePaymentsGRow">
+                        <svg class="pymts06rem" width="auto" height="80px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 283.4 78" version="1.1">
+                            <defs>
+                                <g>
+                                    <symbol overflow="visible" id="glyph0-0">
+                                        <path style="stroke:none;" d="M 39.5 0 L 39.5 -39.5 L 7.90625 -39.5 L 7.90625 0 Z M 8.90625 -38.484375 L 38.484375 -38.484375 L 38.484375 -1.015625 L 8.90625 -1.015625 Z M 8.90625 -38.484375 "></path>
+                                    </symbol>
+                                    <symbol overflow="visible" id="glyph0-1">
+                                        <path style="stroke:none;" d="M 13.78125 0 L 13.78125 -17.0625 L 19.71875 -17.0625 C 23.828125 -17.0625 26.984375 -17.25 29.1875 -17.6875 C 30.765625 -18.078125 32.359375 -18.765625 33.875 -19.84375 C 35.453125 -20.921875 36.71875 -22.4375 37.71875 -24.328125 C 38.734375 -26.21875 39.234375 -28.5625 39.234375 -31.34375 C 39.234375 -34.9375 38.359375 -37.84375 36.65625 -40.125 C 34.875 -42.40625 32.734375 -43.921875 30.140625 -44.546875 C 28.4375 -44.984375 24.828125 -45.25 19.265625 -45.25 L 4.609375 -45.25 L 4.609375 0 Z M 18.203125 -37.59375 C 21.421875 -37.59375 23.625 -37.46875 24.703125 -37.28125 C 26.21875 -37.03125 27.421875 -36.328125 28.375 -35.265625 C 29.3125 -34.1875 29.828125 -32.859375 29.828125 -31.15625 C 29.828125 -29.828125 29.515625 -28.6875 28.8125 -27.671875 C 28.125 -26.671875 27.171875 -25.90625 25.96875 -25.40625 C 24.765625 -24.953125 22.375 -24.703125 18.765625 -24.703125 L 13.78125 -24.703125 L 13.78125 -37.59375 Z M 18.203125 -37.59375 "></path>
+                                    </symbol>
+                                    <symbol overflow="visible" id="glyph0-2">
+                                        <path style="stroke:none;" d="M 27.234375 -45.25 L 17.5625 -45.25 L 0 0 L 9.671875 0 L 13.453125 -10.296875 L 31.59375 -10.296875 L 35.515625 0 L 45.375 0 Z M 16.234375 -17.9375 L 22.375 -34.6875 L 28.625 -17.9375 Z M 16.234375 -17.9375 "></path>
+                                    </symbol>
+                                    <symbol overflow="visible" id="glyph0-3">
+                                        <path style="stroke:none;" d="M 25.65625 0 L 25.65625 -18.953125 L 42.265625 -45.25 L 31.71875 -45.25 L 21.296875 -27.296875 L 10.609375 -45.25 L -0.0625 -45.25 L 16.484375 -19.015625 L 16.484375 0 Z M 25.65625 0 "></path>
+                                    </symbol>
+                                    <symbol overflow="visible" id="glyph0-4">
+                                        <path style="stroke:none;" d="M 38.984375 0 L 38.984375 -7.640625 L 13.78125 -7.640625 L 13.78125 -19.90625 L 36.390625 -19.90625 L 36.390625 -27.546875 L 13.78125 -27.546875 L 13.78125 -37.59375 L 38.109375 -37.59375 L 38.109375 -45.25 L 4.609375 -45.25 L 4.609375 0 Z M 38.984375 0 "></path>
+                                    </symbol>
+                                    <symbol overflow="visible" id="glyph0-5">
+                                        <path style="stroke:none;" d="M 13.78125 0 L 13.78125 -18.890625 L 15.609375 -18.890625 C 17.75 -18.890625 19.265625 -18.703125 20.21875 -18.390625 C 21.234375 -18.078125 22.109375 -17.4375 23 -16.484375 C 23.890625 -15.609375 25.46875 -13.390625 27.859375 -9.859375 L 34.375 0 L 45.3125 0 L 39.8125 -8.84375 C 37.59375 -12.328125 35.890625 -14.78125 34.625 -16.171875 C 33.296875 -17.5625 31.71875 -18.828125 29.765625 -19.96875 C 33.671875 -20.53125 36.65625 -21.921875 38.671875 -24.140625 C 40.625 -26.34375 41.640625 -29.1875 41.640625 -32.546875 C 41.640625 -35.265625 41.015625 -37.59375 39.6875 -39.6875 C 38.359375 -41.765625 36.578125 -43.21875 34.375 -44.046875 C 32.21875 -44.859375 28.6875 -45.25 23.828125 -45.25 L 4.609375 -45.25 L 4.609375 0 Z M 13.78125 -37.59375 L 20.921875 -37.59375 C 24.578125 -37.59375 26.859375 -37.53125 27.546875 -37.46875 C 29.0625 -37.21875 30.203125 -36.578125 31.03125 -35.640625 C 31.84375 -34.75 32.21875 -33.484375 32.21875 -31.96875 C 32.21875 -30.578125 31.90625 -29.453125 31.28125 -28.5625 C 30.703125 -27.671875 29.828125 -27.046875 28.75 -26.671875 C 27.671875 -26.28125 24.890625 -26.09375 20.53125 -26.09375 L 13.78125 -26.09375 Z M 13.78125 -37.59375 "></path>
+                                    </symbol>
+                                    <symbol overflow="visible" id="glyph1-0">
+                                        <path style="stroke:none;" d="M 0 0 L 19.296875 0 L 19.296875 -27.03125 L 0 -27.03125 Z M 9.65625 -15.25 L 3.09375 -25.09375 L 16.21875 -25.09375 Z M 10.8125 -13.515625 L 17.375 -23.359375 L 17.375 -3.671875 Z M 3.09375 -1.9375 L 9.65625 -11.78125 L 16.21875 -1.9375 Z M 1.9375 -23.359375 L 8.5 -13.515625 L 1.9375 -3.671875 Z M 1.9375 -23.359375 "></path>
+                                    </symbol>
+                                    <symbol overflow="visible" id="glyph1-1">
+                                        <path style="stroke:none;" d=""></path>
+                                    </symbol>
+                                </g>
+                            </defs>
+                            <g id="surface1">
+                                <g style="fill: var(--text-color);fill-opacity:1;">
+                                    <use xlink:href="#glyph0-1" x="0" y="54.2113"></use>
+                                </g>
+                                <g style="fill-opacity:1;fill: var(--text-color);">
+                                    <use xlink:href="#glyph0-2" x="37.469701" y="54.2113"></use>
+                                </g>
+                                <g style="fill-opacity:1;fill: var(--text-color);">
+                                    <use xlink:href="#glyph0-3" x="77.351503" y="54.2113"></use>
+                                </g>
+                                <g style="fill:rgb(34.498596%,69.398499%,86.299133%);fill-opacity:1;">
+                                    <use xlink:href="#glyph0-4" x="119.432" y="54.2113"></use>
+                                    <use xlink:href="#glyph0-4" x="161.578062" y="54.2113"></use>
+                                    <use xlink:href="#glyph0-5" x="203.724125" y="54.2113"></use>
+                                </g>
+                                <path style="stroke:none;fill-rule:nonzero;fill-opacity:1;fill: var(--text-color);" d="M 265.570313 38.835938 C 265.570313 37.832031 265.261719 37.152344 264.652344 36.8125 C 264.035156 36.46875 263.054688 36.296875 261.703125 36.296875 L 259.621094 36.296875 L 259.621094 41.300781 L 261.820313 41.300781 C 262.855469 41.300781 263.628906 41.199219 264.144531 40.992188 C 265.09375 40.617188 265.570313 39.898438 265.570313 38.835938 Z M 262.019531 34.636719 C 263.734375 34.636719 264.992188 34.800781 265.792969 35.132813 C 267.222656 35.726563 267.9375 36.894531 267.9375 38.636719 C 267.9375 39.867188 267.484375 40.78125 266.589844 41.363281 C 266.113281 41.671875 265.445313 41.890625 264.589844 42.027344 C 265.671875 42.199219 266.460938 42.652344 266.960938 43.386719 C 267.460938 44.113281 267.714844 44.828125 267.714844 45.527344 L 267.714844 46.53125 C 267.714844 46.855469 267.722656 47.199219 267.746094 47.5625 C 267.769531 47.925781 267.8125 48.164063 267.867188 48.28125 L 267.953125 48.453125 L 265.671875 48.453125 C 265.660156 48.40625 265.652344 48.359375 265.636719 48.316406 C 265.625 48.269531 265.617188 48.21875 265.605469 48.15625 L 265.554688 47.714844 L 265.554688 46.621094 C 265.554688 45.03125 265.117188 43.976563 264.25 43.464844 C 263.734375 43.167969 262.832031 43.015625 261.539063 43.015625 L 259.621094 43.015625 L 259.621094 48.453125 L 257.1875 48.453125 L 257.1875 34.636719 Z M 262.261719 30.746094 C 259.277344 30.746094 256.730469 31.808594 254.617188 33.933594 C 252.515625 36.050781 251.464844 38.601563 251.464844 41.597656 C 251.464844 44.613281 252.507813 47.183594 254.601563 49.3125 C 256.703125 51.433594 259.253906 52.496094 262.261719 52.496094 C 265.269531 52.496094 267.816406 51.433594 269.921875 49.3125 C 272.027344 47.183594 273.078125 44.613281 273.078125 41.597656 C 273.078125 38.601563 272.027344 36.050781 269.921875 33.933594 C 267.8125 31.808594 265.253906 30.746094 262.261719 30.746094 Z M 274.859375 41.578125 C 274.859375 45.066406 273.632813 48.042969 271.175781 50.511719 C 268.71875 52.976563 265.746094 54.214844 262.261719 54.214844 C 258.773438 54.214844 255.8125 52.976563 253.367188 50.511719 C 250.933594 48.050781 249.714844 45.074219 249.714844 41.578125 C 249.714844 38.113281 250.945313 35.15625 253.398438 32.699219 C 255.847656 30.253906 258.800781 29.03125 262.261719 29.03125 C 265.746094 29.03125 268.71875 30.253906 271.175781 32.699219 C 273.632813 35.144531 274.859375 38.105469 274.859375 41.578125 "></path>
+                                <g style="fill:#fff;fill-opacity:1;">
+                                    <use xlink:href="#glyph1-1" x="275.219" y="54.2113"></use>
+                                </g>
+                            </g>
+                        </svg>
+                    </span>
+                    <span class="badge badge-pill m-2 pymts homePaymentsGRow">
+                        <svg class="pymts04rem" width="auto" height="80px" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 234 48">
+                            <path d="M69.472 36.676c4.785 0 7.792-3.004 8.613-5.735l-3.896-1.57c-.581 2.048-2.29 3.448-4.614 3.448-2.905 0-5.16-2.185-5.16-5.53s2.255-5.53 5.126-5.53c2.324 0 3.964 1.4 4.545 3.482l3.896-1.536c-.82-2.799-3.828-5.803-8.51-5.803-5.433 0-9.398 4.096-9.398 9.421s4.033 9.353 9.398 9.353m15.283-16.384v-2.014h-4.1v17.988h4.34v-10.24c0-2.423 1.982-4.096 5.126-4.096v-4.062c-2.256 0-4.135.99-5.365 2.424Zm20.287-2.014-5.093 14.507-4.647-14.507h-4.478l6.357 17.988h1.367l-2.46 6.11h4.272l2.323-6.11 6.87-17.988zm16.732-.41c-2.563 0-4.647 1.024-6.049 2.765v-2.355h-4.032v24.098h4.34v-8.021c1.367 1.467 3.281 2.32 5.639 2.32 5.16 0 8.92-4.027 8.92-9.386 0-5.393-3.657-9.42-8.818-9.42Zm-.683 14.985c-3.11 0-5.229-2.287-5.229-5.564s2.119-5.564 5.229-5.564c2.973 0 5.16 2.355 5.16 5.564 0 3.174-2.187 5.564-5.16 5.564m20.226 3.413h2.837v-3.789h-1.982c-1.948 0-3.008-1.126-3.008-3.208v-7.27h4.853v-3.721h-4.716v-4.676h-4.238v2.833c0 1.228-.581 1.843-1.777 1.843h-1.64v3.72h3.144v7.749c0 3.96 2.221 6.52 6.527 6.52Zm13.632.41c5.605 0 9.604-4.028 9.604-9.387 0-5.393-3.999-9.42-9.604-9.42-5.639 0-9.603 4.027-9.603 9.42 0 5.359 3.964 9.387 9.603 9.387m.034-3.857c-3.144 0-5.297-2.321-5.297-5.53 0-3.243 2.153-5.53 5.297-5.53 3.11 0 5.195 2.287 5.195 5.496 0 3.243-2.119 5.564-5.195 5.564m34.004-14.951c-3.041 0-5.092 1.263-6.083 2.936-1.025-1.878-2.837-2.936-5.707-2.936-2.427 0-4.306 1.024-5.434 2.39v-1.98h-4.101v17.954h4.34V25.343c.034-1.706 1.401-3.584 3.862-3.618 2.426 0 3.759 1.81 3.759 4.165v10.342h4.34V25.343c.035-1.672 1.367-3.584 3.862-3.618 2.427 0 3.725 1.843 3.725 4.165v10.342h4.341V25.105c0-4.062-2.427-7.237-6.904-7.237m22.846.41v10.888c0 1.98-1.572 3.619-3.999 3.653-2.426 0-3.964-1.605-3.964-3.926V18.278h-4.34v11.161c0 4.165 2.46 7.237 7.04 7.237 2.324 0 4.272-.99 5.536-2.39v1.98h4.067V18.278zm14.717 18.398c4.511 0 7.45-2.117 7.45-5.7 0-6.588-9.877-4.711-9.877-7.988 0-1.092.855-1.775 2.461-1.775 1.504 0 2.563.649 3.042 2.014l3.793-1.468c-.752-2.457-3.281-3.89-6.767-3.89-4.237 0-6.972 2.047-6.972 5.324 0 6.178 9.877 4.54 9.877 8.09 0 1.263-1.093 1.98-2.836 1.98-2.188 0-3.589-.99-4.101-2.663l-3.794 1.468c.991 3.038 3.828 4.608 7.724 4.608M43.535 11.345 25.277.817a2.69 2.69 0 0 0-2.675 0L4.344 11.345a2.68 2.68 0 0 0-1.34 2.317v21.055c0 .951.513 1.837 1.34 2.317l18.258 10.528a2.67 2.67 0 0 0 1.34.356c.471 0 .933-.125 1.34-.356L43.54 37.034a2.68 2.68 0 0 0 1.34-2.316V13.662c0-.95-.513-1.837-1.34-2.317zM24.353 22.884a.83.83 0 0 1-.827 0L5.776 12.65l17.75-10.23a.85.85 0 0 1 .827 0l17.75 10.232zm-1.751 1.596q.194.112.416.19v20.99L5.268 35.433a.83.83 0 0 1-.416-.715v-20.47z" fill="currentColor" style="
+                            fill: var(--text-color);
+                            "></path>
+                        </svg>
+                    </span>
+            
+                    <span class="badge badge-pill m-2 pymts homePaymentsGRow">
+                        <svg class="pymts04rem" width="auto" height="65px" xmlns:x="ns_extend;" xmlns:i="ns_ai;" xmlns:graph="ns_graphs;" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 421.4 88" style="enable-background:new 0 0 421.4 88;" xml:space="preserve">
+                            <metadata>
+                                <sfw xmlns="ns_sfw;">
+                                    <slices>
+                                    </slices>
+                                    <slicesourcebounds bottomleftorigin="true" height="88" width="421.4" x="-116.1" y="-24">
+                                    </slicesourcebounds>
+                                </sfw>
+                            </metadata>
+                            <g transform="translate(-289.60744,-341.50536)">
+                                <g transform="matrix(0.61129216,0,0,0.61129216,170.80346,315.53734)">
+                                    <path d="M336.1,131.9c-9.6,38.6-48.7,62-87.2,52.4c-38.5-9.6-62-48.7-52.4-87.2c9.6-38.6,48.7-62,87.2-52.4    C322.3,54.2,345.7,93.3,336.1,131.9z" style="
+                                        fill: #F7931A;
+                                        ">
+                                    </path>
+                                    <path d="M298,104.2c1.4-9.6-5.9-14.7-15.8-18.2l3.2-13l-7.9-2l-3.1,12.6c-2.1-0.5-4.2-1-6.3-1.5l3.2-12.7l-7.9-2    l-3.2,13c-1.7-0.4-3.4-0.8-5-1.2l0,0l-10.9-2.7l-2.1,8.4c0,0,5.9,1.3,5.7,1.4c3.2,0.8,3.8,2.9,3.7,4.6l-3.7,14.8    c0.2,0.1,0.5,0.1,0.8,0.3c-0.3-0.1-0.5-0.1-0.8-0.2l-5.2,20.7c-0.4,1-1.4,2.4-3.6,1.9c0.1,0.1-5.7-1.4-5.7-1.4l-3.9,9l10.3,2.6    c1.9,0.5,3.8,1,5.6,1.5l-3.3,13.1l7.9,2l3.2-13c2.2,0.6,4.2,1.1,6.3,1.6l-3.2,12.9l7.9,2l3.3-13.1c13.5,2.5,23.6,1.5,27.9-10.7    c3.4-9.8-0.2-15.5-7.3-19.2C293.1,114.6,297,111.2,298,104.2L298,104.2z M280,129.5c-2.4,9.8-19,4.5-24.3,3.2l4.3-17.4    C265.4,116.6,282.5,119.3,280,129.5z M282.4,104.1c-2.2,8.9-16,4.4-20.4,3.3l3.9-15.8C270.4,92.7,284.8,94.8,282.4,104.1z" style="
+                                        fill: #fff;
+                                        ">
+                                    </path>
+                                    <g>
+                                        <path d="M405.3,86c5.8,0,10.9,1,15.1,3.1c4.3,2.1,7.8,4.9,10.6,8.4c2.8,3.5,4.8,7.7,6.2,12.4c1.3,4.7,2,9.8,2,15.3     c0,8.4-1.5,16.3-4.6,23.8c-3.1,7.5-7.3,14-12.7,19.5c-5.3,5.5-11.7,9.9-18.9,13.1c-7.3,3.2-15.2,4.8-23.7,4.8c-1.1,0-3,0-5.8-0.1     c-2.7-0.1-5.9-0.3-9.4-0.8c-3.5-0.5-7.3-1.2-11.2-2.2c-3.9-1-7.7-2.3-11.2-4l31.5-132.4l28.2-4.4l-11.3,47     c2.4-1.1,4.8-1.9,7.3-2.5C399.9,86.4,402.5,86,405.3,86L405.3,86z M381.6,164c4.3,0,8.3-1,12-3.1c3.8-2.1,7-4.8,9.8-8.3     c2.7-3.5,4.9-7.4,6.5-11.8c1.6-4.4,2.4-8.9,2.4-13.7c0-5.8-1-10.4-2.9-13.7c-1.9-3.3-5.5-4.9-10.7-4.9c-1.7,0-3.9,0.3-6.6,0.9     c-2.7,0.6-5.2,1.9-7.4,3.8l-12,49.9c0.7,0.1,1.4,0.2,1.9,0.4c0.5,0.1,1.1,0.2,1.7,0.3c0.6,0.1,1.3,0.1,2.2,0.1     S380.3,164,381.6,164L381.6,164z" style="
+                                            fill: var(--text-color);
+                                            ">
+                                        </path>
+                                        <path d="M468.4,183.9h-27l22.8-95.8h27.1L468.4,183.9z M481.6,76.4c-3.8,0-7.2-1.1-10.2-3.4     c-3.1-2.2-4.6-5.7-4.6-10.3c0-2.5,0.5-4.9,1.5-7.2c1-2.2,2.4-4.2,4.1-5.8c1.7-1.6,3.7-2.9,5.9-3.9c2.3-1,4.7-1.5,7.2-1.5     c3.8,0,7.2,1.1,10.2,3.4c3,2.3,4.6,5.7,4.6,10.3c0,2.6-0.5,5-1.5,7.2c-1,2.2-2.4,4.2-4.1,5.8c-1.7,1.6-3.7,2.9-5.9,3.9     C486.5,75.9,484.1,76.4,481.6,76.4L481.6,76.4z" style="
+                                            fill: var(--text-color);
+                                            ">
+                                        </path>
+                                        <path d="M515,64.2l28.2-4.4l-6.9,28.2h30.2l-5.5,22.2H531l-8,33.5c-0.7,2.8-1.2,5.4-1.3,7.8     c-0.1,2.4,0.2,4.5,0.9,6.3c0.7,1.8,2,3.1,3.9,4.1c1.9,1,4.6,1.5,8.1,1.5c2.9,0,5.7-0.3,8.5-0.8c2.7-0.5,5.5-1.3,8.3-2.3l2,20.8     c-3.6,1.3-7.6,2.5-11.8,3.5c-4.3,1-9.3,1.5-15.1,1.5c-8.4,0-14.9-1.2-19.5-3.7c-4.6-2.5-7.9-5.9-9.8-10.2     c-1.9-4.3-2.8-9.3-2.5-14.8c0.2-5.6,1.1-11.5,2.5-17.7L515,64.2z" style="
+                                            fill: var(--text-color);
+                                            ">
+                                        </path>
+                                        <path d="M565.4,145.6c0-8.3,1.3-16,4-23.3c2.7-7.3,6.5-13.7,11.5-19.1c5-5.4,11-9.8,18.1-12.9     c7.1-3.1,15-4.7,23.8-4.7c5.5,0,10.4,0.5,14.7,1.6c4.3,1,8.2,2.4,11.8,4.1l-9.3,21.1c-2.4-1-5-1.9-7.6-2.6     c-2.6-0.8-5.8-1.2-9.6-1.2c-9,0-16.1,3.1-21.4,9.3c-5.3,6.2-7.9,14.5-7.9,25c0,6.2,1.3,11.2,4,15c2.7,3.8,7.6,5.7,14.8,5.7     c3.5,0,6.9-0.4,10.2-1.1c3.3-0.7,6.2-1.6,8.7-2.7l2,21.7c-3.4,1.3-7.2,2.5-11.3,3.6c-4.1,1-9.1,1.5-14.8,1.5     c-7.5,0-13.9-1.1-19.1-3.3c-5.2-2.2-9.5-5.1-12.9-8.8c-3.4-3.7-5.9-8.1-7.4-13C566.1,156.3,565.4,151.1,565.4,145.6L565.4,145.6z     " style="
+                                            fill: var(--text-color);
+                                            ">
+                                        </path>
+                                        <path d="M685.1,186.4c-6.4,0-12-1-16.8-2.9c-4.7-1.9-8.6-4.7-11.7-8.2c-3.1-3.5-5.4-7.7-7-12.5     c-1.6-4.8-2.4-10.1-2.4-15.9c0-7.3,1.2-14.6,3.5-21.9c2.4-7.3,5.9-13.8,10.5-19.7c4.6-5.8,10.3-10.6,16.9-14.3     c6.7-3.7,14.3-5.6,22.9-5.6c6.3,0,11.9,1,16.7,2.9c4.8,1.9,8.7,4.7,11.8,8.2c3.1,3.5,5.4,7.7,7,12.5c1.6,4.8,2.4,10.1,2.4,15.9     c0,7.3-1.2,14.6-3.5,21.9c-2.3,7.3-5.7,13.8-10.2,19.7c-4.5,5.8-10.1,10.6-16.8,14.3C701.8,184.6,694,186.4,685.1,186.4     L685.1,186.4z M698.6,108.5c-4,0-7.5,1.2-10.6,3.5c-3,2.3-5.6,5.2-7.6,8.7c-2.1,3.5-3.6,7.4-4.7,11.6c-1,4.2-1.5,8.2-1.5,11.9     c0,6.1,1,10.8,2.9,14.2c2,3.4,5.5,5.1,10.6,5.1c4,0,7.5-1.2,10.6-3.5c3-2.3,5.6-5.2,7.6-8.7c2.1-3.5,3.6-7.4,4.7-11.6     c1-4.2,1.5-8.2,1.5-11.9c0-6.1-1-10.8-2.9-14.2C707.2,110.2,703.7,108.5,698.6,108.5z" style="
+                                            fill: var(--text-color);
+                                            ">
+                                        </path>
+                                        <path d="M768.4,183.9h-27l22.8-95.8h27.2L768.4,183.9z M781.5,76.4c-3.8,0-7.2-1.1-10.2-3.4c-3-2.2-4.6-5.7-4.6-10.3     c0-2.5,0.5-4.9,1.6-7.2c1-2.2,2.4-4.2,4.1-5.8c1.7-1.6,3.7-2.9,5.9-3.9c2.2-1,4.6-1.5,7.2-1.5c3.8,0,7.2,1.1,10.2,3.4     c3,2.3,4.6,5.7,4.6,10.3c0,2.6-0.5,5-1.6,7.2c-1,2.2-2.4,4.2-4.1,5.8c-1.7,1.6-3.7,2.9-5.9,3.9C786.5,75.9,784.1,76.4,781.5,76.4     L781.5,76.4z" style="
+                                            fill: var(--text-color);
+                                            ">
+                                        </path>
+                                        <path d="M810.8,92.4c2-0.6,4.3-1.3,6.8-2.1c2.5-0.8,5.3-1.5,8.4-2.2c3.1-0.7,6.6-1.2,10.4-1.7     c3.8-0.4,8.2-0.6,13-0.6c14.2,0,24,4.1,29.4,12.4c5.4,8.3,6.3,19.6,2.8,33.9l-12.4,51.7h-27.1l12-50.6c0.7-3.2,1.3-6.2,1.7-9.2     c0.4-3,0.4-5.6-0.1-7.8c-0.5-2.2-1.6-4.1-3.4-5.5c-1.8-1.4-4.5-2.1-8.1-2.1c-3.5,0-7.1,0.4-10.7,1.1l-17.7,74.1h-27.2     C788.8,183.9,810.8,92.4,810.8,92.4z" style="
+                                            fill: var(--text-color);
+                                            ">
+                                        </path>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </span>
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="homeSection homeDevices">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="nBookimg">
+                    <img src="" class="img-fluid">
+                </div>
+            </div>
+            <div class="col-lg-5 offset-lg-1">
+                <div class="inner">
+                    <div class="section-title">
+                        <div class="sectionText">
+                            <h1><span class="underline">%100 compatible</span> with all mobile devices!</h1>
+                        </div>
+                        <p>
+                            Our site is fully compatible with all desktop and mobile devices you are using. In this way, you can do all your transactions instantly from anywhere.
+                        </p>
+                    </div>
+                    <div class="homeMock">
+                        <div class="homeMockList">
+                            <div class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" id="b" data-name="katman 2" viewBox="0 0 450 800.01" style="width: auto;height: 50px;">
+                                    <defs>
+                                        <style>
+                                                                                    .d {
+                                                                                        fill: var(--text-color);
+                                                                                        stroke-width: 0px;
+                                                                                    }
+                                        </style>
+                                    </defs>
+                                    <g id="c" data-name="Слой 1">
+                                        <path class="d" d="M387.5,800H62.5c-34.07.38-62.02-26.87-62.5-60.94V60.94C.48,26.88,28.43-.38,62.5,0h325c34.07-.38,62.02,26.87,62.5,60.94v678.12c-.48,34.07-28.43,61.32-62.5,60.94ZM62.5,25c-20.26-.38-37.02,15.68-37.5,35.94v678.12c.48,20.26,17.24,36.32,37.5,35.94h325c20.26.38,37.02-15.68,37.5-35.94V60.94c-.48-20.26-17.24-36.32-37.5-35.94H62.5Z"></path>
+                                        <path class="d" d="M294.06,75h-138.13c-17.06,0-30.94-16.06-30.94-35.75V15.57h25v23.69c0,6.25,3.56,10.75,5.94,10.75h138.13c2.37,0,5.94-4.31,5.94-10.75v-19.81h25v19.81c0,19.69-13.88,35.75-30.94,35.75Z"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <h6>Phone</h6>
+                        </div>
+
+                        <div class="homeMockList">
+                            <div class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" id="b" data-name="katman 2" viewBox="0 0 798.64 1238.26" style="width: auto;height: 50px;">
+                                    <defs>
+                                        <style>
+                                                                                    .d {
+                                                                                        fill: var(--text-color);
+                                                                                        stroke-width: 0px;
+                                                                                    }
+                                        </style>
+                                    </defs>
+                                    <g id="c" data-name="katman 1">
+                                        <path class="d" d="M.07,619.13c0-184.81,0-369.62,0-554.43,0-12.53,2.13-24.52,8.71-35.4C20.7,9.56,38.86.96,61.28.03c1.16-.05,2.33-.01,3.5-.01,223.11,0,446.21,0,669.32,0,12.36,0,24.21,2.09,34.96,8.52,19.96,11.93,28.68,30.21,29.57,52.84.05,1.16.01,2.33.01,3.5,0,369.46,0,738.91.01,1108.37,0,12.53-2.04,24.54-8.58,35.44-12.09,20.12-30.55,28.99-53.39,29.42-18.14.34-36.29.07-54.44.07-205.79,0-411.58,0-617.37,0-12.53,0-24.54-2.08-35.42-8.66-20.28-12.25-29.1-30.93-29.3-53.95-.27-30.96-.07-61.93-.07-92.9,0-154.51,0-309.02,0-463.53ZM19.35,609.21c0,154.5,0,309.01,0,463.51,0,3-.11,6,.11,8.99.64,8.72,3.73,16.47,9.52,23.1,9.07,10.36,20.54,14.27,34.2,14.26,224.1-.14,448.2-.1,672.3-.1,2.5,0,5.01.1,7.49-.14,7.97-.8,15.13-3.63,21.35-8.79,10.44-8.67,15.08-19.75,15.08-33.29-.07-311.84-.05-623.68-.06-935.52,0-1.83.05-3.67-.12-5.49-.78-7.98-3.59-15.14-8.71-21.38-9.01-10.98-20.67-15.23-34.74-15.22-224.27.12-448.53.09-672.8.09-2.33,0-4.68-.09-6.99.13-8.33.81-15.82,3.73-22.19,9.26-10.21,8.87-14.53,20.05-14.52,33.58.13,155.67.08,311.34.08,467.01ZM439.64,1178.71c.05-22.43-17.7-40.36-40.02-40.44-22.47-.08-40.46,17.61-40.56,39.89-.11,22.74,17.64,40.68,40.27,40.69,22.41,0,40.27-17.77,40.31-40.14ZM409.63,49.83c.11-5.86-4.35-10.45-10.18-10.49-5.66-.04-10.17,4.22-10.37,9.81-.21,5.88,4.14,10.59,9.93,10.75,5.87.16,10.51-4.24,10.62-10.06Z" />
+                                        <path class="d" d="M439.64,1178.71c-.05,22.37-17.9,40.15-40.31,40.14-22.62,0-40.38-17.95-40.27-40.69.11-22.28,18.09-39.97,40.56-39.89,22.32.07,40.07,18.01,40.02,40.44ZM428.75,1178.36c-.25-16.05-13.62-29.29-29.48-29.19-15.96.1-29.26,13.42-29.32,29.35-.06,16.04,13.87,29.83,29.73,29.44,16.13-.39,29.31-13.82,29.07-29.6Z" />
+                                    </g>
+                                </svg>
+                            </div>
+                            <h6>Tablet</h6>
+                        </div>
+
+                        <div class="homeMockList">
+                            <div class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" id="b" data-name="katman 2" viewBox="0 0 1239.16 939.21" style="width: auto;height: 50px;">
+                                    <defs>
+                                        <style>
+                                                                                    .d {
+                                                                                        fill: var(--text-color);
+                                                                                        stroke-width: 0px;
+                                                                                    }
+                                        </style>
+                                    </defs>
+                                    <g id="c" data-name="katman 1">
+                                        <path class="d" d="M620.09.02c190.97,0,381.94.01,572.91-.02,14.71,0,27.53,4.04,37.1,15.95,6.35,7.91,8.48,17.16,9.02,26.97.06,1.16.02,2.33.02,3.5,0,222.13,0,444.26.02,666.4,0,14.87-3.94,27.87-16.16,37.49-7.98,6.28-17.19,8.41-27.01,8.89-1.33.07-2.67.02-4,.02-381.61,0-763.21,0-1144.82,0-11.21,0-21.9-1.68-31.02-8.9-11.14-8.82-15.75-20.67-16.11-34.51-.03-1-.01-2-.01-3C.03,490.68.04,268.54,0,46.41,0,31.51,4.01,18.51,16.15,8.91,24.53,2.28,34.32.09,44.68.05c25.5-.09,50.99-.03,76.49-.03,166.31,0,332.61,0,498.92,0ZM619.82,39.31c-177.62,0-355.25,0-532.87,0-3.17,0-6.34-.11-9.49.12-11.18.82-20.43,5.67-27.82,13.99-7.81,8.79-10.41,19.23-10.4,30.91.12,196.79.09,393.57.09,590.36,0,2.5-.11,5.01.13,7.49,1.05,10.92,5.67,20.06,13.9,27.35,8.97,7.94,19.53,10.48,31.38,10.48,356.58-.11,713.16-.09,1069.74-.09,2.33,0,4.68.08,7-.1,11.32-.9,20.73-5.64,28.21-14.21,7.62-8.74,10.26-18.96,10.25-30.45-.11-196.95-.08-393.91-.09-590.86,0-2.33.08-4.68-.11-7-.92-11.16-5.75-20.4-14.1-27.76-8.68-7.65-18.94-10.31-30.44-10.31-178.46.12-356.91.08-535.37.08ZM619.49,749.85c5.86.04,10.4-4.47,10.38-10.32-.01-5.84-4.57-10.32-10.44-10.26-5.62.06-10.03,4.44-10.13,10.07-.1,5.87,4.36,10.47,10.19,10.51Z" />
+                                        <path class="d" d="M619.2,919.18c-48.82,0-97.64,0-146.45,0-5.8,0-5.77,0-3.24-5.31,21.14-44.3,33.99-90.95,39.48-139.67.26-2.31.69-4.62.81-6.94.39-7.34.35-7.35,7.45-7.35,68.31,0,136.62,0,204.94,0,6.87,0,6.62.03,7.21,7.1,1.81,21.77,5.83,43.17,11.07,64.38,7.09,28.72,16.43,56.61,29.6,83.13,2.32,4.66.33,4.71-3.41,4.71-49.15-.07-98.3-.05-147.45-.05Z" />
+                                        <path class="d" d="M619.39,919.91c67.65,0,135.3,0,202.94,0,7,0,7.77,1.05,6.08,7.9-1.47,5.94-5.18,9.61-11.13,10.81-2.42.49-4.96.55-7.44.55-126.97.02-253.93.02-380.9.02-2.83,0-5.65.06-8.42-.76-6.67-1.97-11.07-8.17-10.76-15.07.1-2.21.79-3.5,3.18-3.44,1.5.03,3-.02,4.5-.02,67.31,0,134.63,0,201.94,0Z" />
+                                    </g>
+                                </svg>
+                            </div>
+                            <h6>Desktop</h6>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
