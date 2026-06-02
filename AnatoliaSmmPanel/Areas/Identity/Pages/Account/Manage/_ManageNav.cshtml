@@ -1,0 +1,86 @@
+﻿@inject SignInManager<IdentityUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+
+  
+    <div class="g-dash-menu">
+        <ul class="g-menu-list">
+    
+            <li class="g-menu-item">
+                <a class="g-menu-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">
+                    <span class="g-menu-icon">
+                    <i class="fas fa-user"></i>
+                </span>
+
+                    <span class="g-menu-text">Profile</span>
+                </a>
+            </li>
+            <li class="g-menu-item">
+                <a class="g-menu-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">
+                    <span class="g-menu-icon">
+                    <i class="fas fa-envelope"></i>
+                </span>
+
+                    <span class="g-menu-text">Email</span>
+
+            
+                </a>
+            </li>
+            <li class="g-menu-item">
+                <a class="g-menu-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">
+                    <span class="g-menu-icon">
+                    <i class="fas fa-lock"></i>
+                </span>
+
+                    <span class="g-menu-text">Password</span>
+            
+                </a>
+            </li>
+   
+            @if (hasExternalLogins)
+            {
+                <li id="external-logins" class="g-menu-item">
+                    <a id="external-login"
+                           class="g-menu-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)"
+                           asp-page="./ExternalLogins">
+               
+                        <span class="g-menu-icon">
+                        <i class="fas fa-link"></i>
+                    </span>
+
+                        <span class="g-menu-text">External logins</span>
+                   
+                    </a>
+                </li>
+            }
+            <li class="g-menu-item">
+                <a class="g-menu-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">
+           
+                    <span class="g-menu-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </span>
+
+                    <span class="g-menu-text">Two-factor authentication</span>
+               
+                </a>
+            </li>
+            <li class="g-menu-item">
+                <a class="g-menu-link @ManageNavPages.PersonalDataNavClass(ViewContext)"
+                       id="personal-data"
+                       asp-page="./PersonalData">
+           
+                    <span class="g-menu-icon">
+                    <i class="fas fa-database"></i>
+                </span>
+
+                    <span class="g-menu-text">Personal data</span>
+               
+                </a>
+            </li>
+
+        </ul>
+    </div>
+
+
+

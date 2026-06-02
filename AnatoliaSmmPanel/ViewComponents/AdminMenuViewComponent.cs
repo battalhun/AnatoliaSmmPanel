@@ -4,17 +4,18 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AnatoliaSmmPanel.Areas.Admin.ViewModels;
+using AnatoliaSmmPanel.Data;
 
 public class AdminMenuViewComponent : ViewComponent
 {
-    private readonly HomeContext _context;
+    private readonly HomeContext _homeContext;
     private readonly UserManager<IdentityUser> _userManager;
 
     public AdminMenuViewComponent(
-        HomeContext context,
+        HomeContext homeContext,
         UserManager<IdentityUser> userManager)
     {
-        _context = context;
+        _homeContext = homeContext;
         _userManager = userManager;
     }
 
@@ -31,7 +32,7 @@ public class AdminMenuViewComponent : ViewComponent
             userRoles = (await _userManager.GetRolesAsync(user)).ToList();
         }
 
-        var adminmenuss = await _context.AdminMenus
+        var adminmenuss = await _homeContext.AdminMenus
             .Where(x => x.IsActive)
             .Include(x => x.NavigationTarget)
             .Include(x => x.AdminMenuPermissions)

@@ -1,19 +1,18 @@
-﻿using AnatoliaSmmPanel.Data;
-using AnatoliaSmmPanel.ViewModels;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AnatoliaSmmPanel.Areas.Admin.ViewModels;
+using AnatoliaSmmPanel.Data;
 public class AdminSubMenuViewComponent : ViewComponent
 {
-    private readonly HomeContext _context;
+    private readonly HomeContext _homeContext;
     private readonly UserManager<IdentityUser> _userManager;
 
     public AdminSubMenuViewComponent(
-        HomeContext context,
+        HomeContext homeContext,
         UserManager<IdentityUser> userManager)
     {
-        _context = context;
+        _homeContext = homeContext;
         _userManager = userManager;
     }
 
@@ -25,7 +24,7 @@ public class AdminSubMenuViewComponent : ViewComponent
             ? await _userManager.GetRolesAsync(user)
             : new List<string>();
 
-        var subMenus = await _context.AdminSubMenus
+        var subMenus = await _homeContext.AdminSubMenus
             .Where(x => x.IsActive && x.AdminMenuId == adminMenuId)
             .Include(x => x.NavigationTarget)
             .Include(x => x.AdminSubMenuPermissions)

@@ -58,5 +58,6 @@ public class Provider
     // Güncellenme tarihi
     public DateTime? UpdatedAt { get; set; }
 
-    
+    public ICollection<SmmService> Services { get; set; }
+
 }

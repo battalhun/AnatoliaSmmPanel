@@ -1,0 +1,88 @@
+﻿@page
+@model LoginWithRecoveryCodeModel
+@{
+    ViewData["Title"] = "Recovery Code Verification";
+}
+
+<section class="regArea">
+    <div class="container">
+        <div class="row justify-content-center">
+
+            <div class="col-lg-6">
+
+                <div class="gcard">
+
+                    <div class="gcard-header">
+                        <div class="row align-items-center">
+                            <div class="col d-flex align-items-center">
+
+                                <div class="ch-g-ticon">
+                                    <div class="gcard-head-icon">
+                                        <i class="ri-key-2-line"></i>
+                                    </div>
+                                </div>
+
+                                <div class="ch-text">
+                                    <h3 class="gcard-title">
+                                        Recovery Code Verification
+                                    </h3>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gcard-body">
+
+                        <p class="mb-4">
+                            You have requested to log in with a recovery code.
+                            This login will not be remembered until you provide
+                            an authenticator app code again or disable two-factor authentication.
+                        </p>
+
+                        <form method="post">
+
+                            <div asp-validation-summary="ModelOnly"
+                                 class="text-danger mb-3"
+                                 role="alert">
+                            </div>
+
+                            <div class="form-group mb-3">
+
+                                <input asp-for="Input.RecoveryCode"
+                                       class="form-control"
+                                       autocomplete="off"
+                                       placeholder="Recovery Code" />
+
+                                <span asp-validation-for="Input.RecoveryCode"
+                                      class="text-danger">
+                                </span>
+
+                            </div>
+
+                            <button type="submit"
+                                    class="btn btn-primary w-100">
+                                Verify & Login
+                            </button>
+
+                        </form>
+
+                        <div class="mt-4 text-center">
+                            <a asp-page="./Login">
+                                Back to Login
+                            </a>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -2,6 +2,13 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
+@{
+    var path = Context.Request.Path.Value?.ToLower() ?? "";
+
+    bool hideNavbar =
+        path.StartsWith("/settings") ||
+        path.StartsWith("/identity/account");
+}
   
 <!DOCTYPE html>
 <html lang="en">
@@ -63,7 +70,7 @@
     @* <partial name="_LoginPartial" /> *@
     
    
-
+    
     @if (SignInManager.IsSignedIn(User))
     {
         <div class="g-dash">
@@ -73,15 +80,16 @@
     }
     else
     {
-        
-        <partial name="Partials/_Navbar"  />
+        <partial name="Partials/_Navbar" />
 
-        
-        @RenderBody()
+        <section class="regArea">
+            <div class="container">
+                @RenderBody()
+            </div>
+        </section>
     }
 
- 
-
+  
 
 
     <footer class="bg-dark text-light mt-0">

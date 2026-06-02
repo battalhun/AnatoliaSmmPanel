@@ -1,4 +1,5 @@
-﻿using AnatoliaSmmPanel.Areas.Admin.Models;
+﻿using AnatoliaSmmPanel.Areas.Admin.Data;
+using AnatoliaSmmPanel.Areas.Admin.Models;
 using AnatoliaSmmPanel.Areas.Admin.Services;
 using AnatoliaSmmPanel.Areas.Admin.ViewModels;
 using AnatoliaSmmPanel.Data;
@@ -16,14 +17,14 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
     {
 
         private readonly ILogger<SettingsController> _logger;
-        private readonly HomeContext _homeContext;
+        private readonly AdminContext _adminContext;
         private readonly ISmmApiService _smmApiService;
         private readonly ISettingsService _settingsService;
 
-        public SettingsController(ILogger<SettingsController> logger, HomeContext homeContext, ISmmApiService smmApiService, ISettingsService settingsService)
+        public SettingsController(ILogger<SettingsController> logger, AdminContext adminContext, ISmmApiService smmApiService, ISettingsService settingsService)
         {
             _logger = logger;
-            _homeContext = homeContext;
+            _adminContext = adminContext;
             _smmApiService = smmApiService;
             _settingsService = settingsService;
         }
@@ -42,7 +43,7 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
 
             else if (section.ToLower() == "providers")
             {
-                viewModel.Providers = _homeContext.Providers.Select(x => new ProviderViewModel
+                viewModel.Providers = _adminContext.Providers.Select(x => new ProviderViewModel
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -71,7 +72,7 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
             var apiUrl = normalized + "/api/v2";
 
             // 2. Bu sağlayıcı zaten veritabanımızda kayıtlı mı kontrolü 
-            bool isExist = _homeContext.Providers.Any(p => p.ApiUrl == apiUrl);
+            bool isExist = _adminContext.Providers.Any(p => p.ApiUrl == apiUrl);
             if (isExist)
             {
                 TempData["Error"] = "Bu sağlayıcı zaten mevcut.";
@@ -102,8 +103,8 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
             };
 
 
-            _homeContext.Providers.Add(provider);
-            await _homeContext.SaveChangesAsync(); // Async kullandığımız için SaveChangesAsync daha iyi olur
+            _adminContext.Providers.Add(provider);
+            await _adminContext.SaveChangesAsync(); // Async kullandığımız için SaveChangesAsync daha iyi olur
 
             TempData["Success"] = "Sağlayıcı başarıyla doğrulandı ve eklendi!";
 
@@ -140,21 +141,21 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
         [HttpPost("providers/delete/{id}")]
         public IActionResult DeleteProvider(int id)
         {
-            var provider = _homeContext.Providers.FirstOrDefault(x => x.Id == id);
+            var provider = _adminContext.Providers.FirstOrDefault(x => x.Id == id);
             if (provider == null)
             {
                 TempData["Error"] = "Sağlayıcı bulunamadı.";
                 return RedirectToAction("Index", new { section = "providers" });
             }
-            _homeContext.Providers.Remove(provider);
-            _homeContext.SaveChanges();
+            _adminContext.Providers.Remove(provider);
+            _adminContext.SaveChanges();
             return RedirectToAction("Index", new { section = "providers" });
         }
 
         [HttpGet("providers/edit/{id}")]
         public IActionResult EditProviderModal(int id)
         {
-            var provider = _homeContext.Providers.FirstOrDefault(x => x.Id == id);
+            var provider = _adminContext.Providers.FirstOrDefault(x => x.Id == id);
 
             if (provider == null)
                 return NotFound();
@@ -183,7 +184,7 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
         public async Task<IActionResult> EditProvider(int id, string apiKey, bool alias_checkbox, string alias, bool balance_checkbox, string balance_limit)
         {
             // 1. Veritabanından güncellenecek kaydı ID'ye göre bul
-            var provider = await _homeContext.Providers.FindAsync(id);
+            var provider = await _adminContext.Providers.FindAsync(id);
 
             if (provider == null)
             {
@@ -206,8 +207,8 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
                 provider.BalanceLimit = 0;
             }
 
-            _homeContext.Providers.Update(provider);
-            await _homeContext.SaveChangesAsync();
+            _adminContext.Providers.Update(provider);
+            await _adminContext.SaveChangesAsync();
 
 
             return RedirectToAction("Index", new { section = "providers" });
@@ -217,7 +218,7 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
         public async Task<IActionResult> SyncAllProvidersBalance()
         {
             // 1. Veritabanındaki tüm sağlayıcıları çekiyoruz
-            var providers = _homeContext.Providers.ToList();
+            var providers = _adminContext.Providers.ToList();
 
             if (!providers.Any())
             {
@@ -284,7 +285,7 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
 
             // 3. KURAL 5: UpdatedAt dolmayacak (Koda bilerek yazmadık, EF Core dokunmayacak)
             // Tüm güncellemeleri tek seferde veritabanına kaydediyoruz
-            await _homeContext.SaveChangesAsync();
+            await _adminContext.SaveChangesAsync();
 
             TempData["Success"] = $"Senkronizasyon tamamlandı! Başarılı: {successCount}, Başarısız/Eksik: {errorCount}";
             return RedirectToAction("Index", new { section = "providers" });
