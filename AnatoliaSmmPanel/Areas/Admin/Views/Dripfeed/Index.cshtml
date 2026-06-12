@@ -1,0 +1,50 @@
+﻿@{
+    // Layout tanımı kaldırıldı; böylece ViewStart üzerinden ana layout'u otomatik miras alacak.
+    ViewData["Title"] = "Yapım Aşamasında";
+
+    // URL'deki yolu (Path) alıp temizliyoruz. Örn: /admin/orders
+    var currentPath = Context.Request.Path.Value?.TrimStart('/');
+
+    // Eğer URL boşsa "Ana Sayfa" yazsın
+    var pageName = string.IsNullOrEmpty(currentPath) ? "Ana Sayfa" : currentPath;
+}
+
+<div class="container my-5 py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-6">
+            <div class="card shadow-sm border-0 text-center p-4 p-sm-5 bg-white rounded-4">
+                <div class="card-body">
+
+                    <div class="mb-4">
+                        <span class="display-3 text-warning">🚧</span>
+                    </div>
+
+                    <h1 class="fw-extrabold text-dark mb-3 display-6">Çok Yakında!</h1>
+
+                    <p class="fs-5 text-secondary mb-4">
+                        <span class="badge bg-danger-subtle text-danger fs-6 px-3 py-2 text-capitalize">
+                            @pageName
+                        </span>
+                        sayfası şu anda yapım aşamasındadır.
+                    </p>
+
+                    <div class="progress mb-4 rounded-pill" style="height: 12px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
+                             role="progressbar"
+                             style="width: 70%"
+                             aria-valuenow="70"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                        </div>
+                    </div>
+
+                    <p class="text-muted small mb-0">
+                        Sizlere daha iyi bir deneyim sunabilmek için altyapı çalışmalarımızı hızla sürdürüyoruz.
+                        Tamamlandığında bu panel üzerinden kesintisiz erişim sağlayabilirsiniz.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
