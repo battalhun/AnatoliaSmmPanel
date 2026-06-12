@@ -39,7 +39,10 @@
                                 <i class="fas fa-plus me-2"></i> Add Service
                             </button>
                             <button id="add-subscription" class="btn btn-outline-secondary px-3">Add Subscription</button>
-                            <button id="create-category" class="btn btn-outline-secondary px-3">Create Category</button>
+                            <button id="create-category" class="btn btn-outline-secondary px-3"
+                                    onclick="setModalSize(''); openDynamicModal('/admin/services/AddCategory')">
+                                Create Category
+                            </button>
                             <button id="import-button" class="btn btn-outline-info px-3" onclick="importbutton()">
                                 Import
                             </button>
@@ -152,21 +155,13 @@
 </div>
 
 
-
-
-
-<script>
-        function importbutton() {
-        setModalSize('xl');
-        openDynamicModal('/admin/services/import');
-    }
-</script>
-
-
-
-
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.2.1/redux.min.js"></script>
+
     <script src="~/js/services/services.js"></script>
+
+    <script src="~/js/services/servicemodal.js"></script>
+
+    <script src="~/js/services/editservicemodal.js"></script>
     <script src="~/js/services/importservicesmodal.js"></script>
 }

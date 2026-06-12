@@ -1,10 +1,11 @@
-using AnatoliaSmmPanel.Data;
 using AnatoliaSmmPanel.Areas.Admin.Data;
+using AnatoliaSmmPanel.Areas.Admin.Services;
+using AnatoliaSmmPanel.Data;
+using AnatoliaSmmPanel.Data.Models.Appliciton;
 using AnatoliaSmmPanel.Seed;
+using AnatoliaSmmPanel.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using AnatoliaSmmPanel.Services;
-using AnatoliaSmmPanel.Areas.Admin.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,12 +16,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDbContext<HomeContext>(options => options.UseSqlServer(connectionString));
-
-builder.Services.AddDbContext<AdminContext>(options => options.UseSqlServer(connectionString));
-
 builder.Services
-    .AddDefaultIdentity<IdentityUser>(options =>
+    .AddDefaultIdentity<ApplicationUser>(options =>
     {
         options.SignIn.RequireConfirmedAccount = true;
     })
@@ -29,6 +26,10 @@ builder.Services
 
 builder.Services.AddHttpClient<ISmmApiService, SmmApiService>();
 builder.Services.AddSingleton<ISettingsService, SettingsService>();
+
+builder.Services.AddAntiforgery(options => {
+    options.HeaderName = "X-CSRF-TOKEN";
+});
 
 var app = builder.Build();
 

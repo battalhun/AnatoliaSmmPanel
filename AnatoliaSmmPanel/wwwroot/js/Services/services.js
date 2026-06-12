@@ -1,4 +1,4 @@
-﻿let servicesStore = [];
+﻿    let servicesStore = [];
 let groupedServices = {};
 let categoryOrder = [];
 let collapsedCategories = new Set();
@@ -131,13 +131,23 @@ function generateServiceRowsHtml(catId, services) {
                 <td class="fw-bold">${item.name}</td>
                 <td>${item.type || 'Default'}</td>
                 <td>${providerName}</td>
-                <td class="text-primary fw-bold">${item.rate}</td>
+                <td class="text-primary fw-bold">$${parseFloat(item.rate).toFixed(4)}</td>
                 <td>${item.min}</td>
                 <td>${item.max}</td>
                 <td>${statusBadge}</td>
-                <td class="text-end">
-                     <button class="btn btn-sm btn-light border"><i class="fas fa-edit"></i></button>
+               
+                <td class="text-end pe-3">
+                    <div class="btn-group">
+                        <button class="btn btn-sm btn-light border dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"> Actions </button>
+                        <ul class="dropdown-menu shadow">            
+                            <li>
+                                <a class="dropdown-item" href="javascript:void(0)" onclick="editService(${item.id})">Edit</a>
+                            </li>
+                        </ul>       
+                    </div>
                 </td>
+
+
             </tr>`;
     });
     return rowsHtml;

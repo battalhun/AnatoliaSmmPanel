@@ -1,4 +1,10 @@
 ﻿
+// Modal boyutunu ayarlamak ve içeriği yüklemek için kullanılan fonksiyon
+function importbutton() {
+    setModalSize('xl');
+    openDynamicModal('/admin/services/import');
+}
+
 // 1. Senkronizasyon Butonu Yükleniyor Efekti
 function showSyncLoading(form) {
     const btn = form.querySelector('button');
@@ -31,90 +37,56 @@ function filterProvidersTable() {
 }
 
 
-function openDynamicModal(url) {
-
-    const modalElement = document.getElementById("dynamicModal");
-
-    if (!modalElement) return;
-
-    const modal = new bootstrap.Modal(modalElement);
-
-    document.getElementById("dynamicModalBody").innerHTML =
-        `<div class="text-center p-5">
-                <div class="spinner-border" role="status"></div>
-            </div>`;
-
-    modal.show();
-
-    fetch(url)
-        .then(response => response.text())
-        .then(res => {
-            document.getElementById("dynamicModalBody").innerHTML = res;
-        })
-        .catch(error => {
-            document.getElementById("dynamicModalBody").innerHTML = `
-                    <div class="p-4 text-danger">
-                        Bir hata oluştu.
-                    </div>
-                `;
-            console.error(error);
-        });
-}
-
-function setModalSize(size) {
-    // modal-dialog elemanını bul
-    const dialog = document.querySelector('#dynamicModal .modal-dialog');
-
-    // Önce tüm olası boyut sınıflarını temizle (çakışmaması için)
-    dialog.classList.remove('modal-sm', 'modal-lg', 'modal-xl');
-
-    // Eğer bir boyut belirtilmişse (sm, lg, xl) onu ekle
-    if (size) {
-        dialog.classList.add('modal-' + size);
-    }
-}
-
-
-
-
-//$(document).on("change", "#provider_id", function () {
-
-//    let providerId = $(this).val();
-
-//    $.ajax({
-//        url: "/admin/services/get-provider-services",
-//        type: "POST",
-//        data: {
-//            providerId: providerId,
-//            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-//        },
-//        success: function (response) {
-//            $(".import-list-container").html(response);
-//        }
-//    });
-
-//});
-
-
-
-
+// 3. Kategori Bazında Tümünü Seç / Tümünün Seçimini Kaldırma
 $(document).ready(function () {
 
-    // Category Select All checkbox
     $(document).on('change', '[id^="select_all_"]', function () {
-
         const isChecked = $(this).prop('checked');
-
-        // örnek: select_all_5 → 5
         const categoryId = $(this).attr('id').replace('select_all_', '');
-
-        // hedef collapse alanı
         const targetId = '#collapse_' + categoryId;
+        $(targetId).find('input[type="checkbox"]').prop('checked', isChecked);
 
-        // sadece o kategori altındaki service checkbox'ları seç
-        $(targetId)
-            .find('input[type="checkbox"]')
-            .prop('checked', isChecked);
+        updateSelectedCount(); 
     });
 
+});
+
+// 4. Seçilen Hizmet Sayısını Güncelleme ve Devam Butonunu Aktif/Pasif Yapma
+$(function () {
+
+    updateSelectedCount();
+
+    $(document).on('change', '.service-checkbox', function () {
+        updateSelectedCount();
+    });
+
+    $(document).on('click', '#btnContinue', function () {
+
+        const container = $('#selectedServicesContainer');
+
+        container.empty();
+
+        $('.service-checkbox:checked').each(function () {
+
+            const serviceId = $(this).data('service-id');
+
+            container.append(`
+                <input type="hidden"
+                       name="SelectedServiceIds"
+                       value="${serviceId}" />
+            `);
+        });
+
+        $('#importForm').submit();
+    });
+
+    // Seçilen hizmet sayısını güncelleyen yardımcı fonksiyon
+    function updateSelectedCount() {
+
+        const count = $('.service-checkbox:checked').length;
+
+        $('#selectedCount').text(count);
+
+        $('#btnContinue').prop('disabled', count === 0);
+    }
 });

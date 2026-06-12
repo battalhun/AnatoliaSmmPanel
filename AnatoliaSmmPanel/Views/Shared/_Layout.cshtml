@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@using AnatoliaSmmPanel.Data.Models.Appliciton
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     var path = Context.Request.Path.Value?.ToLower() ?? "";
@@ -9,7 +10,7 @@
         path.StartsWith("/settings") ||
         path.StartsWith("/identity/account");
 }
-  
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

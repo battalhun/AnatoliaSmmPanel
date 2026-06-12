@@ -10,12 +10,12 @@ namespace AnatoliaSmmPanel.Controllers
     {
 
         private readonly ILogger<HomeController> _logger;
-        private readonly HomeContext _homeContext;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger, HomeContext homeContext)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
-            _homeContext = homeContext;
+            _context = context;
         }
 
 

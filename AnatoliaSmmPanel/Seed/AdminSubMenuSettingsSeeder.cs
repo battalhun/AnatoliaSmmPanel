@@ -1,6 +1,5 @@
 ﻿using AnatoliaSmmPanel.Data;
-using AnatoliaSmmPanel.Areas.Admin.Models;
-using AnatoliaSmmPanel.Data;
+using AnatoliaSmmPanel.Data.Models.Admin;
 using AnatoliaSmmPanel.Enums;
 using AnatoliaSmmPanel.Models;
 using Microsoft.EntityFrameworkCore;
@@ -9,11 +8,11 @@ public class AdminSubMenuSettingsSeeder
 {
     public static async Task SeedAsync(IServiceProvider serviceProvider)
     {
-        var _HomeContext = serviceProvider.GetRequiredService<HomeContext>();
+        var _context = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
         //await context.Database.MigrateAsync();
 
-        var parentMenu = await _HomeContext.AdminMenus
+        var parentMenu = await _context.AdminMenus
             .FirstOrDefaultAsync(x => x.Name == "Settings");
 
         if (parentMenu == null)
@@ -36,7 +35,7 @@ public class AdminSubMenuSettingsSeeder
 
         foreach (var item in subMenus)
         {
-            var exists = await _HomeContext.AdminSubMenus
+            var exists = await _context.AdminSubMenus
                 .AnyAsync(x => x.Name == item.Name && x.AdminMenuId == parentMenu.Id);
 
             if (!exists)
@@ -66,12 +65,12 @@ public class AdminSubMenuSettingsSeeder
                     AdminMenuId = parentMenu.Id
                 };
 
-                await _HomeContext.AdminSubMenus.AddAsync(subMenu);
+                await _context.AdminSubMenus.AddAsync(subMenu);
             }
 
             order++;
         }
 
-        await _HomeContext.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 }

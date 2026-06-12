@@ -1,8 +1,10 @@
 ﻿using AnatoliaSmmPanel.Areas.Admin.Data;
 using AnatoliaSmmPanel.Areas.Admin.Dtos;
-using AnatoliaSmmPanel.Areas.Admin.Models;
 using AnatoliaSmmPanel.Areas.Admin.Services;
+using AnatoliaSmmPanel.Areas.Admin.ViewModels.Services;
 using AnatoliaSmmPanel.Areas.Admin.ViewModels.Services.Import;
+using AnatoliaSmmPanel.Data;
+using AnatoliaSmmPanel.Data.Models.Admin;
 using AnatoliaSmmPanel.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,27 +14,26 @@ using Microsoft.VisualBasic;
 namespace AnatoliaSmmPanel.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    //[Route("admin/[controller]/[action]")]
     [Route("admin/services")]
     [Authorize(Roles = "SuperAdmin,Admin")]
     public class ServicesController : Controller
     {
-        private readonly ILogger<SettingsController> _logger;
-        private readonly AdminContext _adminContext;
+        private readonly ILogger<ServicesController> _logger;
+        private readonly ApplicationDbContext _context;
         private readonly ISmmApiService _smmApiService;
 
 
-        public ServicesController(ILogger<SettingsController> logger, AdminContext adminContext, ISmmApiService smmApiService)
+        public ServicesController(ILogger<ServicesController> logger, ApplicationDbContext context, ISmmApiService smmApiService)
         {
             _logger = logger;
-            _adminContext = adminContext;
+            _context = context;
             _smmApiService = smmApiService;
         }
 
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            //int servicecount = await _adminContext.SmmServices.CountAsync();
+            //int servicecount = await _context.SmmServices.CountAsync();
             return View();
         }
 
@@ -40,7 +41,7 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
         [HttpGet("services2")]
         public async Task<IActionResult> Services2()
         {
-            int servicecount = await _adminContext.SmmServices.CountAsync();
+            int servicecount = await _context.SmmServices.CountAsync();
             return View(servicecount);
         }
 
@@ -48,7 +49,7 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> GetReduxAll()
         {
-            var services = await _adminContext.SmmServices
+            var services = await _context.SmmServices
                 .Include(x => x.Provider)
                 .Include(x => x.serviceCategory)
                 .OrderBy(x => x.serviceCategoryId)
@@ -72,7 +73,7 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
                     },
 
                     ServiceCategoryid = s.serviceCategoryId,
-                    ServiceCategory = new ServiceCategory
+                    ServiceCategory = s.serviceCategory == null ? null : new ServiceCategory
                     {
                         Id = s.serviceCategory.Id,
                         Name = s.serviceCategory.Name,
@@ -81,7 +82,7 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
                     },
 
                     ExternalServiceInfoid = s.externalServiceInfoId,
-                    externalServiceInfo = new ExternalServiceInfo
+                    externalServiceInfo = s.externalServiceInfo == null ? null : new ExternalServiceInfo
                     {
                         ExternalServiceId = s.externalServiceInfo.ExternalServiceId,
                         ExternalName = s.externalServiceInfo.ExternalName,
@@ -112,14 +113,14 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
         public IActionResult Import()
         {
 
-            var providers = _adminContext.Providers
-    .Where(p => p.IsActive)
-    .Select(p => new ImportProviderViewModel
-    {
-        Id = p.Id,
-        Name = p.Name
-    })
-    .ToList();
+            var providers = _context.Providers
+            .Where(p => p.IsActive)
+            .Select(p => new ImportProviderViewModel
+            {
+                Id = p.Id,
+                Name = p.Name
+            })
+            .ToList();
 
             var viewModel = new ImportViewModel
             {
@@ -135,7 +136,7 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Import(int provider_id)
         {
-            var provider = await _adminContext.Providers.FindAsync(provider_id);
+            var provider = await _context.Providers.FindAsync(provider_id);
 
             List<SmmServiceDto> externalServices =
                 await _smmApiService.GetServicesAsync(provider.ApiUrl, provider.ApiKey);
@@ -178,7 +179,7 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
                 })
                 .ToList();
 
-            var providers = _adminContext.Providers
+            var providers = _context.Providers
   .Where(p => p.IsActive)
   .Select(p => new ImportProviderViewModel
   {
@@ -208,6 +209,158 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
             return View();
         }
 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ImportSelectedServices(ImportSelectedServicesViewModel model)
+        {
+            if (model.SelectedProviderId == 0 ||
+                !model.SelectedServiceIds.Any())
+            {
+                return BadRequest();
+            }
+
+            var provider = await _context.Providers.FindAsync(model.SelectedProviderId);
+
+            List<SmmServiceDto> externalServices =
+               await _smmApiService.GetServicesAsync(provider.ApiUrl, provider.ApiKey);
+
+            foreach (var serviceId in model.SelectedServiceIds)
+            {
+                var externalService = externalServices.FirstOrDefault(s => s.Service == serviceId);
+                if (externalService != null)
+                {
+                    SmmService newService = new SmmService
+                    {
+                        Name = externalService.Name,
+                        Type = externalService.Type,
+                        Rate = decimal.TryParse(externalService.Rate,
+    System.Globalization.NumberStyles.Any,
+    System.Globalization.CultureInfo.InvariantCulture,
+    out var parsedRate) ? parsedRate : 0,
+                        Min = externalService.Min,
+                        Max = externalService.Max,
+                        Dripfeed = externalService.Dripfeed,
+                        Refill = externalService.Refill,
+                        Cancel = externalService.Cancel,
+                        ProviderId = model.SelectedProviderId,
+                        serviceCategoryId = null,
+                        externalServiceInfoId = null,
+                        IsActive = true
+                    };
+
+                    _context.SmmServices.Add(newService);
+                }
+            }
+            await _context.SaveChangesAsync();
+
+            return Json(new
+            {
+                success = true,
+                providerId = model.SelectedProviderId,
+                count = model.SelectedServiceIds.Count
+            });
+        }
+
+
+
+
+
+        [HttpGet("AddCategory")]
+        public IActionResult AddCategory()
+        {
+            return PartialView("_AddCategoryModal");
+        }
+
+        [HttpPost("CreateCategory")]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryViewModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Name))
+                return Json(new { success = false, message = "Category name is required." });
+
+            var exists = await _context.ServiceCategories
+                .AnyAsync(x => x.Name == model.Name);
+
+            if (exists)
+                return Json(new { success = false, message = "A category with this name already exists." });
+
+            var category = new ServiceCategory
+            {
+                Name = model.Name.Trim(),
+                SortOrder = model.SortOrder,
+                IsActive = model.IsActive,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.ServiceCategories.Add(category);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, id = category.Id, name = category.Name });
+        }
+
+
+
+
+
+        [HttpGet("EditService/{id}")]
+        public async Task<IActionResult> EditService(int id)
+        {
+            var service = await _context.SmmServices
+                .Include(x => x.serviceCategory)
+                .Include(x => x.Provider)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (service == null) return NotFound();
+
+            var vm = new EditServiceViewModel
+            {
+                Id = service.Id,
+                Name = service.Name,
+                Type = service.Type,
+                Rate = service.Rate,
+                Min = service.Min,
+                Max = service.Max,
+                SortOrder = service.SortOrder,
+                Dripfeed = service.Dripfeed,
+                Refill = service.Refill,
+                Cancel = service.Cancel,
+                IsActive = service.IsActive,
+                ProviderId = service.ProviderId,
+                ServiceCategoryId = service.serviceCategoryId
+            };
+
+            return PartialView("_EditServiceModal", vm);
+        }
+
+
+        [HttpPost("UpdateService")]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> UpdateService([FromBody] EditServiceViewModel model)
+        {
+            var service = await _context.SmmServices.FindAsync(model.Id);
+
+            if (service == null)
+                return Json(new { success = false, message = "Service not found." });
+
+            service.Name = model.Name.Trim();
+            service.Type = model.Type?.Trim();
+            service.Rate = model.Rate;
+            service.Min = model.Min;
+            service.Max = model.Max;
+            service.SortOrder = model.SortOrder;
+            service.serviceCategoryId = model.ServiceCategoryId;
+            service.ProviderId = model.ProviderId;
+            service.Dripfeed = model.Dripfeed;
+            service.Refill = model.Refill;
+            service.Cancel = model.Cancel;
+            service.IsActive = model.IsActive;
+            service.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
 
     }
 }

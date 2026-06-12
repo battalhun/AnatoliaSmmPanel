@@ -1,9 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+<!DOCTYPE html>
 <!-- Başlangıçta light tema ayarlanır, JS ile değiştirilir -->
 <html lang="en" data-bs-theme="light">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @* <meta name="viewport" content="width=device-width, initial-scale=1.0" /> *@
+    <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken">
     <title>@ViewData["Title"] - AnatoliaSmmPanel</title>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=@DateTime.Now.Ticks" />
     <script type="importmap"></script>
