@@ -1,11 +1,9 @@
-﻿@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!-- Başlangıçta light tema ayarlanır, JS ile değiştirilir -->
 <html lang="en" data-bs-theme="light">
 <head>
     <meta charset="utf-8" />
-    @* <meta name="viewport" content="width=device-width, initial-scale=1.0" /> *@
-    <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - AnatoliaSmmPanel</title>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=@DateTime.Now.Ticks" />
     <script type="importmap"></script>
@@ -15,10 +13,7 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-    <link rel="stylesheet" href="https://cdn.datatables.net/scroller/2.2.0/css/scroller.bootstrap5.min.css">
-
-    @RenderSection("Styles", false)
+    
     <!-- DİKKAT: Eski özel <style> bloğunu tamamen sildik! Bootstrap her şeyi kendi halledecek -->
     <!-- Tema Yönetim Scripti (Bootstrap 5.3 Standartı) -->
     <script>
@@ -169,21 +164,15 @@
     </nav>
     
     <!-- Ana İçerik Konteyneri -->
-    <div class="container-fluid">
+    <div class="container">
         @RenderBody()
     </div>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://unpkg.com/@@lottiefiles/lottie-player@@latest/dist/lottie-player.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
-
-
-
-
-
-@await RenderSectionAsync("Scripts", required: false)
+    <!-- Scriptler -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/@@lottiefiles/lottie-player@@latest/dist/lottie-player.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
     
 </body>
 </html>

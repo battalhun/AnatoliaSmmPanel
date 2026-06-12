@@ -1,12 +1,11 @@
-﻿using AnatoliaSmmPanel.Data.Models.Appliciton;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 
 public class UserStatsViewComponent : ViewComponent
 {
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public UserStatsViewComponent(UserManager<ApplicationUser> userManager)
+    public UserStatsViewComponent(UserManager<IdentityUser> userManager)
     {
         _userManager = userManager;
     }

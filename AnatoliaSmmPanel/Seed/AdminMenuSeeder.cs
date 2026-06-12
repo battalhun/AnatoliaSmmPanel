@@ -1,15 +1,14 @@
-﻿using AnatoliaSmmPanel.Enums;
+﻿using AnatoliaSmmPanel.Data;
+using AnatoliaSmmPanel.Enums;
 using AnatoliaSmmPanel.Models;
-using AnatoliaSmmPanel.Data.Models.Admin;
 using Microsoft.EntityFrameworkCore;
-using AnatoliaSmmPanel.Data;
+using AnatoliaSmmPanel.Areas.Admin.Models;
 
 public static class AdminMenuSeeder
 {
     public static async Task SeedAsync(IServiceProvider serviceProvider)
     {
-
-        var _context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+        var context = serviceProvider.GetRequiredService<HomeContext>();
 
         //// Migration uygulanmış mı kontrol et
         //await context.Database.MigrateAsync();
@@ -19,7 +18,7 @@ public static class AdminMenuSeeder
             "Users",
             "Orders",
             "Subscriptions",
-            "Dripfeed",
+            "Drip-feed",
             "Refill",
             "Cancel",
             "Services",
@@ -37,7 +36,7 @@ public static class AdminMenuSeeder
         foreach (var menuName in menuNames)
         {
             // Aynı menü varsa tekrar ekleme
-            bool exists = await _context.AdminMenus
+            bool exists = await context.AdminMenus
                 .AnyAsync(x => x.Name == menuName);
 
             if (!exists)
@@ -51,14 +50,14 @@ public static class AdminMenuSeeder
                     Name = menuName,
                     NavigationTarget = new NavigationTarget
                     {
-                        Controller = menuName,
-                        Action = "Index",
+                        Controller = "Admin",
+                        Action = actionName,
                         Page = null,
                         Area = null,
                         Url = null,
                         MenuConnect = MenuConnect.Mvc, // = 0
                     },
-
+                   
                     IsActive = true,
                     Order = order,
 
@@ -68,12 +67,12 @@ public static class AdminMenuSeeder
                     OpenInNewTab = false
                 };
 
-                await _context.AdminMenus.AddAsync(menu);
+                await context.AdminMenus.AddAsync(menu);
             }
 
             order++;
         }
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 }

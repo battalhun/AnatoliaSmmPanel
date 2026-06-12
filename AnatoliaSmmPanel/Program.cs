@@ -1,11 +1,9 @@
-using AnatoliaSmmPanel.Areas.Admin.Data;
-using AnatoliaSmmPanel.Areas.Admin.Services;
 using AnatoliaSmmPanel.Data;
-using AnatoliaSmmPanel.Data.Models.Appliciton;
 using AnatoliaSmmPanel.Seed;
-using AnatoliaSmmPanel.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using AnatoliaSmmPanel.Services;
+using AnatoliaSmmPanel.Areas.Admin.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,23 +11,15 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
-
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services
-    .AddDefaultIdentity<ApplicationUser>(options =>
-    {
-        options.SignIn.RequireConfirmedAccount = true;
-    })
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddDbContext<HomeContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddHttpClient<ISmmApiService, SmmApiService>();
 builder.Services.AddSingleton<ISettingsService, SettingsService>();
-
-builder.Services.AddAntiforgery(options => {
-    options.HeaderName = "X-CSRF-TOKEN";
-});
 
 var app = builder.Build();
 
@@ -82,7 +72,7 @@ app.MapGet("/", context =>
     if (context.User?.Identity?.IsAuthenticated == true)
     {
         //context.Response.Redirect("/new-order");
-        context.Response.Redirect("/admin/services/ServicesTest");
+        context.Response.Redirect("/admin/settings");
     }
     else
     {

@@ -1,5 +1,4 @@
 ﻿using AnatoliaSmmPanel.Data;
-using AnatoliaSmmPanel.Data.Models.Appliciton;
 using AnatoliaSmmPanel.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -7,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 public class MenuViewComponent : ViewComponent
 {
-    private readonly ApplicationDbContext _context;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly HomeContext _context;
+    private readonly UserManager<IdentityUser> _userManager;
 
     public MenuViewComponent(
-        ApplicationDbContext context,
-        UserManager<ApplicationUser> userManager)
+        HomeContext context,
+        UserManager<IdentityUser> userManager)
     {
         _context = context;
         _userManager = userManager;
