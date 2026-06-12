@@ -1,299 +1,36 @@
 ﻿@{
     ViewData["Title"] = "Users";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<div class="d-flex flex-column vh-100 bg-body-tertiary shadow-sm" style="padding: 10px; border-radius: 5px;">
 
-    <!-- HEADER -->
-    <header class="container-fluid py-4 border-bottom bg-body-tertiary">
-        <div class="row align-items-center">
-            <div class="col-md-7">
-                <div class="d-flex flex-wrap gap-2">
-                    <button class="btn btn-primary px-3" onclick="openAddUserModal()">
-                        <i class="fas fa-plus me-2"></i> Add User
-                    </button>
-                    <button class="btn btn-outline-secondary px-3" onclick="exportUsers()">
-                        <i class="fas fa-file-export me-2"></i> Export
-                    </button>
-                </div>
-            </div>
-            <div class="col-md-5">
-                <div class="input-group">
-                    <span class="input-group-text bg-body border-end-0">
-                        <i class="fas fa-search text-muted"></i>
-                    </span>
-                    <input type="text"
-                           id="usersSearch"
-                           class="form-control border-start-0 py-2 bg-body"
-                           placeholder="Search users...">
-                    <select class="form-select border-start-0 bg-body" id="statusFilter" style="max-width: 160px;">
-                        <option value="">All Statuses</option>
-                        <option value="Active">Active</option>
-                        <option value="Suspended">Suspended</option>
-                        <option value="Unconfirmed">Unconfirmed</option>
-                        <option value="Malicious">Malicious</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </header>
+<h4>Users</h4>
+<br>
+<h4>Users</h4>
+<br>
+<h4>Users</h4>
+<br>
+<h4>Users</h4>
+<br>
+<h4>Users</h4>
+<br>
+<h4>Users</h4>
+<br>
+<h4>Users</h4>
+<br>
+<h4>Users</h4>
+<br>
 
-    <!-- TABLE HEADER (fixed) -->
-    <main class="flex-grow-1 d-flex flex-column overflow-hidden">
 
-        <div class="border-bottom bg-body-tertiary" style="z-index: 10; padding-right: 17px;">
-            <table class="table table-sm mb-0 custom-table table-fixed">
-                <colgroup>
-                    <col style="width: 50px;">   <!-- Checkbox -->
-                    <col style="width: 70px;">   <!-- ID -->
-                    <col style="width: 130px;">  <!-- Username -->
-                    <col>                         <!-- Email (kalan alanı doldurur) -->
-                    <col style="width: 100px;">  <!-- Balance -->
-                    <col style="width: 100px;">  <!-- Spent -->
-                    <col style="width: 110px;">  <!-- Status -->
-                    <col style="width: 150px;">  <!-- Created -->
-                    <col style="width: 150px;">  <!-- Last Auth -->
-                    <col style="width: 120px;">  <!-- Discount -->
-                    <col style="width: 120px;">  <!-- Rates -->
-                    <col style="width: 110px;">  <!-- Actions -->
-                </colgroup>
-                <thead class="bg-body-secondary border-bottom">
-                    <tr>
-                        <th class="text-center">
-                            <input class="form-check-input" type="checkbox" id="checkAll">
-                        </th>
-                        <th>ID</th>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th class="text-end">Balance</th>
-                        <th class="text-end">Spent</th>
-                        <th>Status</th>
-                        <th>Created</th>
-                        <th>Last Auth</th>
-                        <th>Discount</th>
-                        <th>Rates</th>
-                        <th class="text-end pe-4">Actions</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-
-        <!-- SCROLLABLE BODY -->
-        <div id="scrollArea" class="flex-grow-1 overflow-auto">
-            <table class="table table-hover mb-0 custom-table table-fixed align-middle" id="usersTable">
-                <colgroup>
-                    <col style="width: 50px;">   <!-- Checkbox -->
-                    <col style="width: 70px;">   <!-- ID -->
-                    <col style="width: 130px;">  <!-- Username -->
-                    <col>                         <!-- Email (kalan alanı doldurur) -->
-                    <col style="width: 100px;">  <!-- Balance -->
-                    <col style="width: 100px;">  <!-- Spent -->
-                    <col style="width: 110px;">  <!-- Status -->
-                    <col style="width: 150px;">  <!-- Created -->
-                    <col style="width: 150px;">  <!-- Last Auth -->
-                    <col style="width: 120px;">  <!-- Discount -->
-                    <col style="width: 120px;">  <!-- Rates -->
-                    <col style="width: 110px;">  <!-- Actions -->
-                </colgroup>
-                <tbody id="usersTableBody">
-                    <tr>
-                        <td colspan="12" class="text-center py-5">
-                            <div class="spinner-border text-primary" role="status"></div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="container-fluid py-3 border-top bg-body-tertiary">
-        <div class="d-flex justify-content-between align-items-center">
-            <div id="massActionsBar" class="d-none">
-                <div class="dropdown d-inline-block">
-                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
-                        Mass Actions
-                    </button>
-                    <ul class="dropdown-menu shadow">
-                        <li><a class="dropdown-item" href="#">Suspend all</a></li>
-                        <li><a class="dropdown-item" href="#">Activate all</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="#">Delete custom rates</a></li>
-                    </ul>
-                </div>
-                <span class="ms-2 small text-muted" id="selectedUsersCount">0 users selected</span>
-            </div>
-            <div id="noSelectionBar">
-                <span class="text-muted small">Select users for mass actions</span>
-            </div>
-            <span class="badge bg-secondary px-3 py-2" id="totalCount">Total: —</span>
-        </div>
-    </footer>
-
+<div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+    <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio1" autocomplete="off" checked="" wfd-id="id9">
+    <label class="btn btn-outline-danger" for="vbtn-radio1">Radio 1</label>
+    <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio2" autocomplete="off" wfd-id="id10">
+    <label class="btn btn-outline-danger" for="vbtn-radio2">Radio 2</label>
+    <input type="radio" class="btn-check" name="vbtn-radio" id="vbtn-radio3" autocomplete="off" wfd-id="id11">
+    <label class="btn btn-outline-danger" for="vbtn-radio3">Radio 3</label>
 </div>
 
-<!-- Dinamik Modal -->
-<div class="modal fade" id="dynamicModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content border-0 shadow" id="dynamicModalBody">
-            <div class="text-center p-5">
-                <div class="spinner-border text-primary" role="status"></div>
-            </div>
-        </div>
-    </div>
-</div>
 
-@section Scripts {
-    <script src="~/js/modal.js"></script>
 
-    <script>
 
-        // ── Helpers ──────────────────────────────────────────────
-        function statusBadge(status) {
-            const map = {
-                'Active':      'bg-success-subtle text-success border border-success-subtle',
-                'Suspended':   'bg-danger-subtle text-danger border border-danger-subtle',
-                'Unconfirmed': 'bg-warning-subtle text-warning border border-warning-subtle',
-                'Malicious':   'bg-dark-subtle text-dark border border-dark-subtle',
-            };
-            const cls = map[status] || 'bg-secondary-subtle text-secondary';
-            return `<span class="badge ${cls}">${status}</span>`;
-        }
-
-        function formatDate(str) {
-            if (!str) return '—';
-            return str.substring(0, 16).replace('T', ' ');
-        }
-
-        // ── Render ───────────────────────────────────────────────
-        function renderRows(users) {
-            const tbody = document.getElementById('usersTableBody');
-            if (!users.length) {
-                tbody.innerHTML = `<tr><td colspan="12" class="text-center py-5 text-muted">No users found.</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = users.map(u => `
-                <tr class="user-row" data-id="${u.id}">
-                    <td class="text-center">
-                        <input class="form-check-input user-checkbox" type="checkbox" value="${u.id}">
-                    </td>
-                    <td class="text-muted">#${u.id}</td>
-                    <td class="fw-semibold">${u.username ?? '—'}</td>
-                    <td class="text-truncate" style="max-width:1px;">
-    ${u.email ?? '—'}
-    ${u.emailConfirmed ? '<i class="fas fa-check text-success"></i>' : '<i class="fas fa-times text-danger"></i>'}
-    ${u.phoneNumber ? (u.phoneNumberConfirmed ? '<i class="fas fa-check text-success"></i>' : '') : ''}
-    ${u.twoFactorEnabled ? '<i class="fas fa-shield-alt text-primary"></i>' : ''}
-</td>
-                    <td class="text-end">${parseFloat(u.balance ?? 0).toFixed(2)}</td>
-                    <td class="text-end">${parseFloat(u.spent ?? 0).toFixed(2)}</td>
-                    <td>${statusBadge(u.status)}</td>
-                    <td class="small text-muted">${formatDate(u.createdAt)}</td>
-                    <td class="small text-muted">${formatDate(u.lastAuthAt)}</td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="setDiscount(${u.id})">
-                            Set discount
-                        </button>
-                    </td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="setCustomRates(${u.id})">
-                            Set rates
-                        </button>
-                    </td>
-                    <td class="text-end pe-3">
-                        <div class="btn-group">
-                            <button class="btn btn-sm btn-light border dropdown-toggle" data-bs-toggle="dropdown">
-                                Actions
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end shadow">
-                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="editUser(${u.id})">
-                                    <i class="fas fa-edit me-2"></i>Edit user
-                                </a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="setPassword(${u.id})">
-                                    <i class="fas fa-key me-2"></i>Set password
-                                </a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0)">
-                                    <i class="fas fa-copy me-2"></i>Copy rates
-                                </a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0)">
-                                    <i class="fas fa-history me-2"></i>Sign-in history
-                                </a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                
-                                <li>
-                                <a class="dropdown-item ${u.status !== 'Suspended' ? 'text-danger' : 'text-success'}" href="javascript:void(0)" onclick="suspendUser(${u.id})">
-                              ${u.status !== 'Suspended' ? '<i class="fas fa-ban me-2"></i>Suspend user' : '<i class="fas fa-check-circle me-2"></i>Activate user'}
-                                </a> 
-                                </li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
-
-            document.getElementById('totalCount').textContent = `Total: ${users.length}`;
-        }
-
-        // ── Load ─────────────────────────────────────────────────
-        async function loadUsers() {
-            try {
-                const res = await fetch('/admin/users/GetAll');
-                const data = await res.json();
-                if (data.success) renderRows(data.data);
-            } catch (e) {
-                document.getElementById('usersTableBody').innerHTML =
-                    `<tr><td colspan="12" class="text-center py-4 text-danger">Failed to load users.</td></tr>`;
-            }
-        }
-
-        // ── Search & Filter ──────────────────────────────────────
-        function filterRows() {
-            const search = document.getElementById('usersSearch').value.toLowerCase();
-            const status = document.getElementById('statusFilter').value;
-
-            document.querySelectorAll('#usersTableBody .user-row').forEach(row => {
-                const text = row.textContent.toLowerCase();
-                const matchSearch = !search || text.includes(search);
-                const matchStatus = !status || row.querySelector('.badge')?.textContent === status;
-                row.style.display = matchSearch && matchStatus ? '' : 'none';
-            });
-        }
-
-        document.getElementById('usersSearch').addEventListener('input', filterRows);
-        document.getElementById('statusFilter').addEventListener('change', filterRows);
-
-        // ── Check All ────────────────────────────────────────────
-        document.getElementById('checkAll').addEventListener('change', function () {
-            document.querySelectorAll('.user-checkbox').forEach(cb => cb.checked = this.checked);
-            updateMassActions();
-        });
-
-        document.addEventListener('change', function (e) {
-            if (e.target.classList.contains('user-checkbox')) updateMassActions();
-        });
-
-        function updateMassActions() {
-            const count = document.querySelectorAll('.user-checkbox:checked').length;
-            const bar = document.getElementById('massActionsBar');
-            const noBar = document.getElementById('noSelectionBar');
-            document.getElementById('selectedUsersCount').textContent = `${count} users selected`;
-            bar.classList.toggle('d-none', count === 0);
-            noBar.classList.toggle('d-none', count > 0);
-        }
-
-        // ── Action stubs ─────────────────────────────────────────
-        function editUser(id)        { setModalSize('lg'); openDynamicModal(`/admin/users/EditUser/${id}`); }
-        function setPassword(id)     { setModalSize('');   openDynamicModal(`/admin/users/SetPassword/${id}`); }
-        function setDiscount(id)     { setModalSize('');   openDynamicModal(`/admin/users/SetDiscount/${id}`); }
-        function setCustomRates(id)  { setModalSize('xl'); openDynamicModal(`/admin/users/SetCustomRates/${id}`); }
-        function suspendUser(id)     { if (confirm('Suspend this user?')) fetch(`/admin/users/Suspend/${id}`, { method: 'POST' }).then(() => loadUsers()); }
-        function openAddUserModal()  { setModalSize('');   openDynamicModal('/admin/users/AddUser'); }
-        function exportUsers()       { window.location.href = '/admin/users/Export'; }
-
-        // ── Init ─────────────────────────────────────────────────
-        loadUsers();
-
-    </script>
-}

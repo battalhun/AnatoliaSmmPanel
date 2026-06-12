@@ -9,7 +9,7 @@ namespace AnatoliaSmmPanel.Seed
     {
         public static async Task SeedAsync(IServiceProvider serviceProvider)
         {
-            var _context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            var context = serviceProvider.GetRequiredService<HomeContext>();
 
             var menus = new List<Menu>
             {
@@ -73,16 +73,16 @@ namespace AnatoliaSmmPanel.Seed
 
             foreach (var menu in menus)
             {
-                bool exists = await _context.Menus
+                bool exists = await context.Menus
                     .AnyAsync(x => x.Name == menu.Name);
 
                 if (!exists)
                 {
-                    await _context.Menus.AddAsync(menu);
+                    await context.Menus.AddAsync(menu);
                 }
             }
 
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
     }
 }

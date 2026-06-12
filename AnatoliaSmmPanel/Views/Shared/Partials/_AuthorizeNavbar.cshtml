@@ -1,16 +1,8 @@
-﻿@{
-    var path = Context.Request.Path.Value?.ToLower() ?? "";
-
-    bool hideNavbar =
-        path.StartsWith("/settings") ||
-        path.StartsWith("/identity/account");
-}
-
-  
+﻿
 
 
-  @if (!hideNavbar)
-    {
+
+
 <div class="g-sidebar">
     <div class="g-logo">
         <a href="{{ page_url('index') }}">
@@ -175,7 +167,7 @@
         </ul>
     </div>
 </div>
-}
+ 
 <div class="g-dash-header">
     <div class="container-fluid">
         <button class="g-dash-btn d-lg-none" @* onclick="authMenuToggle();" *@>

@@ -1,4 +1,4 @@
-﻿using AnatoliaSmmPanel.Areas.Admin.Dtos;
+﻿using AnatoliaSmmPanel.Models;
 
 namespace AnatoliaSmmPanel.Services
 {
