@@ -1,0 +1,277 @@
+﻿@model IEnumerable<AnatoliaSmmPanel.Data.Models.Admin.SmmService>
+
+<div class="wrapper" id="page-wrapper">
+
+    <!-- ALERTS -->
+    <div id="wrapper-alerts">
+        <div class="wrapper-alerts"></div>
+    </div>
+
+    <div class="page">
+
+        <!-- HEADER ACTIONS -->
+        <div class="service-table">
+
+            <div class="container-fluid">
+
+                <ul class="nav align-items-center gap-2 flex-wrap">
+
+                    <li class="nav-item">
+                        <button id="add-service" class="btn btn-outline-secondary">
+                            Add service
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button id="add-subscription" class="btn btn-outline-secondary">
+                            Add subscription
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button id="create-category" class="btn btn-outline-secondary">
+                            Create category
+                        </button>
+                    </li>
+
+                    <li class="nav-item">
+                        <button id="import-button" class="btn btn-outline-secondary">
+                            Import services
+                        </button>
+                    </li>
+
+                    <!-- SEARCH -->
+                    <li class="nav-item ms-auto">
+                        <div class="input-group">
+
+                            <span class="input-group-text">
+                                <i class="fas fa-search"></i>
+                            </span>
+
+                            <input type="text"
+                                   id="searchInput"
+                                   class="form-control"
+                                   placeholder="Search">
+
+                            <select class="form-select">
+                                <option value="all">All</option>
+                                <option value="service-name">Service name</option>
+                                <option value="service-id">Service ID</option>
+                                <option value="external-id">External ID</option>
+                                <option value="category-name">Category name</option>
+                            </select>
+
+                        </div>
+                    </li>
+
+                </ul>
+
+            </div>
+
+            <!-- TABLE HEADER -->
+            <div class="container-fluid mt-3">
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle">
+
+                        <thead class="table-light">
+                            <tr>
+
+                                <th class="text-center">
+                                    <input type="checkbox">
+                                </th>
+
+                                <th>ID</th>
+
+                                <th>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                                data-bs-toggle="dropdown">
+                                            Service
+                                        </button>
+
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item active">All (2738)</a></li>
+                                            <li><a class="dropdown-item">Traffic</a></li>
+                                            <li><a class="dropdown-item">TikTok</a></li>
+                                            <li><a class="dropdown-item">Instagram</a></li>
+                                            <li><a class="dropdown-item">Facebook</a></li>
+                                        </ul>
+                                    </div>
+                                </th>
+
+                                <th>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                                data-bs-toggle="dropdown">
+                                            Type
+                                        </button>
+                                    </div>
+                                </th>
+
+                                <th>Provider</th>
+                                <th>Rate</th>
+                                <th>Min</th>
+                                <th>Max</th>
+
+                                <th>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                                data-bs-toggle="dropdown">
+                                            Status
+                                        </button>
+
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item active">All</a></li>
+                                            <li><a class="dropdown-item">Disabled</a></li>
+                                            <li><a class="dropdown-item">Enabled</a></li>
+                                        </ul>
+                                    </div>
+                                </th>
+
+                                <th class="text-end">Actions</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody id="serviceTableBody">
+                            @foreach (var group in Model.GroupBy(x => x.serviceCategory.Name))
+                            {
+                                <!-- CATEGORY ROW -->
+                                <tr class="table-secondary">
+                                    <td colspan="10">
+                                        <strong>
+                                            <i class="fab fa-instagram"></i>
+                                              @group.Key
+
+                                        </strong>
+                                    </td>
+                                </tr>
+
+                                <!-- SERVICE ROW -->
+                                foreach (var item in group)
+                                {
+                                    <tr>
+
+                                        <td class="text-center">
+                                            <input type="checkbox">
+                                        </td>
+
+                                        <td>@item.Id</td>
+
+                                        <td>
+                                            @item.Name
+                                        </td>
+
+                                        <td>
+                                            <div>@item.Type</div>
+                                            
+                                            <div class="service-table__type-options">
+                                                @if (item.Dripfeed)
+                                                {
+                                                    <span class="fas fa-tint service-table__type-options-icon"></span>
+                                                }
+                                                @if (item.Cancel)
+                                                {
+                                                    <span class="fas fa-times-circle service-table__type-options-icon"></span>
+                                                }
+                                                @if (item.Refill)
+                                                {
+                                                    <span class="far fa-sync-alt service-table__type-options-icon"></span>
+                                                }
+                                            </div>
+
+                                        </td>
+                                       
+                                        <td>
+                                            <div class="fw-semibold">
+                                                @item.Provider.Name
+                                            </div>
+
+                                            <div class="text-muted small">
+                                                @item.externalServiceInfo.ExternalServiceId
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="fw-semibold">
+                                                @item.Rate
+                                            </div>
+
+                                            <div class="text-muted small">
+                                                @item.externalServiceInfo.ExternalRate
+                                            </div>
+                                        </td>
+
+                                        <td>
+
+                                            <div class="fw-semibold">
+                                                @item.Min
+                                            </div>
+
+                                            <div class="text-muted small">
+                                                @item.externalServiceInfo.ExternalMin
+                                            </div>
+                                            
+                                        </td>
+                                        <td>
+
+                                            <div class="fw-semibold">
+                                                @item.Max
+                                            </div>
+
+                                            <div class="text-muted small">
+                                                @item.externalServiceInfo.ExternalMax
+                                            </div>
+                                            
+                                        </td>
+                                        <td>
+                                            <span class="badge @(item.IsActive ? "bg-success" : "bg-danger")">@(item.IsActive ? "Enabled" : "Disabled")</span>
+                                        </td>
+
+                                        <td class="text-end">
+
+                                            <div class="dropdown">
+
+                                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                                        data-bs-toggle="dropdown">
+                                                    Actions
+                                                </button>
+
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li><a class="dropdown-item" onclick="modal/edit/service/@item.Id">Edit service</a></li>
+                                                    <li><a class="dropdown-item" onclick="modal/edit/description/@item.Id">Edit description</a></li>
+                                                    <li><a class="dropdown-item" onclick="modal/edit/status/@item.Id">Disable service</a></li>
+                                                    <li><a class="dropdown-item" onclick="modal/Delete/@item.Id">Delete service</a></li>
+                                                </ul>
+
+                                            </div>
+
+                                        </td>
+
+                                    </tr>
+
+                              
+                                }
+                            }
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+            <div class="container-fluid mt-3">
+                <button class="btn btn-link">Deleted services</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+                         
