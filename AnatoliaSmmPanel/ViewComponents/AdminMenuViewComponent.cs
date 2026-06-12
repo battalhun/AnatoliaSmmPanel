@@ -1,18 +1,18 @@
-﻿using AnatoliaSmmPanel.Data;
-using AnatoliaSmmPanel.ViewModels;
+﻿using AnatoliaSmmPanel.Areas.Admin.ViewModels;
+using AnatoliaSmmPanel.Data;
+using AnatoliaSmmPanel.Data.Models.Appliciton;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using AnatoliaSmmPanel.Areas.Admin.ViewModels;
 
 public class AdminMenuViewComponent : ViewComponent
 {
-    private readonly HomeContext _context;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly ApplicationDbContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public AdminMenuViewComponent(
-        HomeContext context,
-        UserManager<IdentityUser> userManager)
+        ApplicationDbContext context,
+        UserManager<ApplicationUser> userManager)
     {
         _context = context;
         _userManager = userManager;

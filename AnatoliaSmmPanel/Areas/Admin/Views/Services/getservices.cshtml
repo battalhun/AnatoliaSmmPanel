@@ -1,0 +1,115 @@
+﻿
+  @*   <!-- CATEGORY ROW -->
+    <tr class="table-secondary">
+        <td colspan="10">
+            <strong>
+                <i class="fab fa-instagram"></i>
+               
+
+            </strong>
+        </td>
+    </tr>
+
+    <!-- SERVICE ROW -->
+ 
+        <tr>
+
+            <td class="text-center">
+                <input type="checkbox">
+            </td>
+
+            <td>@item.Id</td>
+
+            <td>
+                @item.Name
+            </td>
+
+            <td>
+                <div>@item.Type</div>
+                                            
+                <div class="service-table__type-options">
+                    @if (item.Dripfeed)
+                    {
+                        <span class="fas fa-tint service-table__type-options-icon"></span>
+                    }
+                    @if (item.Cancel)
+                    {
+                        <span class="fas fa-times-circle service-table__type-options-icon"></span>
+                    }
+                    @if (item.Refill)
+                    {
+                        <span class="far fa-sync-alt service-table__type-options-icon"></span>
+                    }
+                </div>
+
+            </td>
+                                       
+            <td>
+                <div class="fw-semibold">
+                    @item.Provider.Name
+                </div>
+
+                <div class="text-muted small">
+                    @item.externalServiceInfo.ExternalServiceId
+                </div>
+            </td>
+
+            <td>
+                <div class="fw-semibold">
+                    @item.Rate
+                </div>
+
+                <div class="text-muted small">
+                    @item.externalServiceInfo.ExternalRate
+                </div>
+            </td>
+
+            <td>
+
+                <div class="fw-semibold">
+                    @item.Min
+                </div>
+
+                <div class="text-muted small">
+                    @item.externalServiceInfo.ExternalMin
+                </div>
+                                            
+            </td>
+            <td>
+
+                <div class="fw-semibold">
+                    @item.Max
+                </div>
+
+                <div class="text-muted small">
+                    @item.externalServiceInfo.ExternalMax
+                </div>
+                                            
+            </td>
+            <td>
+                <span class="badge @(item.IsActive ? "bg-success" : "bg-danger")">@(item.IsActive ? "Enabled" : "Disabled")</span>
+            </td>
+
+            <td class="text-end">
+
+                <div class="dropdown">
+
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                            data-bs-toggle="dropdown">
+                        Actions
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" onclick="modal/edit/service/@item.Id">Edit service</a></li>
+                        <li><a class="dropdown-item" onclick="modal/edit/description/@item.Id">Edit description</a></li>
+                        <li><a class="dropdown-item" onclick="modal/edit/status/@item.Id">Disable service</a></li>
+                        <li><a class="dropdown-item" onclick="modal/Delete/@item.Id">Delete service</a></li>
+                    </ul>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+                               *@
