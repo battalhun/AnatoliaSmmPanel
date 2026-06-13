@@ -1,0 +1,79 @@
+@model AnatoliaSmmPanel.Areas.Admin.ViewModels.Tickets.TicketDetailsViewModel
+
+@{
+    var statusMap = new Dictionary<string, string>
+    {
+        ["Pending"]  = "bg-warning-subtle text-warning border border-warning-subtle",
+        ["Answered"] = "bg-success-subtle text-success border border-success-subtle",
+        ["Closed"]   = "bg-secondary-subtle text-secondary border border-secondary-subtle",
+    };
+    var statusClass = statusMap.TryGetValue(Model.Status.ToString(), out var sc) ? sc : "bg-secondary-subtle text-secondary";
+}
+
+<div class="modal-header bg-body-tertiary py-3">
+    <div>
+        <h5 class="modal-title fw-bold mb-1">
+            <i class="fas fa-ticket-alt me-2 text-primary"></i>Ticket #@Model.Id
+        </h5>
+        <div class="small text-muted">
+            @(Model.UserNickname ?? $"User #{Model.UserId}") &middot; @Model.Subject
+        </div>
+    </div>
+    <span class="badge @statusClass ms-auto me-3">@Model.Status</span>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+<div class="modal-body p-0">
+    <div class="p-3 border-bottom bg-body-tertiary d-flex gap-2">
+        <div class="dropdown">
+            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                <i class="fas fa-exchange-alt me-1"></i> Change Status
+            </button>
+            <ul class="dropdown-menu shadow">
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="changeStatus(@Model.Id, 'Pending')">Pending</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="changeStatus(@Model.Id, 'Answered')">Answered</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="changeStatus(@Model.Id, 'Closed')">Closed</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Message Thread -->
+    <div id="ticketThread" class="p-3" style="max-height: 420px; overflow-y: auto; background: var(--bs-body-bg);">
+        @if (Model.Messages == null || !Model.Messages.Any())
+        {
+            <div class="text-center text-muted py-4">No messages yet.</div>
+        }
+        else
+        {
+            @foreach (var msg in Model.Messages.OrderBy(m => m.CreatedAt))
+            {
+                var isAdmin = msg.IsAdmin;
+                <div class="d-flex mb-3 @(isAdmin ? "justify-content-end" : "justify-content-start")">
+                    <div class="@(isAdmin ? "bg-primary text-white" : "bg-body-tertiary border") rounded-3 p-3"
+                         style="max-width: 75%;">
+                        <div class="small fw-semibold mb-1 @(isAdmin ? "text-white-50" : "text-muted")">
+                            @(isAdmin ? "Support" : (Model.UserNickname ?? $"User #{Model.UserId}"))
+                        </div>
+                        <div style="white-space: pre-wrap;">@msg.Message</div>
+                        <div class="small mt-1 @(isAdmin ? "text-white-50" : "text-muted")" style="font-size: 0.7rem;">
+                            @msg.CreatedAt.ToString("yyyy-MM-dd HH:mm")
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<div class="modal-footer bg-body-tertiary p-3 flex-column">
+    <div id="replyAlert" class="w-100"></div>
+    <div class="d-flex gap-2 w-100">
+        <textarea id="replyMessage" class="form-control bg-body" rows="2" placeholder="Type your reply..."></textarea>
+        <button type="button" id="btnSendReply" class="btn btn-primary px-4" onclick="sendReply(@Model.Id)">
+            <span id="btnSendReplyText"><i class="fas fa-paper-plane me-2"></i>Send</span>
+            <span id="btnSendReplySpinner" class="d-none">
+                <span class="spinner-border spinner-border-sm me-2"></span>Sending...
+            </span>
+        </button>
+    </div>
+</div>

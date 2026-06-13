@@ -4,17 +4,19 @@ using AnatoliaSmmPanel.Data.Models.Admin;
 using Microsoft.EntityFrameworkCore;
 using AnatoliaSmmPanel.Data;
 
-public static class AdminMenuSeeder
+namespace AnatoliaSmmPanel.Seed
 {
-    public static async Task SeedAsync(IServiceProvider serviceProvider)
+    public static class AdminMenuSeeder
     {
+        public static async Task SeedAsync(IServiceProvider serviceProvider)
+        {
 
-        var _context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            var _context = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
-        //// Migration uygulanmış mı kontrol et
-        //await context.Database.MigrateAsync();
+            //// Migration uygulanmış mı kontrol et
+            //await context.Database.MigrateAsync();
 
-        var menuNames = new List<string>
+            var menuNames = new List<string>
         {
             "Users",
             "Orders",
@@ -32,48 +34,49 @@ public static class AdminMenuSeeder
             "Settings"
         };
 
-        int order = 1;
+            int order = 1;
 
-        foreach (var menuName in menuNames)
-        {
-            // Aynı menü varsa tekrar ekleme
-            bool exists = await _context.AdminMenus
-                .AnyAsync(x => x.Name == menuName);
-
-            if (!exists)
+            foreach (var menuName in menuNames)
             {
-                var actionName = menuName
-                    .Replace("-", "")
-                    .Replace(" ", "");
+                // Aynı menü varsa tekrar ekleme
+                bool exists = await _context.AdminMenus
+                    .AnyAsync(x => x.Name == menuName);
 
-                var menu = new AdminMenu
+                if (!exists)
                 {
-                    Name = menuName,
-                    NavigationTarget = new NavigationTarget
+                    var actionName = menuName
+                        .Replace("-", "")
+                        .Replace(" ", "");
+
+                    var menu = new AdminMenu
                     {
-                        Controller = menuName,
-                        Action = "Index",
-                        Page = null,
-                        Area = null,
-                        Url = null,
-                        MenuConnect = MenuConnect.Mvc, // = 0
-                    },
+                        Name = menuName,
+                        NavigationTarget = new NavigationTarget
+                        {
+                            Controller = menuName,
+                            Action = "Index",
+                            Page = null,
+                            Area = null,
+                            Url = null,
+                            MenuConnect = MenuConnect.Mvc, // = 0
+                        },
 
-                    IsActive = true,
-                    Order = order,
+                        IsActive = true,
+                        Order = order,
 
-                    Icon = null,
+                        Icon = null,
 
-                    IsAdminOnly = true,
-                    OpenInNewTab = false
-                };
+                        IsAdminOnly = true,
+                        OpenInNewTab = false
+                    };
 
-                await _context.AdminMenus.AddAsync(menu);
+                    await _context.AdminMenus.AddAsync(menu);
+                }
+
+                order++;
             }
 
-            order++;
+            await _context.SaveChangesAsync();
         }
-
-        await _context.SaveChangesAsync();
     }
 }

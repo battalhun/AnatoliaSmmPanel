@@ -1,0 +1,139 @@
+﻿@model AnatoliaSmmPanel.Data.Models.Admin.Order
+
+<div class="modal-header bg-body-tertiary py-3">
+    <h5 class="modal-title fw-bold">
+        <i class="fas fa-info-circle me-2 text-primary"></i>
+        Order Details
+        <span class="badge bg-secondary ms-2 fw-normal fs-6">
+            ID: #@Model.Id
+        </span>
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body p-4">
+
+    <div class="mb-4">
+        <label class="form-label fw-semibold text-muted small text-uppercase">Target Link</label>
+        <div class="input-group">
+            <input type="text" class="form-control bg-body" value="@Model.Link" readonly id="orderDetailLink">
+            <button class="btn btn-outline-secondary" type="button" title="Copy Link" onclick="navigator.clipboard.writeText(document.getElementById('orderDetailLink').value)">
+                <i class="fas fa-copy"></i>
+            </button>
+            <a href="@Model.Link" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary" title="Open Link">
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-6">
+            <div class="p-3 rounded border bg-light-subtle h-100">
+                <div class="fw-bold small text-uppercase text-muted mb-3 border-bottom pb-1">
+                    <i class="fas fa-shopping-cart me-1"></i> Order Info
+                </div>
+
+                <table class="table table-sm table-borderless mb-0 align-middle">
+                    <tr>
+                        <td class="text-muted py-2" style="width: 35%;">User ID:</td>
+                        <td class="fw-semibold py-2">@Model.UserId</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted py-2">Service:</td>
+                        <td class="fw-semibold py-2">
+                            <span class="badge bg-secondary-subtle text-secondary border me-1">@Model.ServiceId</span>
+                            <span class="text-truncate d-inline-block" style="max-width: 180px; vertical-align: middle;" title="@Model.Service?.Name">
+                                @(Model.Service?.Name ?? "—")
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted py-2">Quantity:</td>
+                        <td class="fw-semibold py-2">@Model.Quantity</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted py-2">Charge:</td>
+                        <td class="fw-semibold text-success py-2">$@Model.Charge.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture)</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted py-2">Mode:</td>
+                        <td class="py-2">
+                            <span class="badge @(Model.Mode == "Auto" ? "bg-info-subtle text-info border border-info-subtle" : "bg-warning-subtle text-warning border border-warning-subtle")">
+                                @Model.Mode
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="p-3 rounded border bg-light-subtle h-100">
+                <div class="fw-bold small text-uppercase text-muted mb-3 border-bottom pb-1">
+                    <i class="fas fa-layer-group me-1"></i> Execution & Provider
+                </div>
+
+                <table class="table table-sm table-borderless mb-0 align-middle">
+                    <tr>
+                        <td class="text-muted py-2" style="width: 40%;">Status:</td>
+                        <td class="py-2">
+                            @{
+                                var statusClass = Model.Status switch
+                                {
+                                    "Completed" => "bg-success-subtle text-success border border-success-subtle",
+                                    "In progress" => "bg-primary-subtle text-primary border border-primary-subtle",
+                                    "Pending" => "bg-warning-subtle text-warning border border-warning-subtle",
+                                    "Awaiting" => "bg-info-subtle text-info border border-info-subtle",
+                                    "Partial" => "bg-warning-subtle text-warning border border-warning-subtle",
+                                    "Canceled" or "Fail" or "Error" => "bg-danger-subtle text-danger border border-danger-subtle",
+                                    _ => "bg-secondary-subtle text-secondary border border-secondary-subtle"
+                                };
+                            }
+                            <span class="badge @statusClass">@Model.Status</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted py-2">Start Count:</td>
+                        <td class="fw-semibold py-2">@Model.StartCount</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted py-2">Remains:</td>
+                        <td class="fw-semibold py-2">@Model.Remains</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted py-2">Provider:</td>
+                        <td class="fw-semibold text-muted py-2">@(string.IsNullOrEmpty(Model.ProviderName) ? "—" : Model.ProviderName)</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted py-2">External ID:</td>
+                        <td class="fw-semibold text-muted py-2">@(string.IsNullOrEmpty(Model.ExternalOrderId) ? "—" : $"#{Model.ExternalOrderId}")</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted py-2">Cost (Cost USD):</td>
+                        <td class="fw-semibold text-muted py-2">$@Model.ProviderCharge.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mt-4 p-3 rounded border bg-body-secondary">
+        <div class="row text-center g-2">
+            <div class="col-6 border-end">
+                <div class="small text-muted text-uppercase fw-semibold" style="font-size: 0.72rem;">Created At</div>
+                <div class="small fw-semibold mt-1 text-secondary">@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")</div>
+            </div>
+            <div class="col-6">
+                <div class="small text-muted text-uppercase fw-semibold" style="font-size: 0.72rem;">Last Update</div>
+                <div class="small fw-semibold mt-1 text-secondary">@(Model.UpdatedAt.HasValue ? Model.UpdatedAt.Value.ToString("yyyy-MM-dd HH:mm:ss") : "—")</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal-footer bg-body-tertiary p-3">
+    <button type="button" class="btn btn-secondary px-4 shadow-sm" data-bs-dismiss="modal">Close</button>
+</div>

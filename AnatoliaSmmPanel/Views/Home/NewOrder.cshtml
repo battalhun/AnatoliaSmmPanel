@@ -16,7 +16,7 @@
 										 <div class="row align-items-center">
 											<div class="col">
 											   <h2>Balance</h2>
-											   <h3>{{ user['balance_formatted'] }}</h3>
+											   <h3>@ViewBag.Balance</h3>
 											</div>
 											<div class="col-auto">
 											   <div class="gny-circle">
@@ -33,7 +33,7 @@
 										 <div class="row align-items-center">
 											<div class="col">
 											   <h2>Spent</h2>
-											   <h3>{{ user['spent_formatted'] }}</h3>
+											   <h3>@ViewBag.Spent</h3>
 											</div>
 											<div class="col-auto">
 											   <div class="gny-circle">
@@ -54,7 +54,7 @@
 								  <div class="col-lg mb-4 mb-lg-0">
 									 <div class="row">
 										<div class="col">
-										   <p style="display: none;" id="spent">{{ user['spent'] }}</p>
+										   <p style="display: none;" id="spent">@ViewBag.Spent</p>
 										   <span class="progress-title">Account level:
 											<span id="atual" class="primary-color"><span id="currentStatus"></span></span>
 										   </span>  

@@ -47,6 +47,8 @@ using (var scope = app.Services.CreateScope())
     await AdminSubMenuSettingsSeeder.SeedAsync(services);
 
     await MenuSeeder.SeedAsync(services);
+
+    await AuthMenuSeeder.SeedAsync(services);
 }
 
 // Configure the HTTP request pipeline.
@@ -81,8 +83,8 @@ app.MapGet("/", context =>
 {
     if (context.User?.Identity?.IsAuthenticated == true)
     {
-        //context.Response.Redirect("/new-order");
-        context.Response.Redirect("/admin/services/ServicesTest");
+        context.Response.Redirect("/new-order");
+    //    context.Response.Redirect("/admin/services/ServicesTest");
     }
     else
     {

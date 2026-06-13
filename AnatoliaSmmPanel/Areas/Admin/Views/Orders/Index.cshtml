@@ -59,7 +59,6 @@
         </div>
     </header>
 
-    <!-- TABLE HEADER (fixed) -->
     <main class="flex-grow-1 d-flex flex-column overflow-hidden">
 
         <div class="border-bottom bg-body-tertiary" style="z-index: 10; padding-right: 17px;">
@@ -101,7 +100,7 @@
             </table>
         </div>
 
-        <!-- SCROLLABLE BODY -->
+
         <div id="scrollArea" class="flex-grow-1 overflow-auto">
             <table class="table table-hover mb-0 custom-table table-fixed align-middle" id="ordersTable">
                 <colgroup>
@@ -179,6 +178,8 @@
 </div>
 
 @section Scripts {
+    <script src="~/js/modal.js"></script>
+
     <script>
 
         let currentStatus = 'All';
@@ -212,7 +213,7 @@
             return link.length > max ? link.substring(0, max) + '…' : link;
         }
 
-        // ── Render ───────────────────────────────────────────────
+        // Domları renderlama
         function renderRows(orders) {
             const tbody = document.getElementById('ordersTableBody');
 
@@ -392,60 +393,60 @@
             noBar.classList.toggle('d-none', count > 0);
         }
 
-        // ── Actions ──────────────────────────────────────────────
-        function orderDetails(id)   { setModalSize('lg'); openDynamicModal(`/admin/orders/Details/${id}`); }
-        function setStartCount(id)  { setModalSize('');   openDynamicModal(`/admin/orders/SetStartCount/${id}`); }
-        function setPartial(id)     { setModalSize('');   openDynamicModal(`/admin/orders/SetPartial/${id}`); }
+            // ── Actions ──────────────────────────────────────────────
+            function orderDetails(id)   { setModalSize('lg'); openDynamicModal(`/admin/orders/Details/${id}`); }
+            function setStartCount(id)  { setModalSize('');   openDynamicModal(`/admin/orders/SetStartCount/${id}`); }
+            function setPartial(id)     { setModalSize('');   openDynamicModal(`/admin/orders/SetPartial/${id}`); }
 
-        async function changeStatus(id, status) {
-            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            await fetch('/admin/orders/ChangeStatus', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
-                body: JSON.stringify({ id, status })
-            });
-            loadOrders();
-        }
+            async function changeStatus(id, status) {
+                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                await fetch('/admin/orders/ChangeStatus', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+                    body: JSON.stringify({ id, status })
+                });
+                loadOrders();
+            }
 
-        async function cancelRefund(id) {
-            if (!confirm('Cancel this order and refund the user?')) return;
-            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            await fetch('/admin/orders/CancelRefund', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
-                body: JSON.stringify({ id })
-            });
-            loadOrders();
-        }
+            async function cancelRefund(id) {
+                if (!confirm('Cancel this order and refund the user?')) return;
+                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                await fetch('/admin/orders/CancelRefund', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+                    body: JSON.stringify({ id })
+                });
+                loadOrders();
+            }
 
-        async function massChangeStatus(status) {
-            const ids = [...document.querySelectorAll('.order-checkbox:checked')].map(cb => parseInt(cb.value));
-            if (!ids.length) return;
-            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            await fetch('/admin/orders/MassChangeStatus', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
-                body: JSON.stringify({ ids, status })
-            });
-            loadOrders();
-        }
+            async function massChangeStatus(status) {
+                const ids = [...document.querySelectorAll('.order-checkbox:checked')].map(cb => parseInt(cb.value));
+                if (!ids.length) return;
+                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                await fetch('/admin/orders/MassChangeStatus', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+                    body: JSON.stringify({ ids, status })
+                });
+                loadOrders();
+            }
 
-        async function massCancelRefund() {
-            const ids = [...document.querySelectorAll('.order-checkbox:checked')].map(cb => parseInt(cb.value));
-            if (!ids.length || !confirm(`Cancel and refund ${ids.length} orders?`)) return;
-            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            await fetch('/admin/orders/MassCancelRefund', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
-                body: JSON.stringify({ ids })
-            });
-            loadOrders();
-        }
+            async function massCancelRefund() {
+                const ids = [...document.querySelectorAll('.order-checkbox:checked')].map(cb => parseInt(cb.value));
+                if (!ids.length || !confirm(`Cancel and refund ${ids.length} orders?`)) return;
+                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                await fetch('/admin/orders/MassCancelRefund', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+                    body: JSON.stringify({ ids })
+                });
+                loadOrders();
+            }
 
-        function exportOrders() {
-            const status = currentStatus === 'All' ? '' : currentStatus;
-            window.location.href = `/admin/orders/Export?status=${status}`;
-        }
+            function exportOrders() {
+                const status = currentStatus === 'All' ? '' : currentStatus;
+                window.location.href = `/admin/orders/Export?status=${status}`;
+            }
 
         // ── Init ─────────────────────────────────────────────────
         loadOrders();

@@ -14,6 +14,8 @@ namespace AnatoliaSmmPanel.Data
         public DbSet<ExternalServiceInfo> ExternalServiceInfos { get; set; }
         public DbSet<Order> Orders { get; set; }
 
+        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<TicketMessage> TicketMessages { get; set; }
 
         partial void OnAdminModelCreating(ModelBuilder builder)
         {

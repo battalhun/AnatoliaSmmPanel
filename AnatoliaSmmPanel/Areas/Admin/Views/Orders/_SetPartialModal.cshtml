@@ -1,0 +1,165 @@
+﻿@model AnatoliaSmmPanel.Data.Models.Admin.Order
+
+@Html.AntiForgeryToken()
+
+<div class="modal-header bg-body-tertiary py-3">
+    <h5 class="modal-title fw-bold">
+        <i class="fas fa-adjust me-2 text-warning"></i>
+        Set Partial
+        <span class="badge bg-secondary ms-2 fw-normal fs-6">
+            Order ID: (@Model.Id)
+        </span>
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<div class="modal-body p-4">
+
+    <div id="setPartialAlert"></div>
+
+    <form id="setPartialForm">
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold text-muted">Total Quantity</label>
+                <input type="text" class="form-control bg-body-secondary text-muted" value="@Model.Quantity" disabled>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold text-muted">Charge (USD)</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-body-secondary border-end-0 text-muted">$</span>
+                    <input type="text" class="form-control bg-body-secondary border-start-0 text-muted" value="@Model.Charge.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture)" disabled>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-12">
+                <label for="setPartialRemains" class="form-label fw-semibold">
+                    Remains (Kalan Miktar) <span class="text-danger">*</span>
+                </label>
+                <input type="number"
+                       id="setPartialRemains"
+                       class="form-control bg-body form-control-lg"
+                       min="0"
+                       max="@Model.Quantity"
+                       value="@Model.Remains"
+                       required>
+                <div class="form-text text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Enter the amount that could not be delivered. Value must be between 0 and @Model.Quantity.
+                </div>
+                <div class="invalid-feedback">Invalid remains value.</div>
+            </div>
+        </div>
+
+        <input type="hidden" id="setPartialOrderId" value="@Model.Id">
+
+    </form>
+
+</div>
+
+<div class="modal-footer bg-body-tertiary p-3">
+    <button type="button"
+            class="btn btn-link text-decoration-none text-secondary"
+            data-bs-dismiss="modal">
+        Cancel
+    </button>
+    <button type="button"
+            id="btnSavePartial"
+            class="btn btn-primary px-5 shadow-sm">
+        <span id="btnSavePartialText">
+            <i class="fas fa-save me-2"></i>Set Partial
+        </span>
+        <span id="btnSavePartialSpinner" class="d-none">
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            Processing...
+        </span>
+    </button>
+</div>
+
+<script>
+    (function () {
+
+        document.getElementById('btnSavePartial').addEventListener('click', async function () {
+
+            const remainsInput = document.getElementById('setPartialRemains');
+            const remainsValue = parseInt(remainsInput.value);
+            const maxQuantity = parseInt('@Model.Quantity');
+
+            // Validasyon
+            if (isNaN(remainsValue) || remainsValue < 0 || remainsValue > maxQuantity) {
+                remainsInput.classList.add('is-invalid');
+                return;
+            }
+            remainsInput.classList.remove('is-invalid');
+
+            const payload = {
+                id: parseInt(document.getElementById('setPartialOrderId').value),
+                remains: remainsValue
+            };
+
+            // Buton durumunu ayarla
+            document.getElementById('btnSavePartialText').classList.add('d-none');
+            document.getElementById('btnSavePartialSpinner').classList.remove('d-none');
+            document.getElementById('btnSavePartial').disabled = true;
+
+            try {
+                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                const response = await fetch('/admin/orders/SetPartial', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Eğer refund varsa mesajda belirtelim
+                    let refundMsg = result.refundAmount > 0
+                        ? `Order set to Partial. Refunded: <b>$${result.refundAmount.toFixed(4)}</b>`
+                        : `Order set to Partial successfully.`;
+
+                    document.getElementById('setPartialAlert').innerHTML = `
+                        <div class="alert alert-success d-flex align-items-center gap-2 py-2">
+                            <i class="fas fa-check-circle"></i>
+                            <span>${refundMsg}</span>
+                        </div>`;
+
+                    // Ana tablodaki verileri güncelle
+                    if (typeof loadOrders === 'function') {
+                        loadOrders();
+                    }
+
+                    setTimeout(() => {
+                        bootstrap.Modal.getInstance(document.getElementById('dynamicModal'))?.hide();
+                    }, 1500);
+
+                } else {
+                    document.getElementById('setPartialAlert').innerHTML = `
+                        <div class="alert alert-danger d-flex align-items-center gap-2 py-2">
+                            <i class="fas fa-exclamation-circle"></i>
+                            ${result.message || 'An error occurred.'}
+                        </div>`;
+                }
+
+            } catch (err) {
+                document.getElementById('setPartialAlert').innerHTML = `
+                    <div class="alert alert-danger py-2">
+                        <i class="fas fa-exclamation-circle me-2"></i>Connection error.
+                    </div>`;
+            } finally {
+                // Hata aldıysa veya henüz modal kapanmadıysa buton durumunu geri al
+                document.getElementById('btnSavePartialText').classList.remove('d-none');
+                document.getElementById('btnSavePartialSpinner').classList.add('d-none');
+                document.getElementById('btnSavePartial').disabled = false;
+            }
+        });
+
+    })();
+</script>
