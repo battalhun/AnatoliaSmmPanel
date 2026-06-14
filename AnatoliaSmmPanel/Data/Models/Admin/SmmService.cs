@@ -42,6 +42,7 @@ public class SmmService
 
     // Status
     public bool IsActive { get; set; } = true;
+    public bool IsDeleted { get; set; } = false;
 
     // Sync tracking
     public DateTime? LastSyncAt { get; set; } 

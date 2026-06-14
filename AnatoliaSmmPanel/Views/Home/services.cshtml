@@ -1,5 +1,395 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<AnatoliaSmmPanel.ViewModels.HomeServicesViewModel>
 @{
+    ViewData["Title"] = "Services";
+
+    var categories = (Model ?? Enumerable.Empty<AnatoliaSmmPanel.ViewModels.HomeServicesViewModel>())
+    .Select(x => new { Id = x.CategoryId, Name = string.IsNullOrEmpty(x.CategoryName) ? "General" : x.CategoryName })
+    .GroupBy(x => x.Id)
+    .Select(g => g.First())
+    .ToList();
+}
+
+@* <style>
+    .svc-toolbar {
+        background-color: var(--bs-tertiary-bg);
+        border: 1px solid var(--bs-border-color);
+        border-radius: 12px;
+    }
+
+    .svc-search {
+        position: relative;
+    }
+
+        .svc-search .form-control {
+            background-color: var(--bs-body-bg);
+            border-color: var(--bs-border-color);
+            color: var(--bs-body-color);
+            padding-left: 2.5rem;
+        }
+
+            .svc-search .form-control:focus {
+                box-shadow: none;
+                border-color: var(--bs-primary);
+            }
+
+        .svc-search i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--bs-secondary-color);
+        }
+
+    .svc-card {
+        border: 1px solid var(--bs-border-color);
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: var(--bs-body-bg);
+    }
+
+    .svc-table thead th {
+        background-color: var(--bs-tertiary-bg);
+        color: var(--bs-emphasis-color);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        font-weight: 700;
+        border-bottom: 1px solid var(--bs-border-color);
+        white-space: nowrap;
+    }
+
+    .svc-category-row td {
+        background-color: var(--bs-tertiary-bg);
+        border-top: 1px solid var(--bs-border-color);
+        border-bottom: 1px solid var(--bs-border-color);
+        font-weight: 700;
+    }
+
+    .svc-category-row .cat-icon {
+        color: var(--bs-primary);
+    }
+
+    .svc-table tbody tr.svc-row:hover {
+        background-color: var(--bs-tertiary-bg);
+    }
+
+    .svc-id {
+        color: var(--bs-secondary-color);
+        font-family: var(--bs-font-monospace, monospace);
+        font-size: 0.85rem;
+    }
+
+    .svc-rate {
+        color: var(--bs-primary);
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .svc-minmax {
+        color: var(--bs-secondary-color);
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+
+    .svc-name {
+        font-weight: 600;
+    }
+
+    .dropdown-menu {
+        --bs-dropdown-bg: var(--bs-body-bg);
+        --bs-dropdown-link-color: var(--bs-body-color);
+        --bs-dropdown-link-hover-bg: var(--bs-tertiary-bg);
+        border-color: var(--bs-border-color);
+    }
+
+    /* Modal body description */
+    .svc-desc-box {
+        max-height: 280px;
+        overflow-y: auto;
+        background-color: var(--bs-tertiary-bg);
+        border: 1px solid var(--bs-border-color);
+        border-radius: 8px;
+        padding: 1rem;
+    }
+
+    .svc-modal-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: .5rem 0;
+        border-bottom: 1px solid var(--bs-border-color);
+    }
+
+        .svc-modal-row:last-child {
+            border-bottom: none;
+        }
+
+        .svc-modal-row .label {
+            color: var(--bs-secondary-color);
+            font-size: 0.85rem;
+        }
+</style> *@
+
+<div class="container py-4">
+
+    <!-- TOOLBAR -->
+    <div class="svc-toolbar p-3 mb-3">
+        <div class="row g-2 align-items-center">
+            <div class="col-12 col-md-auto">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle px-4" type="button" id="categoryFilterBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-filter me-2"></i><span id="selectedCategoryText">All Categories</span>
+                    </button>
+                    <ul class="dropdown-menu shadow" style="max-height: 400px; overflow-y: auto;">
+                        <li>
+                            <a class="dropdown-item fw-bold" href="javascript:void(0)" data-filter-category-id="All">All Categories</a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        @foreach (var cat in categories)
+                        {
+                            <li>
+                                <a class="dropdown-item" href="javascript:void(0)" data-filter-category-id="@cat.Id" data-filter-category-name="@cat.Name">@cat.Name</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-12 col-md">
+                <div class="svc-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="filterServicesInput" class="form-control" placeholder="Search services..." onkeyup="searchServices()">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="svc-card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 svc-table" id="service-table">
+                <thead>
+                    <tr>
+                        <th class="ps-4" style="width: 80px;">ID</th>
+                        <th class="width-service-name">Service Name</th>
+                        <th class="nowrap" style="width: 110px;">Rate</th>
+                        <th class="nowrap" style="width: 130px;" data-bs-toggle="tooltip" data-bs-placement="top" title="Min Order - Max Order">Min - Max</th>
+                        <th class="pe-4 text-center" style="width: 90px;">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        var groupedServices = Model.GroupBy(x => new { x.CategoryId, CategoryName = string.IsNullOrEmpty(x.CategoryName) ? "General" : x.CategoryName });
+
+                        foreach (var categoryGroup in groupedServices)
+                        {
+                            <tr class="svc-category-row" data-filter-table-category-id="@categoryGroup.Key.CategoryId">
+                                <td colspan="5" class="ps-4 py-2">
+                                    <i class="fas fa-folder-open cat-icon me-2"></i>@categoryGroup.Key.CategoryName
+                                </td>
+                            </tr>
+
+                            foreach (var service in categoryGroup)
+                            {
+                                <tr class="svc-row" data-filter-table-category-id="@categoryGroup.Key.CategoryId" data-filter-table-service-name="true" data-name="@service.Name.ToLower()">
+                                    <td class="ps-4 svc-id" data-filter-table-service-id="@service.Id">#@service.Id</td>
+                                    <td class="svc-name">@service.Name</td>
+                                    <td class="svc-rate">$@service.Rate.ToString("0.0000")</td>
+                                    <td class="svc-minmax">@service.Min&nbsp;&ndash;&nbsp;@service.Max</td>
+                                    <td class="pe-4 text-center">
+                                        <button class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#serviceDetailModal"
+                                                data-service-id="@service.Id"
+                                                data-service-name="@service.Name"
+                                                data-service-rate="$@service.Rate.ToString("0.0000")"
+                                                data-service-min="@service.Min"
+                                                data-service-max="@service.Max"
+                                                data-service-description="@System.Net.WebUtility.HtmlEncode(service.Description ?? "")"
+                                                data-service-dripfeed="@service.Dripfeed.ToString().ToLower()"
+                                                data-service-refill="@service.Refill.ToString().ToLower()"
+                                                data-service-cancel="@service.Cancel.ToString().ToLower()">
+                                            View
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-body-secondary">
+                                <i class="fas fa-box-open fa-3x mb-3 opacity-50"></i>
+                                <h5>No services available at the moment.</h5>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- SERVICE DETAIL MODAL -->
+<div class="modal fade" id="serviceDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-body-tertiary py-3">
+                <h5 class="modal-title fw-bold" id="svcModalTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+
+                <div class="svc-modal-row">
+                    <span class="label">Service ID</span>
+                    <span class="d-flex align-items-center gap-2">
+                        <strong id="svcModalId"></strong>
+                        <i class="fas fa-copy cursor-pointer text-secondary" role="button" onclick="copyServiceId()" title="Copy ID"></i>
+                    </span>
+                </div>
+
+                <div class="svc-modal-row">
+                    <span class="label">Rate (per 1000)</span>
+                    <strong id="svcModalRate" class="svc-rate"></strong>
+                </div>
+
+                <div class="svc-modal-row">
+                    <span class="label">Amount</span>
+                    <span>Min. <strong id="svcModalMin"></strong> &nbsp;&ndash;&nbsp; Max. <strong id="svcModalMax"></strong></span>
+                </div>
+
+                <div class="svc-modal-row" id="svcModalFeaturesRow" style="display:none;">
+                    <span class="label">Features</span>
+                    <span id="svcModalFeatures"></span>
+                </div>
+
+                <div class="mt-3" id="svcModalDescWrapper" style="display:none;">
+                    <div class="label mb-2">Description</div>
+                    <div class="svc-desc-box" id="svcModalDesc"></div>
+                </div>
+
+            </div>
+            <div class="modal-footer bg-body-tertiary p-3">
+                <a id="svcModalCreateOrderLink" href="#" class="btn btn-primary px-4 w-100">
+                    <i class="fas fa-plus me-2"></i>Create Order
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // Tooltips
+            [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+                .forEach(el => new bootstrap.Tooltip(el));
+
+            // Category filter dropdown
+            document.querySelectorAll('[data-filter-category-id]').forEach(item => {
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const id = this.getAttribute('data-filter-category-id');
+                    const name = this.getAttribute('data-filter-category-name') || 'All Categories';
+
+                    document.getElementById('selectedCategoryText').textContent =
+                        id === 'All' ? 'All Categories' : name;
+
+                    document.getElementById('filterServicesInput').value = '';
+
+                    document.querySelectorAll('[data-filter-table-category-id]').forEach(row => {
+                        if (id === 'All' || row.getAttribute('data-filter-table-category-id') === id) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // Service detail modal population
+            const serviceModal = document.getElementById('serviceDetailModal');
+            serviceModal.addEventListener('show.bs.modal', function (event) {
+                const btn = event.relatedTarget;
+                if (!btn) return;
+
+                const id          = btn.getAttribute('data-service-id');
+                const name        = btn.getAttribute('data-service-name');
+                const rate        = btn.getAttribute('data-service-rate');
+                const min         = btn.getAttribute('data-service-min');
+                const max         = btn.getAttribute('data-service-max');
+                const description = btn.getAttribute('data-service-description');
+                const dripfeed    = btn.getAttribute('data-service-dripfeed') === 'true';
+                const refill      = btn.getAttribute('data-service-refill') === 'true';
+                const cancel      = btn.getAttribute('data-service-cancel') === 'true';
+
+                document.getElementById('svcModalTitle').textContent = name;
+                document.getElementById('svcModalId').textContent = '#' + id;
+                document.getElementById('svcModalRate').textContent = rate;
+                document.getElementById('svcModalMin').textContent = min;
+                document.getElementById('svcModalMax').textContent = max;
+
+                // Features
+                let features = '';
+                if (dripfeed) features += '<i class="fas fa-tint text-info me-2" title="Dripfeed Enabled"></i>';
+                if (refill)   features += '<i class="fas fa-sync-alt text-success me-2" title="Refill Available"></i>';
+                if (cancel)   features += '<i class="fas fa-times-circle text-danger" title="Cancelable"></i>';
+
+                const featuresRow = document.getElementById('svcModalFeaturesRow');
+                if (features) {
+                    document.getElementById('svcModalFeatures').innerHTML = features;
+                    featuresRow.style.display = '';
+                } else {
+                    featuresRow.style.display = 'none';
+                }
+
+                // Description (HTML-encoded server-side; safe to render as text)
+                const descWrapper = document.getElementById('svcModalDescWrapper');
+                if (description && description.trim()) {
+                    document.getElementById('svcModalDesc').textContent = description;
+                    descWrapper.style.display = '';
+                } else {
+                    descWrapper.style.display = 'none';
+                }
+
+                // Create order link
+                document.getElementById('svcModalCreateOrderLink').href = '/new-order?service_id=' + id;
+            });
+        });
+
+        function searchServices() {
+            const searchText = document.getElementById("filterServicesInput").value.toLowerCase();
+            const serviceRows = document.querySelectorAll(".svc-row");
+            const categoryRows = document.querySelectorAll(".svc-category-row");
+
+            document.getElementById("selectedCategoryText").textContent = "All Categories";
+
+            let visibleCategories = new Set();
+
+            serviceRows.forEach(row => {
+                const name = row.getAttribute("data-name");
+                const category = row.getAttribute("data-filter-table-category-id");
+
+                if (name.includes(searchText)) {
+                    row.style.display = "";
+                    visibleCategories.add(category);
+                } else {
+                    row.style.display = "none";
+                }
+            });
+
+            categoryRows.forEach(row => {
+                const category = row.getAttribute("data-filter-table-category-id");
+                row.style.display = visibleCategories.has(category) ? "" : "none";
+            });
+        }
+
+        function copyServiceId() {
+            const id = document.getElementById('svcModalId').textContent.replace('#', '');
+            navigator.clipboard.writeText(id);
+        }
+    </script>
 }

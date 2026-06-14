@@ -1,0 +1,349 @@
+﻿@model List<AnatoliaSmmPanel.Areas.Admin.ViewModels.Services.DeletedViewModel>
+@{
+    ViewData["Title"] = "Deleted Services";
+}
+
+<style>
+    /* AG Grid Actions Dropdown Z-Index Düzeltmesi */
+    .ag-row {
+        z-index: 0;
+    }
+
+        .ag-row:hover,
+        .ag-row.ag-row-focus,
+        .ag-row:focus-within {
+            z-index: 9999 !important;
+        }
+
+    .ag-cell[col-id="Actions"] {
+        overflow: visible !important;
+    }
+
+    #agGridWrapper {
+        flex: 1 1 auto;
+        overflow: hidden;
+        min-height: 0;
+    }
+
+    #myGrid {
+        height: 100%;
+        width: 100%;
+    }
+
+    .ag-theme-alpine {
+        --ag-font-size: 13px;
+        --ag-font-family: Inter, sans-serif;
+        --ag-border-color: #e9ecef;
+        --ag-row-border-color: #f1f3f5;
+        --ag-header-background-color: #ffffff;
+        --ag-odd-row-background-color: #fcfcfd;
+        --ag-row-hover-color: rgba(13, 110, 253, 0.04);
+        --ag-selected-row-background-color: rgba(13, 110, 253, 0.06);
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+        .ag-theme-alpine .ag-header {
+            background: #ffffff !important;
+            border-bottom: 1px solid #e9ecef !important;
+            min-height: 52px !important;
+        }
+
+        .ag-theme-alpine .ag-header-cell {
+            border-right: 1px solid #f1f3f5;
+            padding: 0 12px;
+        }
+
+            .ag-theme-alpine .ag-header-cell:last-child {
+                border-right: none;
+            }
+
+        .ag-theme-alpine .ag-header-cell-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #212529;
+            letter-spacing: 0.2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ag-theme-alpine .ag-header-cell-menu-button {
+            display: none !important;
+        }
+
+        .ag-theme-alpine .ag-header-icon.ag-header-label-icon.ag-filter-icon {
+            display: none !important;
+        }
+
+        .ag-theme-alpine .ag-sort-indicator-container {
+            margin-left: auto;
+            opacity: 0.6;
+        }
+
+        .ag-theme-alpine .ag-header-cell-resize::after {
+            background: #dee2e6 !important;
+            width: 1px;
+        }
+
+        .ag-theme-alpine .ag-row {
+            font-size: 13px;
+            border-bottom: 1px solid #f8f9fa !important;
+            transition: all 0.15s ease;
+        }
+
+            .ag-theme-alpine .ag-row:hover {
+                background: rgba(13, 110, 253, 0.03) !important;
+            }
+
+        .ag-theme-alpine .ag-row-group {
+            background: #f8f9fc !important;
+            font-weight: 700;
+            font-size: 13px;
+            color: #212529;
+            border-bottom: 1px solid #e9ecef !important;
+        }
+
+        .ag-theme-alpine .ag-checkbox-input-wrapper {
+            transform: scale(0.95);
+        }
+
+        .ag-theme-alpine .btn-group .btn {
+            border-radius: 8px !important;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .ag-theme-alpine .ag-paging-panel {
+            border-top: 1px solid #e9ecef;
+            background: #fff;
+        }
+
+        .ag-theme-alpine .ag-cell-focus,
+        .ag-theme-alpine .ag-cell-no-focus {
+            border: none !important;
+        }
+
+        .ag-theme-alpine .ag-cell:focus {
+            outline: none !important;
+        }
+
+        .ag-theme-alpine .ag-pinned-left-header,
+        .ag-theme-alpine .ag-pinned-left-cols-container {
+            border-right: 1px solid #f1f3f5;
+        }
+
+        .ag-theme-alpine .ag-pinned-right-header,
+        .ag-theme-alpine .ag-pinned-right-cols-container {
+            border-left: 1px solid #f1f3f5;
+        }
+
+    .ag-row-group .ag-group-expanded,
+    .ag-row-group .ag-group-contracted {
+        display: none !important;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Disabled Services</h4>
+    </div>
+
+    <div id="bulkActions" class="d-none mb-3 gap-2 align-items-center bg-light p-2 rounded border shadow-sm">
+        <span id="selectedInfo" class="fw-bold text-muted ms-2"></span>
+        <button class="btn btn-success btn-sm ms-auto" onclick="bulkEnable()">
+            <i class="fas fa-check-circle me-1"></i> Enable Selected
+        </button>
+    </div>
+
+    <div id="myDisableGrid" class="ag-theme-alpine shadow-sm" style="height: 600px; width: 100%;"></div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-enterprise/dist/ag-grid-enterprise.min.js"></script>
+
+    <style>
+        /* Z-Index ve Dropdown düzeltmeleri */
+        .ag-row {
+        z-index: 0;
+        }
+
+        .ag-row:hover, .ag-row.ag-row-focus, .ag-row:focus-within {
+        z-index: 9999 !important;
+        }
+
+        .ag-cell[col-id="Actions"] {
+        overflow: visible !important;
+        }
+    </style>
+
+    <script>
+        /* =========================
+        License Key
+        ========================= */
+        agGrid.LicenseManager.setLicenseKey('[TRIAL]_this_{AG_Charts_and_AG_Grid}_Enterprise_key_{AG-128628}_is_granted_for_evaluation_only___Use_in_production_is_not_permitted___Please_report_misuse_to_legal@ag-grid.com___For_help_with_purchasing_a_production_key_please_contact_info@ag-grid.com___You_are_granted_a_{Single_Application}_Developer_License_for_one_application_only___All_Front-End_JavaScript_developers_working_on_the_application_would_need_to_be_licensed___This_key_will_deactivate_on_{10 June 2026}____[v3]_[0102]_MTc4MTA0NjAwMDAwMA==27bf590b40f80de6d2c08a74090a07f7');
+
+        /* =========================
+        Backend Modelini JS'e Aktarma
+        ========================= */
+        // C# Modelini doğrudan JavaScript objesine dönüştürüyoruz
+        // Yeni Hali (İlk harfleri otomatik küçülterek JS formatına uygun hale getirir)
+        const initialRowData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model, new System.Text.Json.JsonSerializerOptions 
+            { PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase }));
+        /* =========================
+        Columns Configuration
+        ========================= */
+        const columnDefs = [
+        {
+        width: 50,
+        resizable: false,
+        sortable: false,
+        filter: false,
+        pinned: 'left',
+        headerCheckboxSelection: true,
+        checkboxSelection: p => !!p.data,
+        cellRenderer: () => ''
+        },
+        {
+        field: 'id', // C# property'leri genelde PascalCase'den camelCase'e dönüşür
+        headerName: 'ID',
+        width: 90,
+        cellRenderer: p => p.data ? `#${p.data.id}` : ''
+        },
+        {
+        field: 'name',
+        headerName: 'Service Name',
+        flex: 1,
+        minWidth: 220,
+        cellRenderer: p => p.data ? `<div class="fw-bold text-truncate">${p.data.name || 'Unknown'}</div>` : ''
+        },
+        {
+        field: 'isActive',
+        headerName: 'Status',
+        width: 120,
+        cellRenderer: p => '<span class="badge bg-danger-subtle text-danger border border-danger-subtle">Disabled</span>'
+        },
+        {
+        headerName: 'Actions',
+        width: 120,
+        pinned: 'right',
+        sortable: false,
+        filter: false,
+        resizable: false,
+        cellStyle: { overflow: 'visible' },
+        cellRenderer: p => {
+        if (!p.data) return '';
+        return `
+        <button class="btn btn-sm btn-outline-success" onclick="enableService(${p.data.id})">
+        <i class="fas fa-check me-1"></i> Enable
+        </button>`;
+        }
+        }
+        ];
+
+        /* =========================
+        Grid Options
+        ========================= */
+        const gridOptions = {
+        columnDefs,
+        rowData: initialRowData,
+        rowSelection: 'multiple',
+        suppressRowClickSelection: true,
+        defaultColDef: {
+        sortable: true,
+        filter: true,
+        resizable: true
+        },
+        onSelectionChanged: onSelectionChanged
+        };
+
+        /* =========================
+        Initialize Grid
+        ========================= */
+        const gridDiv = document.getElementById('myDisableGrid');
+        const grid = agGrid.createGrid(gridDiv, gridOptions);
+
+        /* =========================
+        Selection Logic
+        ========================= */
+        function onSelectionChanged() {
+        const count = grid.getSelectedRows().length;
+        const bar = document.getElementById('bulkActions');
+
+        if (count > 0) {
+        document.getElementById('selectedInfo').textContent = count + ' selected';
+        bar.classList.remove('d-none');
+        bar.classList.add('d-flex');
+        } else {
+        bar.classList.add('d-none');
+        bar.classList.remove('d-flex');
+        }
+        }
+
+        /* =========================
+        Single Enable Action
+        ========================= */
+        async function enableService(id) {
+        if (!confirm('Are you sure you want to enable this service?')) return;
+
+        try {
+        const res = await fetch(`/admin/services/GetRestoreService/${id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+        // IgnoreAntiforgeryToken kullandığın için X-CSRF-TOKEN yollamaya gerek yok
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+        // İşlem başarılıysa satırı grid'den kaldır (Çünkü artık disabled değil)
+        const rowNode = grid.getRowNode(id);
+        if (rowNode) {
+        grid.applyTransaction({ remove: [rowNode.data] });
+        } else {
+        location.reload(); // Fallback olarak sayfayı yenile
+        }
+        } else {
+        alert(result.message || 'Failed to enable service.');
+        }
+        } catch (err) {
+        alert('Connection error.');
+        console.error(err);
+        }
+        }
+
+        /* =========================
+        Bulk Enable Action
+        ========================= */
+        async function bulkEnable() {
+        const selected = grid.getSelectedRows();
+        if (!selected.length) return;
+
+        if (!confirm(`Are you sure you want to enable ${selected.length} service(s)?`)) return;
+
+        const ids = selected.map(r => r.id);
+
+        try {
+        const res = await fetch('/admin/services/BulkSetActive', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: ids, isActive: true })
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+        // İşlem başarılıysa seçili satırları grid'den kaldır
+        grid.applyTransaction({ remove: selected });
+        onSelectionChanged(); // Barı gizle
+        } else {
+        alert(result.message || 'Operation failed.');
+        }
+        } catch (err) {
+        alert('Connection error.');
+        console.error(err);
+        }
+        }
+    </script>
+}

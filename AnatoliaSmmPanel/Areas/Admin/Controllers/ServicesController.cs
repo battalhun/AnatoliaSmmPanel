@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AnatoliaSmmPanel.Areas.Admin.Controllers
 {
@@ -31,18 +32,24 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
         }
 
         [HttpGet("")]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            //int servicecount = await _context.SmmServices.CountAsync();
-            return View();
-        }
+            var providers = _context.Providers
+                .Where(p => p.IsActive)
+                .Select(p => new ImportProviderViewModel
+                {
+                    Id = p.Id,
+                    Name = p.Name
+                })
+                .ToList();
 
+            var viewModel = new ImportViewModel
+            {
+                ımportProviderViewModel = providers,
+                ImportServicesViewModel = new List<ImportServicesViewModel>()
+            };
 
-        [HttpGet("services2")]
-        public async Task<IActionResult> Services2()
-        {
-            int servicecount = await _context.SmmServices.CountAsync();
-            return View(servicecount);
+            return View(viewModel);
         }
 
         [HttpGet("GetReduxAll")]
@@ -50,6 +57,7 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
         public async Task<IActionResult> GetReduxAll()
         {
             var services = await _context.SmmServices
+                .Where(s => !s.IsDeleted)
                 .Include(x => x.Provider)
                 .Include(x => x.serviceCategory)
                 .OrderBy(x => x.serviceCategoryId)
@@ -202,20 +210,11 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
 
 
 
-
-        [HttpGet("ServicesTest")]
-        public IActionResult ServicesTest()
-        {
-            return View();
-        }
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ImportSelectedServices(ImportSelectedServicesViewModel model)
         {
-            if (model.SelectedProviderId == 0 ||
-                !model.SelectedServiceIds.Any())
+            if (model.SelectedProviderId == 0 || !model.SelectedServiceIds.Any())
             {
                 return BadRequest();
             }
@@ -230,14 +229,18 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
                 var externalService = externalServices.FirstOrDefault(s => s.Service == serviceId);
                 if (externalService != null)
                 {
+                    // Fiyatı güvenli bir şekilde parse etme
+                    decimal parsedRate = 0;
+                    decimal.TryParse(externalService.Rate,
+                        System.Globalization.NumberStyles.Any,
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        out parsedRate);
+
                     SmmService newService = new SmmService
                     {
                         Name = externalService.Name,
                         Type = externalService.Type,
-                        Rate = decimal.TryParse(externalService.Rate,
-    System.Globalization.NumberStyles.Any,
-    System.Globalization.CultureInfo.InvariantCulture,
-    out var parsedRate) ? parsedRate : 0,
+                        Rate = parsedRate,
                         Min = externalService.Min,
                         Max = externalService.Max,
                         Dripfeed = externalService.Dripfeed,
@@ -245,13 +248,30 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
                         Cancel = externalService.Cancel,
                         ProviderId = model.SelectedProviderId,
                         serviceCategoryId = null,
-                        externalServiceInfoId = null,
+
+                        // externalServiceInfoId alanını YAZMIYORUZ, EF Core otomatik halledecek.
+
+                        externalServiceInfo = new ExternalServiceInfo
+                        {
+                            ExternalServiceId = externalService.Service.ToString(), // İleride Sync yapabilmek için çok önemli!
+                            ExternalName = externalService.Name,
+                            ExternalType = externalService.Type,
+                            ExternalMin = externalService.Min,
+                            ExternalMax = externalService.Max,
+                            ExternalRate = parsedRate, // Karşı tarafın orijinal fiyatını da tutmak faydalıdır
+                            ExternalCategoryName = externalService.Category,
+                            LastSyncAt = DateTime.UtcNow, // İlk eklenme anını sync zamanı olarak alabiliriz
+                           
+                        },
                         IsActive = true
                     };
 
                     _context.SmmServices.Add(newService);
                 }
             }
+
+            // SaveChangesAsync çağrıldığında EF Core her iki tabloya da veriyi ekler 
+            // ve aralarındaki ID ilişkisini kusursuzca kurar.
             await _context.SaveChangesAsync();
 
             return Json(new
@@ -261,8 +281,6 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
                 count = model.SelectedServiceIds.Count
             });
         }
-
-
 
 
 
@@ -362,5 +380,129 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
             return Json(new { success = true });
         }
 
+
+
+
+
+        #region Servis aktif etme işlemleri
+        // GetDisableService Servislere IsActive = False etmek için kullanılır.
+        [HttpPost("GetDisableService/{id}")]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> GetDisableService(int id)
+        {
+            var service = await _context.SmmServices.FindAsync(id);
+            if (service == null)
+                return Json(new { success = false, message = "Service not found." });
+
+            service.IsActive = false;
+            await _context.SaveChangesAsync();
+            return Json(new { success = true });
+
+        }
+
+        // GetEnabledService Servislere IsActive = True etmek için kullanılır.
+        [HttpPost("GetEnableServices/{id}")]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> GetEnableServices(int id)
+        {
+            var service = await _context.SmmServices.FindAsync(id);
+            if (service == null)
+                return Json(new { success = false, message = "Service not found." });
+
+            service.IsActive = true;
+            await _context.SaveChangesAsync();
+            return Json(new { success = true });
+        }
+
+
+
+        // BulkSetActive Servislere toplu olarak IsActive = True veya False etmek için kullanılır.
+        [HttpPost("BulkSetActive")]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> BulkSetActive([FromBody] BulkSetActiveRequest request)
+        {
+            if (request.Ids == null || request.Ids.Count == 0)
+                return Json(new { success = false, message = "No services selected." });
+
+            var services = await _context.SmmServices
+                .Where(s => request.Ids.Contains(s.Id))
+                .ToListAsync();
+
+            foreach (var service in services)
+            {
+                service.IsActive = request.IsActive;
+                service.UpdatedAt = DateTime.UtcNow;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, updated = services.Count });
+        } 
+        #endregion
+
+
+        #region Servis silme işlemleri
+        // DeletedServices Silinmiş servisleri listelemek için kullanılır.
+        [HttpGet("DeletedServices")]
+        public async Task<IActionResult> DeletedServices()
+        {
+            List<DeletedViewModel> services = await _context.SmmServices
+                .Where(s => s.IsDeleted)
+                .Select(s => new DeletedViewModel
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    IsActive = s.IsActive,
+                    IsDeleted = s.IsDeleted
+                }).ToListAsync();
+
+
+            return View(services);
+        }
+
+
+
+       
+        // GetDeletedService Servislere IsDeleted = True etmek için kullanılır.
+        [HttpPost("GetDeletedService/{id}")]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> GetDeletedService(int id)
+        {
+            var service = await _context.SmmServices.FindAsync(id);
+            if (service == null)
+                return Json(new { success = false, message = "Service not found." });
+            service.IsActive = false;
+            service.IsDeleted = true;
+            service.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return Json(new { success = true });
+        }
+
+        // GetRestoreService Servislere IsDeleted = False etmek için kullanılır.
+        [HttpPost("GetRestoreService/{id}")]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> GetRestoreService(int id)
+        {
+            var service = await _context.SmmServices.FindAsync(id);
+            if (service == null)
+                return Json(new { success = false, message = "Service not found." });
+            service.IsActive = false;
+            service.IsDeleted = false;
+            service.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return Json(new { success = true });
+        } 
+        #endregion
+
     }
+
+    public class BulkSetActiveRequest
+    {
+        public List<int> Ids { get; set; } = new();
+        public bool IsActive { get; set; }
+    }
+
+
 }

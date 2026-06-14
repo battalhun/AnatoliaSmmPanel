@@ -143,6 +143,9 @@ function generateServiceRowsHtml(catId, services) {
                             <li>
                                 <a class="dropdown-item" href="javascript:void(0)" onclick="editService(${item.id})">Edit</a>
                             </li>
+                            <li>
+                                <a class="dropdown-item" href="javascript:void(0)" onclick="disableService(${item.id})">Disable</a>
+                            </li>
                         </ul>       
                     </div>
                 </td>
@@ -172,3 +175,34 @@ $(document).on('click', '.toggle-services-btn', function () {
             .html('<i class="fas fa-eye me-1"></i> Show Services');
     }
 });
+
+
+// Disable Service Function
+async function disableService(id) {
+    if (!confirm('Are you sure you want to disable this service?')) return;
+
+    try {
+        const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
+
+        const res = await fetch(`/admin/services/GetDisableService/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': token
+            }
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+            // Listeyi yenile — projendeki tabloyu yeniden yükleyen fonksiyonun adıyla değiştir
+            if (typeof loadServices === 'function') loadServices();
+            if (typeof getReduxAll === 'function') getReduxAll();
+        } else {
+            alert(result.message || 'Failed to disable service.');
+        }
+    } catch (err) {
+        alert('Connection error.');
+        console.error(err);
+    }
+}

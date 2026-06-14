@@ -29,8 +29,8 @@ public class Order
     [Column(TypeName = "decimal(18,6)")]
     public decimal ProviderCharge { get; set; }
 
-    public string ExternalOrderId { get; set; }
-    public string ProviderName { get; set; }
+    public string? ExternalOrderId { get; set; }
+    public string? ProviderName { get; set; }
 
     public string Status { get; set; } = "Pending";
     // Pending, Awaiting, In progress, Processing, Completed, Partial, Canceled, Fail, Error

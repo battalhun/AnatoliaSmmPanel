@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿        @using Microsoft.AspNetCore.Identity
 @using AnatoliaSmmPanel.Data.Models.Appliciton
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -15,7 +15,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+    <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken">
     <title>@ViewData["Title"] - AnatoliaSmmPanel</title>
     <script type="importmap"></script>
   @*   <meta name="keywords" content="{{ site['seo_key'] }}">

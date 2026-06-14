@@ -1,5 +1,4 @@
-﻿
-// Dinamik modal açma fonksiyonu
+﻿// Dinamik modal açma fonksiyonu
 function openDynamicModal(url) {
 
     const modalElement = document.getElementById("dynamicModal");
@@ -51,7 +50,3 @@ function setModalSize(size) {
         dialog.classList.add('modal-' + size);
     }
 }
-
-
-
-

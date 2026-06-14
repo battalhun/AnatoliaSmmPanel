@@ -1,5 +1,4 @@
-﻿
-// Modal boyutunu ayarlamak ve içeriği yüklemek için kullanılan fonksiyon
+﻿// Modal boyutunu ayarlamak ve içeriği yüklemek için kullanılan fonksiyon
 function importbutton() {
     setModalSize('xl');
     openDynamicModal('/admin/services/import');
@@ -46,7 +45,7 @@ $(document).ready(function () {
         const targetId = '#collapse_' + categoryId;
         $(targetId).find('input[type="checkbox"]').prop('checked', isChecked);
 
-        updateSelectedCount(); 
+        updateSelectedCount();
     });
 
 });

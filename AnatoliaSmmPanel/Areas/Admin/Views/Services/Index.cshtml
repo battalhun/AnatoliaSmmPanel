@@ -6,46 +6,179 @@
 }
 
 <style>
-    .service-row {
-        height: 60px !important;
-        contain: strict;
+    /* AG Grid Actions Dropdown Z-Index Düzeltmesi */
+    .ag-row {
+        z-index: 0;
     }
 
-    #scrollArea {
-        transform: translateZ(0);
-        will-change: scroll-position;
-        backface-visibility: hidden;
+        .ag-row:hover,
+        .ag-row.ag-row-focus,
+        .ag-row:focus-within {
+            z-index: 9999 !important;
+        }
+
+    .ag-cell[col-id="Actions"] {
+        overflow: visible !important;
     }
 
+    #agGridWrapper {
+        flex: 1 1 auto;
+        overflow: hidden;
+        min-height: 0;
+    }
+
+    #myGrid {
+        height: 100%;
+        width: 100%;
+    }
+
+    .ag-theme-alpine {
+        --ag-font-size: 13px;
+        --ag-font-family: Inter, sans-serif;
+        --ag-border-color: #e9ecef;
+        --ag-row-border-color: #f1f3f5;
+        --ag-header-background-color: #ffffff;
+        --ag-odd-row-background-color: #fcfcfd;
+        --ag-row-hover-color: rgba(13, 110, 253, 0.04);
+        --ag-selected-row-background-color: rgba(13, 110, 253, 0.06);
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+        .ag-theme-alpine .ag-header {
+            background: #ffffff !important;
+            border-bottom: 1px solid #e9ecef !important;
+            min-height: 52px !important;
+        }
+
+        .ag-theme-alpine .ag-header-cell {
+            border-right: 1px solid #f1f3f5;
+            padding: 0 12px;
+        }
+
+            .ag-theme-alpine .ag-header-cell:last-child {
+                border-right: none;
+            }
+
+        .ag-theme-alpine .ag-header-cell-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #212529;
+            letter-spacing: 0.2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ag-theme-alpine .ag-header-cell-menu-button {
+            display: none !important;
+        }
+
+        .ag-theme-alpine .ag-header-icon.ag-header-label-icon.ag-filter-icon {
+            display: none !important;
+        }
+
+        .ag-theme-alpine .ag-sort-indicator-container {
+            margin-left: auto;
+            opacity: 0.6;
+        }
+
+        .ag-theme-alpine .ag-header-cell-resize::after {
+            background: #dee2e6 !important;
+            width: 1px;
+        }
+
+        .ag-theme-alpine .ag-row {
+            font-size: 13px;
+            border-bottom: 1px solid #f8f9fa !important;
+            transition: all 0.15s ease;
+        }
+
+            .ag-theme-alpine .ag-row:hover {
+                background: rgba(13, 110, 253, 0.03) !important;
+            }
+
+        .ag-theme-alpine .ag-row-group {
+            background: #f8f9fc !important;
+            font-weight: 700;
+            font-size: 13px;
+            color: #212529;
+            border-bottom: 1px solid #e9ecef !important;
+        }
+
+        .ag-theme-alpine .ag-checkbox-input-wrapper {
+            transform: scale(0.95);
+        }
+
+        .ag-theme-alpine .btn-group .btn {
+            border-radius: 8px !important;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .ag-theme-alpine .ag-paging-panel {
+            border-top: 1px solid #e9ecef;
+            background: #fff;
+        }
+
+        .ag-theme-alpine .ag-cell-focus,
+        .ag-theme-alpine .ag-cell-no-focus {
+            border: none !important;
+        }
+
+        .ag-theme-alpine .ag-cell:focus {
+            outline: none !important;
+        }
+
+        .ag-theme-alpine .ag-pinned-left-header,
+        .ag-theme-alpine .ag-pinned-left-cols-container {
+            border-right: 1px solid #f1f3f5;
+        }
+
+        .ag-theme-alpine .ag-pinned-right-header,
+        .ag-theme-alpine .ag-pinned-right-cols-container {
+            border-left: 1px solid #f1f3f5;
+        }
+
+    .ag-row-group .ag-group-expanded,
+    .ag-row-group .ag-group-contracted {
+        display: none !important;
+    }
 </style>
 
 <div class="wrapper" id="page-wrapper">
 
-    <!-- ALERTS -->
     <div id="wrapper-alerts">
         <div class="wrapper-alerts"></div>
     </div>
 
     <div class="page">
+        <div class="d-flex flex-column vh-100 bg-body-tertiary shadow-sm" style="padding: 10px; border-radius: 5px;">
 
-
-        <div class="d-flex flex-column vh-100 bg-body-tertiary shadow-sm" style="padding: 10px;border-radius: 5px;">
-    
+            <!-- HEADER -->
             <header class="container-fluid py-4 border-bottom bg-body-tertiary">
                 <div class="row align-items-center">
                     <div class="col-md-7">
-                        <div class="d-flex flex-wrap gap-2">
-                            <button id="add-service" class="btn btn-primary px-3">
-                                <i class="fas fa-plus me-2"></i> Add Service
-                            </button>
-                            <button id="add-subscription" class="btn btn-outline-secondary px-3">Add Subscription</button>
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
                             <button id="create-category" class="btn btn-outline-secondary px-3"
                                     onclick="setModalSize(''); openDynamicModal('/admin/services/AddCategory')">
-                                Create Category
+                                <i class="fas fa-folder-plus me-2"></i>Create Category
                             </button>
                             <button id="import-button" class="btn btn-outline-info px-3" onclick="importbutton()">
-                                Import
+                                <i class="fas fa-file-import me-2"></i>Import
                             </button>
+
+                            <!-- Seçim yapılınca belirir -->
+                            <div id="bulkActions" class="d-none d-flex gap-2 align-items-center ms-2 border-start ps-3">
+                                <span class="text-muted small" id="selectedInfo"></span>
+                                <button class="btn btn-sm btn-success" onclick="bulkSetActive(true)">
+                                    <i class="fas fa-check me-1"></i>Enable
+                                </button>
+                                <button class="btn btn-sm btn-warning" onclick="bulkSetActive(false)">
+                                    <i class="fas fa-ban me-1"></i>Disable
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-5">
@@ -53,115 +186,64 @@
                             <span class="input-group-text bg-body border-end-0">
                                 <i class="fas fa-search text-muted"></i>
                             </span>
-                            <input type="text" id="searchInput" class="form-control border-start-0 py-2 bg-body" placeholder="Search for services...">
-                            <select class="form-select border-start-0 bg-body" id="searchField" style="max-width: 150px;">
+                            <input type="text" id="searchInput" class="form-control border-start-0 py-2 bg-body"
+                                   placeholder="Search for services, IDs..."
+                                   oninput="onSearch(this.value)">
+                            <select id="searchField" class="form-select border-start-0 bg-body" style="max-width: 140px;"
+                                    onchange="onSearch(document.getElementById('searchInput').value)">
                                 <option value="all">All Fields</option>
                                 <option value="name">Service Name</option>
-                                <option value="id">Service ID</option>
+                                <option value="id">ID</option>
                                 <option value="provider">Provider</option>
-                                <option value="type">Service Type</option>
+                                <option value="type">Type</option>
                             </select>
                         </div>
                     </div>
                 </div>
             </header>
 
+            <!-- AG GRID -->
             <main class="flex-grow-1 d-flex flex-column overflow-hidden">
-        
-                <div class="border-bottom bg-body-tertiary" style="z-index: 10; padding-right: 17px;">
-                    <table class="table table-sm mb-0 custom-table table-fixed">
-                        <colgroup>
-                            <col style="width: 50px;">
-                            <col style="width: 80px;">
-                            <col>
-                            <col style="width: 150px;">
-                            <col style="width: 150px;">
-                            <col style="width: 100px;">
-                            <col style="width: 80px;">
-                            <col style="width: 80px;">
-                            <col style="width: 110px;">
-                            <col style="width: 120px;">
-                        </colgroup>
-                        <thead class="bg-body-secondary border-bottom">
-                            <tr>
-                                <th class="text-center">
-                                    <input class="form-check-input" type="checkbox" id="checkAll">
-                                </th>
-                                <th>ID</th>
-                                <th>Service Name</th>
-                                <th>Type</th>
-                                <th>Provider</th>
-                                <th>Rate</th>
-                                <th>Min</th>
-                                <th>Max</th>
-                                <th>Status</th>
-                                <th class="text-end pe-4">Actions</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-
-                <div id="scrollArea" class="flex-grow-1 overflow-auto">
-                    <table class="table table-hover mb-0 custom-table table-fixed align-middle" id="serviceTable">
-                        <colgroup>
-                            <col style="width: 50px;">
-                            <col style="width: 80px;">
-                            <col>
-                            <col style="width: 150px;">
-                            <col style="width: 150px;">
-                            <col style="width: 100px;">
-                            <col style="width: 80px;">
-                            <col style="width: 80px;">
-                            <col style="width: 110px;">
-                            <col style="width: 120px;">
-                        </colgroup>
-                        <tbody>
-                        </tbody>
-                    </table>
+                <div id="agGridWrapper">
+                    <div id="myGrid" class="ag-theme-alpine"></div>
                 </div>
             </main>
 
+            <!-- FOOTER -->
             <footer class="container-fluid py-3 border-top bg-body-tertiary">
                 <div class="d-flex justify-content-between align-items-center">
-                    <button type="button" class="btn btn-link btn-sm text-decoration-none text-secondary">
-                        <i class="fas fa-trash-alt me-1"></i> Deleted Services
-                    </button>
-                    <span class="badge bg-secondary px-3 py-2" id="totalCount">Total: </span>
+                    <span class="small text-muted">
+                        <a asp-action="DeletedServices" asp-controller="Services">Deleted Services</a>
+                    </span>
+                    <div class="d-flex align-items-center gap-3">
+                        <div id="loadingSpinner" class="spinner-border spinner-border-sm text-primary d-none" role="status"></div>
+                        <span class="badge bg-secondary px-3 py-2" id="totalCount">Total: 0</span>
+                    </div>
                 </div>
             </footer>
+
         </div>
-
-            
     </div>
-
 </div>
 
-
-
-
-
-<!-- Dinamik Modal İskeleti -->
+<!-- Dinamik Modal -->
 <div class="modal fade" id="dynamicModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
-        <!-- data-bs-theme mirasını bozmasın diye modal-content standart kalıyor -->
         <div class="modal-content border-0 shadow" id="dynamicModalBody">
             <div class="text-center p-5">
                 <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Yükleniyor...</span>
+                    <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
 @section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.2.1/redux.min.js"></script>
-
-    <script src="~/js/services/services.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-enterprise/dist/ag-grid-enterprise.min.js"></script>
 
     <script src="~/js/services/servicemodal.js"></script>
-
     <script src="~/js/services/editservicemodal.js"></script>
     <script src="~/js/services/importservicesmodal.js"></script>
+    <script src="~/js/services/servicesgrid.js"></script>
 }
