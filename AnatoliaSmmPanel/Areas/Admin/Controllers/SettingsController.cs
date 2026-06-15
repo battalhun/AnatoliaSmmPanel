@@ -298,11 +298,13 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
                 // 1. Mevcut ayarları JSON'dan çek (Yolları korumak için)
                 var currentSettings = await _settingsService.GetSettingsAsync();
 
-                // 2. Favicon İşlemleri
+                var uploadsRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+
+                // 2. Favicon
                 if (model.FaviconFile != null && model.FaviconFile.Length > 0)
                 {
                     var fileName = "favicon.ico";
-                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", fileName);
+                    var path = Path.Combine(uploadsRoot, fileName);
                     using (var stream = new FileStream(path, FileMode.Create))
                     {
                         await model.FaviconFile.CopyToAsync(stream);
@@ -315,31 +317,92 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
                     model.FaviconPath = currentSettings.FaviconPath;
                 }
 
-                // 3. Diğer dosya yollarını da mevcut ayarlardan aktar (Eğer formda değişmiyorsa)
-                model.SitemapPath = currentSettings.SitemapPath;
-                model.RobotsPath = currentSettings.RobotsPath;
+                // 3. Site Logo
+                if (model.LogoFile != null && model.LogoFile.Length > 0)
+                {
+                    var ext = Path.GetExtension(model.LogoFile.FileName);
+                    var fileName = "logo" + ext;
+                    var path = Path.Combine(uploadsRoot, fileName);
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await model.LogoFile.CopyToAsync(stream);
+                    }
+                    model.LogoPath = "/" + fileName;
+                }
+                else
+                {
+                    model.LogoPath = currentSettings.LogoPath;
+                }
 
-                // 4. Dosya nesnelerini JSON'a girmemesi için temizle
+                // 4. Dar (Small) Logo
+                if (model.SmallLogoFile != null && model.SmallLogoFile.Length > 0)
+                {
+                    var ext = Path.GetExtension(model.SmallLogoFile.FileName);
+                    var fileName = "logo-small" + ext;
+                    var path = Path.Combine(uploadsRoot, fileName);
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await model.SmallLogoFile.CopyToAsync(stream);
+                    }
+                    model.SmallLogoPath = "/" + fileName;
+                }
+                else
+                {
+                    model.SmallLogoPath = currentSettings.SmallLogoPath;
+                }
+
+                // 5. Custom sitemap / robots dosyaları
+                if (model.CustomSitemapFile != null && model.CustomSitemapFile.Length > 0)
+                {
+                    var fileName = "sitemap.xml";
+                    var path = Path.Combine(uploadsRoot, fileName);
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await model.CustomSitemapFile.CopyToAsync(stream);
+                    }
+                    model.SitemapPath = "/" + fileName;
+                }
+                else
+                {
+                    model.SitemapPath = currentSettings.SitemapPath;
+                }
+
+                if (model.CustomRobotsFile != null && model.CustomRobotsFile.Length > 0)
+                {
+                    var fileName = "robots.txt";
+                    var path = Path.Combine(uploadsRoot, fileName);
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await model.CustomRobotsFile.CopyToAsync(stream);
+                    }
+                    model.RobotsPath = "/" + fileName;
+                }
+                else
+                {
+                    model.RobotsPath = currentSettings.RobotsPath;
+                }
+
+                // 6. Dosya nesnelerini JSON'a girmemesi için temizle
                 model.FaviconFile = null;
+                model.LogoFile = null;
+                model.SmallLogoFile = null;
                 model.CustomSitemapFile = null;
                 model.CustomRobotsFile = null;
 
-                // 5. JSON'a kaydet
+                // 7. JSON'a kaydet
                 await _settingsService.SaveSettingsAsync(model);
 
-                TempData["Success"] = "Settings saved to JSON successfully!";
+                TempData["Success"] = "Settings saved successfully!";
             }
             catch (Exception ex)
             {
-                // Hata durumunda loglama yapabilir ve kullanıcıya mesaj verebilirsin
                 _logger.LogError(ex, "Settings save error");
                 TempData["Error"] = "An error occurred while saving settings.";
             }
 
-            // HATA BURADAYDI: Metodun en dışında mutlaka bir return olmalı!
-            // Başarılı da olsa hata da alsa kullanıcıyı tekrar Settings sayfasına gönderiyoruz.
             return RedirectToAction("Index", new { section = "general" });
         }
+
 
     }
 }

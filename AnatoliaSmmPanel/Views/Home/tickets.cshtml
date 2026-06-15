@@ -1,1 +1,590 @@
-﻿
+﻿@model IEnumerable<AnatoliaSmmPanel.ViewModels.HomeTicketListItemViewModel>
+@{
+    ViewData["Title"] = "Tickets";
+    var search = Context.Request.Query["search"].ToString();
+}
+
+<div class="g-dash-content">
+    <section class="mt-4 mb-2">
+        <div class="container-fluid">
+
+            <div class="gcard-2 gcard-shadow fade-1 mb-5">
+                <div class="gcard-body gi-card">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="gcard-icon gi-1">
+                                <i class="ri-customer-service-2-line"></i>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <span class="gi-title">Tickets</span>
+                            <p class="gi-text">
+                                Be sure to check the <a href="/faq">FAQ</a> page before opening a support case.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+
+                <div class="col-lg-6">
+                    <div class="gcard ticket-page mb-3">
+
+                        <div class="gcard-header">
+                            <div class="row align-items-center">
+                                <div class="col d-flex align-items-center">
+                                    <div class="ch-g-ticon">
+                                        <div class="gcard-head-icon">
+                                            <i class="ri-customer-service-2-line"></i>
+                                        </div>
+                                    </div>
+                                    <div class="ch-text">
+                                        <h3 class="gcard-title">Create support request</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="gcard-body">
+
+                            <div class="alert alert-danger alert-dismissible fade show ticket-danger" style="display:none">
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                <div></div>
+                            </div>
+
+                            <form method="post" action="" id="ticketsend">
+
+                                <div class="ticket">
+
+                                    <div class="order-id">
+
+                                        <div class="custom-radio row">
+
+                                            <div class="col-xl-3 col-lg-6 col-6 mb-3">
+                                                <button type="button"
+                                                        data-bs-toggle="tab"
+                                                        data-bs-target="#tab11"
+                                                        class="active"
+                                                        id="typeOrder">
+                                                    <input type="radio" name="subject" value="Order" class="designradio" checked />
+                                                    <a href="javascript:void(0)">
+                                                        <div class="subject_box">
+                                                            <span><i class="ri-archive-line"></i></span>
+                                                            <p class="text_color">Order</p>
+                                                        </div>
+                                                    </a>
+                                                </button>
+                                            </div>
+
+                                            <div class="col-xl-3 col-lg-6 col-6 mb-3">
+                                                <button type="button"
+                                                        data-bs-toggle="tab"
+                                                        data-bs-target="#tab2"
+                                                        id="typePayment">
+                                                    <input type="radio" name="subject" value="Payment" class="designradio" />
+                                                    <a href="javascript:void(0)">
+                                                        <div class="subject_box">
+                                                            <span><i class="ri-refund-2-line"></i></span>
+                                                            <p class="text_color">Payment</p>
+                                                        </div>
+                                                    </a>
+                                                </button>
+                                            </div>
+
+                                            <div class="col-xl-3 col-lg-6 col-6 mb-3">
+                                                <button type="button"
+                                                        data-bs-toggle="tab"
+                                                        data-bs-target="#tab3">
+                                                    <input type="radio" name="subject" value="ChildPanel" class="designradio" />
+                                                    <a href="javascript:void(0)">
+                                                        <div class="subject_box">
+                                                            <span><i class="ri-store-2-line"></i></span>
+                                                            <p class="text_color">Child Panel</p>
+                                                        </div>
+                                                    </a>
+                                                </button>
+                                            </div>
+
+                                            <div class="col-xl-3 col-lg-6 col-6 mb-3">
+                                                <button type="button"
+                                                        data-bs-toggle="tab"
+                                                        data-bs-target="#tab4">
+                                                    <input type="radio" name="subject" value="Other" class="designradio" />
+                                                    <a href="javascript:void(0)">
+                                                        <div class="subject_box">
+                                                            <span><i class="ri-more-line"></i></span>
+                                                            <p class="text_color">Other</p>
+                                                        </div>
+                                                    </a>
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-content" id="secondTab">
+                                        <div class="tab-pane fade show active text-style" id="tab11"></div>
+                                        <div class="tab-pane fade text-style" id="tab2"></div>
+                                        <div class="tab-pane fade text-style" id="tab3"></div>
+                                        <div class="tab-pane fade text-style" id="tab4"></div>
+                                    </div>
+
+                                    <div class="ticket-fields">
+
+                                        <div class="form-group id_order" id="txtIdInput" style="display:none">
+                                            <label for="order_id_payment" class="control-label text_color">Payment ID</label>
+                                            <input type="text" class="form-control bg_color" id="order_id_payment" name="txt_id">
+                                        </div>
+
+                                        <div class="form-group id_order" id="orderIdInput">
+
+                                            <label for="order_status" class="control-label text_color">Request</label>
+
+                                            <select class="form-control bg_color" id="order_status" name="orderstatus">
+                                                <option value="Speed">Speed</option>
+                                                <option value="Cancel">Cancel</option>
+                                                <option value="Refill">Refill</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+
+                                            <div class="mt-3"></div>
+
+                                            <label for="order_id" class="control-label text_color">Order ID</label>
+
+                                            <input type="text"
+                                                   class="form-control bg_color"
+                                                   id="order_id"
+                                                   name="ordernumbers"
+                                                   placeholder="Enter multiple order id, separate with commas (,). E.g., '1234,1235,1236'">
+
+                                        </div>
+
+                                        <div class="form-group id_order" id="hidmsg">
+                                            <label for="message_box" class="control-label text_color">
+                                                Message
+                                            </label>
+
+                                            <textarea class="form-control bg_color"
+                                                      rows="7"
+                                                      id="message_box"
+                                                      name="TicketForm[message]"></textarea>
+
+                                            @Html.AntiForgeryToken()
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="tickets-uploader"
+                                                 data-rtl="false"
+                                                 data-lang-button-attach="Attach file"
+                                                 data-lang-file-format-incorrect="Invalid file format"
+                                                 data-lang-file-size-incorrect="File too large">
+                                            </div>
+                                        </div>
+
+                                        <div id="messageContainer"></div>
+
+                                        <input type="hidden"
+                                               id="ticketSubject"
+                                               name="TicketForm[subject]">
+
+                                        <button id="submitTicketBtn"
+                                                type="submit"
+                                                class="btn btn-primary w-100">
+                                            Submit Ticket
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+
+                    <div class="gcard">
+
+                        <div class="gcard-header">
+                            <div class="row align-items-center">
+                                <div class="col d-flex align-items-center">
+                                    <div class="ch-g-ticon">
+                                        <div class="gcard-head-icon">
+                                            <i class="ri-coupon-line"></i>
+                                        </div>
+                                    </div>
+                                    <div class="ch-text">
+                                        <h3 class="gcard-title">Support history</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="gcard-body gc-scroll">
+
+                            @if ((Model != null && Model.Any()) || !string.IsNullOrEmpty(search))
+                            {
+                                <div class="row">
+                                    <div class="offset-md-8 ms-3 mb-3">
+                                        <div class="nav-pills">
+                                            <form action="" method="get" id="history-search">
+
+                                                <div class="input-group">
+
+                                                    <input type="text"
+                                                           class="form-control"
+                                                           style="width:300px;"
+                                                           value="@search"
+                                                           name="search"
+                                                           placeholder="Search...">
+
+                                                    <div class="ms-2">
+                                                        <button class="btn btn-primary dropdown-toggle"
+                                                                type="submit"
+                                                                style="font-weight:700;padding:15px 40px;position:relative;z-index:1;height:50px;">
+                                                            <i class="fa fa-search" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            @if (Model != null && Model.Any())
+                            {
+                                var filtered = string.IsNullOrEmpty(search)
+                                    ? Model
+                                    : Model.Where(t => t.Subject.Contains(search, StringComparison.OrdinalIgnoreCase)
+                                                     || t.Id.ToString().Contains(search));
+
+                                @if (filtered.Any())
+                                {
+                                    <ul class="list-unstyled m-0">
+                                        @foreach (var ticket in filtered)
+                                        {
+                                            var statusClass = ticket.Status switch
+                                            {
+                                                "Pending" => "bg-warning-subtle text-warning border border-warning-subtle",
+                                                "Answered" => "bg-success-subtle text-success border border-success-subtle",
+                                                "Closed" => "bg-secondary-subtle text-secondary border border-secondary-subtle",
+                                                _ => "bg-secondary-subtle text-secondary border border-secondary-subtle"
+                                            };
+
+                                            <li class="d-flex justify-content-between align-items-center py-3 border-bottom">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    @if (ticket.IsUnread)
+                                                    {
+                                                        <i class="fas fa-circle text-primary" style="font-size:6px;"></i>
+                                                    }
+                                                    <div>
+                                                        <div class="fw-semibold">@ticket.Subject</div>
+                                                        <div class="small text-body-secondary">
+                                                            #@ticket.Id &middot; @ticket.UpdatedAt.ToString("yyyy-MM-dd HH:mm")
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span class="badge @statusClass">@ticket.Status</span>
+                                                    <button class="btn btn-sm btn-outline-primary" onclick="openTicketDetails(@ticket.Id)">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <div class="text-center text-body-secondary py-5">
+                                        <i class="fas fa-search fa-2x mb-3 opacity-50"></i>
+                                        <p class="mb-0">No tickets match your search.</p>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="text-center text-body-secondary py-5">
+                                    <i class="fas fa-inbox fa-2x mb-3 opacity-50"></i>
+                                    <p class="mb-0">No support tickets yet.</p>
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<!-- TICKET DETAILS MODAL -->
+<div class="modal fade" id="ticketDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-body-tertiary py-3">
+                <div>
+                    <h5 class="modal-title fw-bold mb-1" id="tdTitle">Ticket</h5>
+                    <div class="small text-body-secondary" id="tdSubject"></div>
+                </div>
+                <span class="badge ms-auto me-3" id="tdStatusBadge"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div id="tdThread" class="p-3 d-flex flex-column gap-2" style="max-height:420px; overflow-y:auto;"></div>
+            </div>
+            <div class="modal-footer bg-body-tertiary p-3 flex-column" id="tdReplyFooter">
+                <div id="tdReplyAlert" class="w-100"></div>
+                <div class="d-flex gap-2 w-100">
+                    <textarea id="tdReplyMessage" class="form-control bg-body" rows="2" placeholder="Type your reply..."></textarea>
+                    <button type="button" id="btnTdReply" class="btn btn-primary px-4">
+                        <span id="btnTdReplyText"><i class="fas fa-paper-plane me-2"></i>Send</span>
+                        <span id="btnTdReplySpinner" class="d-none">
+                            <span class="spinner-border spinner-border-sm me-2"></span>Sending...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        let currentTicketId = null;
+
+        // ── Tab radio -> hidden subject input ─────────────────────
+        document.querySelectorAll('.designradio').forEach(radio => {
+            radio.addEventListener('change', function () {
+                document.getElementById('ticketSubject').value = this.value;
+            });
+        });
+        document.getElementById('ticketSubject').value = 'Order';
+
+        // ── Order / Payment fields visibility ─────────────────────
+        document.getElementById('typeOrder')?.addEventListener('click', function () {
+            document.getElementById('orderIdInput').style.display = '';
+            document.getElementById('txtIdInput').style.display = 'none';
+        });
+        document.getElementById('typePayment')?.addEventListener('click', function () {
+            document.getElementById('orderIdInput').style.display = 'none';
+            document.getElementById('txtIdInput').style.display = '';
+        });
+        document.querySelector('[data-bs-target="#tab3"]')?.addEventListener('click', function () {
+            document.getElementById('orderIdInput').style.display = 'none';
+            document.getElementById('txtIdInput').style.display = 'none';
+        });
+        document.querySelector('[data-bs-target="#tab4"]')?.addEventListener('click', function () {
+            document.getElementById('orderIdInput').style.display = 'none';
+            document.getElementById('txtIdInput').style.display = 'none';
+        });
+
+        // ── Submit Ticket ──────────────────────────────────────────
+        document.getElementById('ticketsend').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const alertBox = document.querySelector('.ticket-danger');
+            const alertText = alertBox.querySelector('div');
+            const subject = document.getElementById('ticketSubject').value;
+            const message = document.getElementById('message_box').value.trim();
+            const submitBtn = document.getElementById('submitTicketBtn');
+
+            alertBox.style.display = 'none';
+
+            if (!message) {
+                alertText.textContent = 'Please enter a message.';
+                alertBox.style.display = '';
+                return;
+            }
+
+            // Subject metnini ek bilgilerle birlikte oluştur
+            let fullSubject = subject;
+            if (subject === 'Order') {
+                const status = document.getElementById('order_status').value;
+                const orderIds = document.getElementById('order_id').value.trim();
+                fullSubject = `Order - ${status}` + (orderIds ? ` (#${orderIds})` : '');
+            } else if (subject === 'Payment') {
+                const paymentId = document.getElementById('order_id_payment').value.trim();
+                fullSubject = 'Payment' + (paymentId ? ` (#${paymentId})` : '');
+            } else if (subject === 'ChildPanel') {
+                fullSubject = 'Child Panel';
+            } else {
+                fullSubject = 'Other';
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting...';
+
+            try {
+                const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                    ?? document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+                    ?? '';
+
+                const res = await fetch('/home/tickets/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+                    body: JSON.stringify({ subject: fullSubject, message })
+                });
+
+                const result = await res.json();
+
+                if (result.success) {
+                    window.location.reload();
+                } else {
+                    alertText.textContent = result.message || 'Something went wrong.';
+                    alertBox.style.display = '';
+                }
+            } catch (err) {
+                alertText.textContent = 'Connection error.';
+                alertBox.style.display = '';
+                console.error(err);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Ticket';
+            }
+        });
+
+        // ── Ticket Details Modal ───────────────────────────────────
+        function statusBadgeClass(status) {
+            const map = {
+                'Pending':  'bg-warning-subtle text-warning border border-warning-subtle',
+                'Answered': 'bg-success-subtle text-success border border-success-subtle',
+                'Closed':   'bg-secondary-subtle text-secondary border border-secondary-subtle',
+            };
+            return map[status] || 'bg-secondary-subtle text-secondary border border-secondary-subtle';
+        }
+
+        async function openTicketDetails(id) {
+            currentTicketId = id;
+
+            const modal = new bootstrap.Modal(document.getElementById('ticketDetailsModal'));
+
+            document.getElementById('tdThread').innerHTML = `
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                </div>`;
+            document.getElementById('tdSubject').textContent = '';
+            document.getElementById('tdStatusBadge').className = 'badge ms-auto me-3';
+            document.getElementById('tdStatusBadge').textContent = '';
+            document.getElementById('tdReplyMessage').value = '';
+            document.getElementById('tdReplyAlert').innerHTML = '';
+
+            modal.show();
+
+            try {
+                const res = await fetch(`/home/tickets/details/${id}`);
+                const result = await res.json();
+
+                if (!result.success) {
+                    document.getElementById('tdThread').innerHTML =
+                        `<div class="text-center text-danger py-5">${result.message}</div>`;
+                    return;
+                }
+
+                const ticket = result.data;
+
+                document.getElementById('tdTitle').textContent = `Ticket #${ticket.id}`;
+                document.getElementById('tdSubject').textContent = ticket.subject;
+
+                const badge = document.getElementById('tdStatusBadge');
+                badge.textContent = ticket.status;
+                badge.className = 'badge ms-auto me-3 ' + statusBadgeClass(ticket.status);
+
+                document.getElementById('tdReplyFooter').style.display = ticket.status === 'Closed' ? 'none' : '';
+
+                renderThread(ticket.messages);
+
+            } catch (err) {
+                document.getElementById('tdThread').innerHTML =
+                    `<div class="text-center text-danger py-5">Connection error.</div>`;
+                console.error(err);
+            }
+        }
+
+        function renderThread(messages) {
+            const thread = document.getElementById('tdThread');
+
+            if (!messages || !messages.length) {
+                thread.innerHTML = `<div class="text-center text-body-secondary py-5">No messages yet.</div>`;
+                return;
+            }
+
+            thread.innerHTML = messages.map(m => `
+                <div class="p-3 rounded-3 ${m.isAdmin ? 'bg-body-tertiary border' : 'bg-primary text-white ms-auto'}" style="max-width:75%;">
+                    <div class="fw-semibold small">${m.isAdmin ? 'Support' : 'You'}</div>
+                    <div style="white-space: pre-wrap;">${escapeHtml(m.message)}</div>
+                    <div class="small mt-1" style="font-size:0.7rem; opacity:.75;">${formatDate(m.createdAt)}</div>
+                </div>
+            `).join('');
+
+            thread.scrollTop = thread.scrollHeight;
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function formatDate(str) {
+            if (!str) return '';
+            return str.substring(0, 16).replace('T', ' ');
+        }
+
+        // ── Send Reply ───────────────────────────────────────────
+        document.getElementById('btnTdReply').addEventListener('click', async function () {
+            const textarea = document.getElementById('tdReplyMessage');
+            const alertBox = document.getElementById('tdReplyAlert');
+            const btn = this;
+
+            const message = textarea.value.trim();
+            if (!message) {
+                textarea.classList.add('is-invalid');
+                return;
+            }
+            textarea.classList.remove('is-invalid');
+
+            document.getElementById('btnTdReplyText').classList.add('d-none');
+            document.getElementById('btnTdReplySpinner').classList.remove('d-none');
+            btn.disabled = true;
+
+            try {
+                const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
+
+                const res = await fetch('/home/tickets/reply', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+                    body: JSON.stringify({ ticketId: currentTicketId, message })
+                });
+
+                const result = await res.json();
+
+                if (result.success) {
+                    textarea.value = '';
+                    openTicketDetails(currentTicketId);
+                } else {
+                    alertBox.innerHTML = `<div class="alert alert-danger py-2 mb-2">${result.message}</div>`;
+                }
+            } catch (err) {
+                alertBox.innerHTML = `<div class="alert alert-danger py-2 mb-2">Connection error.</div>`;
+                console.error(err);
+            } finally {
+                document.getElementById('btnTdReplyText').classList.remove('d-none');
+                document.getElementById('btnTdReplySpinner').classList.add('d-none');
+                btn.disabled = false;
+            }
+        });
+
+    </script>
+}

@@ -27,6 +27,22 @@
         @foreach (var AdminMenu in Model)
         {
 
+            if (AdminMenu.Name == "Tickets" && @ViewBag.TicketsCount > 0)
+            {
+                <li class="nav-item">
+                    <a data-name="@AdminMenu.Name"
+                       asp-controller="@AdminMenu.NavigationTarget.Controller"
+                       asp-action="@AdminMenu.NavigationTarget.Action"
+                       class="nav-link @(AdminMenu.Icon != null ? $"icon-{AdminMenu.Icon}" : "")"
+                       target="@(AdminMenu.OpenInNewTab ? "_blank" : "_self")">
+                        @AdminMenu.Name
+                        <span class="badge-header badge" style="color: white; background-color: orange">@ViewBag.TicketsCount</span>
+                    </a>
+                    
+                </li>
+
+                continue;
+            }
 
     
 
@@ -73,5 +89,7 @@
 
     
         }
+    
+    
     </ul>
 </div>

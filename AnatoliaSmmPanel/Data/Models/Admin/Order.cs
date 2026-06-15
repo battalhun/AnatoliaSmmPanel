@@ -30,7 +30,7 @@ public class Order
     public decimal ProviderCharge { get; set; }
 
     public string? ExternalOrderId { get; set; }
-    public string? ProviderName { get; set; }
+    public string? ProviderName { get; set; } // Silinecek
 
     public string Status { get; set; } = "Pending";
     // Pending, Awaiting, In progress, Processing, Completed, Partial, Canceled, Fail, Error

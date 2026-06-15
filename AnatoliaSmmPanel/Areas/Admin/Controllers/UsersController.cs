@@ -127,6 +127,12 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
             if (model.NewPassword != model.ConfirmPassword)
                 return Json(new { success = false, message = "Passwords do not match." });
 
+            if (await _userManager.IsLockedOutAsync(user))
+            {
+                await _userManager.SetLockoutEndDateAsync(user, null);
+            }
+            await _userManager.ResetAccessFailedCountAsync(user);
+
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var result = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
 

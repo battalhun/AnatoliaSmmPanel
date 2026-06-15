@@ -12,6 +12,6 @@ namespace AnatoliaSmmPanel.Areas.Admin.Dtos
         public string Currency { get; set; }
 
         [JsonPropertyName("error")]
-        public string Error { get; set; } // Hata varsa buraya gelir
+        public string Error { get; set; } 
     }
 }

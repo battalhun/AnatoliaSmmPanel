@@ -1,5 +1,7 @@
 {
   "FaviconPath": "/favicon.ico",
+  "LogoPath": "/logo.svg",
+  "SmallLogoPath": "/logo-small.svg",
   "SitemapPath": "/sitemap.xml",
   "RobotsPath": "/robots.txt",
   "Timezone": 3,

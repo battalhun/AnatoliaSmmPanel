@@ -1,4 +1,4 @@
-﻿        @using Microsoft.AspNetCore.Identity
+﻿@using Microsoft.AspNetCore.Identity
 @using AnatoliaSmmPanel.Data.Models.Appliciton
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -17,62 +17,78 @@
     <meta charset="utf-8" />
     @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
     <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=@DateTime.Now.Ticks" />
     <title>@ViewData["Title"] - AnatoliaSmmPanel</title>
     <script type="importmap"></script>
-  @*   <meta name="keywords" content="{{ site['seo_key'] }}">
+    @*   <meta name="keywords" content="{{ site['seo_key'] }}">
     <meta name="description" content="{{ site['seo_desc'] }}"> *@
-  @*   {% if site['favicon'] %}
+    @*   {% if site['favicon'] %}
     <link rel="shortcut icon" type="image/ico" href="{{ site['favicon'] }}" />
     {% endif %} *@
 
     <script>
-            (function() {
-                var theme = localStorage.getItem("darkMode");
-            
-                if (theme === "true") {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                } else if (theme === "false") {
-                    document.documentElement.setAttribute('data-theme', 'light');
-                } else {
+        (function() {
+        var theme = localStorage.getItem("darkMode");
+        var isDark;
 
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                    localStorage.setItem("darkMode", "true");
-                }
-            })();
+        if (theme === "true") {
+        isDark = true;
+        } else if (theme === "false") {
+        isDark = false;
+        } else {
+        isDark = true;
+        localStorage.setItem("darkMode", "true");
+        }
 
-            function change_mode() {
-                var currentTheme = localStorage.getItem("darkMode");
-                var newTheme = (currentTheme === "true") ? "false" : "true";
-                localStorage.setItem("darkMode", newTheme);
-                document.documentElement.setAttribute('data-theme', newTheme === "true" ? 'dark' : 'light');
-            }
+        applyTheme(isDark);
+        })();
 
-            function change_light() {
-                localStorage.setItem("darkMode", "false");
-                document.documentElement.setAttribute('data-theme', 'light');
-            }
+        function applyTheme(isDark) {
+        var mode = isDark ? 'dark' : 'light';
+        // Site'in kendi tema sistemi
+        document.documentElement.setAttribute('data-theme', mode);
+        // Bootstrap 5.3 dark mode icin gerekli attribute (modal, dropdown, vb. bunu kullanir)
+        document.documentElement.setAttribute('data-bs-theme', mode);
+        }
 
-            function change_dark() {
-                localStorage.setItem("darkMode", "true");
-                document.documentElement.setAttribute('data-theme', 'dark');
-            }
+        function change_mode() {
+        var currentTheme = localStorage.getItem("darkMode");
+        var newTheme = (currentTheme === "true") ? "false" : "true";
+        localStorage.setItem("darkMode", newTheme);
+        applyTheme(newTheme === "true");
+        }
+
+        function change_light() {
+        localStorage.setItem("darkMode", "false");
+        applyTheme(false);
+        }
+
+        function change_dark() {
+        localStorage.setItem("darkMode", "true");
+        applyTheme(true);
+        }
     </script>
+
  
     
-
     <link href="~/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="~/css/site.css" rel="stylesheet" />
 </head>
 
 <body>
 
+
+
+
+
+
     @* <partial name="_LoginPartial" /> *@
+
     
    
-    
     @if (SignInManager.IsSignedIn(User))
     {
         <div class="g-dash">
@@ -98,7 +114,7 @@
 
         <div class="container text-center py-5">
 
-            <!-- Logo / Brand (opsiyonel) --> 
+            <!-- Logo / Brand (opsiyonel) -->
             <a asp-area="Identity" asp-page="/Account/Login" class="d-inline-block mb-4 text-decoration-none text-light">
                 <h3 class="fw-bold m-0">
                     <svg xmlns="http://www.w3.org/2000/svg" version="1.0" class="mb-4" style="height: auto;width: 50vw;max-width: 400px;" viewBox="0 0 3376.000000 1630.000000" preserveAspectRatio="xMidYMid meet">
@@ -189,25 +205,7 @@
 
 
 
-    @*
-    {% if user['auth'] %}
-
-{% if site.currencies %} *@
-    <div class="currency-overlay"></div>
-    <div class="currency-drawer">
-        <div class="drawer-header">
-            <h3 class="drawer-header-title">Balance {{ user['balance_formatted'] }}</h3>
-            <div class="drawer-header-close">
-                <i class="ri-close-line"></i>
-            </div>
-        </div>
-        <div class="drawer-body" id="currencies-list">
-            {% for key, rate in site.currencies %}
-            <a id="currencies-item" data-rate-key="{{ key }}" data-rate-symbol="{{ rate.symbol }}" class="currency-item">{{ key }} ( {{ rate['symbol'] }} )</a>
-            {% endfor %}
-        </div>
-    </div>
-    @*  {% endif %} *@
+    
 
     <div class="g-overlay"></div>
     <div class="bs-toast">
@@ -217,13 +215,12 @@
     </div>
 
   
-    @* {% endif %} *@
 
 
 
 
     <partial name="Partials/_Scripts" />
-@await RenderSectionAsync("Scripts", required: false)
+    @await RenderSectionAsync("Scripts", required: false)
 
 </body>
 </html>

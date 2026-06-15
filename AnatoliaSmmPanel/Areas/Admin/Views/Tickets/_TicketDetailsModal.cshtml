@@ -30,9 +30,9 @@
                 <i class="fas fa-exchange-alt me-1"></i> Change Status
             </button>
             <ul class="dropdown-menu shadow">
-                <li><a class="dropdown-item" href="javascript:void(0)" onclick="changeStatus(@Model.Id, 'Pending')">Pending</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0)" onclick="changeStatus(@Model.Id, 'Answered')">Answered</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0)" onclick="changeStatus(@Model.Id, 'Closed')">Closed</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="changeStatus(@Model.Id, 0)">Pending</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="changeStatus(@Model.Id, 1)">Answered</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="changeStatus(@Model.Id, 2)">Closed</a></li>
             </ul>
         </div>
     </div>

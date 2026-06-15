@@ -6,9 +6,17 @@ namespace AnatoliaSmmPanel.Areas.Admin.ViewModels
 {
     public class GeneralSettingsViewModel
     {
-        [JsonIgnore] 
+        [JsonIgnore]
         public IFormFile? FaviconFile { get; set; }
-        public string? FaviconPath { get; set; } = "/favicon.ico"; 
+        public string? FaviconPath { get; set; }
+
+        [JsonIgnore]
+        public IFormFile? LogoFile { get; set; }
+        public string? LogoPath { get; set; }
+
+        [JsonIgnore]
+        public IFormFile? SmallLogoFile { get; set; }
+        public string? SmallLogoPath { get; set; }
 
         [JsonIgnore]
         public IFormFile? CustomSitemapFile { get; set; }

@@ -31,6 +31,12 @@ public class AdminMenuViewComponent : ViewComponent
             userRoles = (await _userManager.GetRolesAsync(user)).ToList();
         }
 
+        var ticketsCount = await _context.Tickets
+            .Where(t => t.Status == 0)
+            .CountAsync();
+
+        ViewBag.TicketsCount = ticketsCount;
+
         var adminmenuss = await _context.AdminMenus
             .Where(x => x.IsActive)
             .Include(x => x.NavigationTarget)

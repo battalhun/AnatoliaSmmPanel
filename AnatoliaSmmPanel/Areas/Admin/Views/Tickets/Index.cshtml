@@ -127,6 +127,25 @@
     </div>
 </div>
 
+<!-- CONFIRM MODAL (sayfada bir kez bulunmalı) -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalTitle">Are you sure?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmModalBody" class="mb-0">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link text-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger px-4" id="confirmModalConfirmBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
 
     <script src="~/js/modal.js"></script>
@@ -177,11 +196,58 @@
                                 <i class="fas fa-eye me-1"></i> View
                             </button>
                             <button class="btn btn-sm btn-light border dropdown-toggle" data-bs-toggle="dropdown"></button>
-                            <ul class="dropdown-menu dropdown-menu-end shadow">
-                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="changeStatus(${t.id}, 'Answered')">Mark Answered</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="changeStatus(${t.id}, 'Closed')">Close</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="changeStatus(${t.id}, 'Pending')">Reopen</a></li>
-                            </ul>
+     <style>
+.dropdown-submenu {
+    position: relative;
+}
+
+.submenu-drop {
+    top: 0;
+    margin-top: -1px;
+    display: none;
+}
+
+.submenu-drop__left {
+    left: auto;
+    right: 100%;
+}
+
+.dropdown-submenu:hover > .submenu-drop {
+    display: block;
+}
+
+.dropdown-submenu__title::before {
+    content: "";
+    display: inline-block;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    border-top: 0.3em solid transparent;
+    border-bottom: 0.3em solid transparent;
+    border-right: 0.3em solid currentColor;
+}
+
+.dropdown-submenu__title {
+    display: flex;
+    align-items: center;
+}
+</style>
+
+<ul class="dropdown-menu dropdown-menu-end shadow">
+
+    <li class="dropdown dropdown-submenu">
+        <a href="javascript:void(0)" class="dropdown-item dropdown-submenu__title">Change status</a>
+        <ul class="dropdown-menu submenu-drop submenu-drop__left shadow">
+            <li><a class="dropdown-item" href="javascript:void(0)" onclick="changeStatus(${t.id}, 0)">Pending</a></li>
+            <li><a class="dropdown-item" href="javascript:void(0)" onclick="changeStatus(${t.id}, 1)">Answered</a></li>
+            <li><a class="dropdown-item" href="javascript:void(0)" onclick="changeStatus(${t.id}, 2)">Closed</a></li>
+        </ul>
+    </li>
+
+    <li><hr class="dropdown-divider"></li>
+
+    <li><a class="dropdown-item text-danger" href="javascript:void(0)" onclick="deleteTicket(${t.id})">Delete</a></li>
+
+</ul>
                         </div>
                     </td>
                 </tr>
@@ -274,6 +340,65 @@
             loadTickets();
         }
 
+        // ── Promise tabanlı modal confirm ──────────────────────────────
+        // confirm() yerine kullanılır: const ok = await confirmModal('Title', 'Message');
+        function confirmModal(title, message) {
+        return new Promise((resolve) => {
+        const modalEl = document.getElementById('confirmModal');
+        const modal = new bootstrap.Modal(modalEl);
+        const confirmBtn = document.getElementById('confirmModalConfirmBtn');
+
+        document.getElementById('confirmModalTitle').textContent = title;
+        document.getElementById('confirmModalBody').textContent = message;
+
+        let resolved = false;
+
+        const onConfirm = () => {
+        resolved = true;
+        modal.hide();
+        resolve(true);
+        };
+
+        const onHidden = () => {
+        confirmBtn.removeEventListener('click', onConfirm);
+        modalEl.removeEventListener('hidden.bs.modal', onHidden);
+        if (!resolved) resolve(false);
+        };
+
+        confirmBtn.addEventListener('click', onConfirm);
+        modalEl.addEventListener('hidden.bs.modal', onHidden);
+
+        modal.show();
+        });
+        }
+
+        // ── Delete Ticket ────────────────────────────────────────────
+        async function deleteTicket(id) {
+        const ok = await confirmModal('Delete Ticket', 'Are you sure you want to delete this ticket? This action cannot be undone.');
+        if (!ok) return;
+
+        try {
+        const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ?? '';
+
+        const res = await fetch('/admin/tickets/DeleteTicket', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': token },
+        body: JSON.stringify({ id })
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+        loadTickets();
+        } else {
+        alert(result.message || 'Failed to delete ticket.');
+        }
+        } catch (err) {
+        alert('Connection error.');
+        console.error(err);
+        }
+        }
+
         function exportTickets() {
             const status = currentStatus === 'All' ? '' : currentStatus;
             window.location.href = `/admin/tickets/Export?status=${status}`;
@@ -331,6 +456,16 @@
                 document.getElementById('btnNewTicketSpinner').classList.add('d-none');
                 btn.disabled = false;
             }
+        });
+
+
+        document.querySelectorAll('.dropdown-submenu > a').forEach(el => {
+        el.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const submenu = this.nextElementSibling;
+        submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+        });
         });
 
         // ── Send Reply (from Ticket Details modal) ────────────────

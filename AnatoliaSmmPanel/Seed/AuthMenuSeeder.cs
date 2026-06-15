@@ -24,7 +24,8 @@ namespace AnatoliaSmmPanel.Seed
                     },
                     IsActive = true,
                     Order = 1,
-                    OpenInNewTab = false
+                    OpenInNewTab = false,
+                    Icon = "fas fa-plus"
                 },
 
                 new AuthMenu
@@ -38,7 +39,8 @@ namespace AnatoliaSmmPanel.Seed
                     },
                     IsActive = true,
                     Order = 2,
-                    OpenInNewTab = false
+                    OpenInNewTab = false,
+                    Icon = "fas fa-cubes"
                 },
                  new AuthMenu
                 {
@@ -51,7 +53,22 @@ namespace AnatoliaSmmPanel.Seed
                     },
                     IsActive = true,
                     Order = 2,
-                    OpenInNewTab = false
+                    OpenInNewTab = false,
+                    Icon = "fas fa-ticket-alt"
+                },
+                  new AuthMenu
+                {
+                    Name = "Orders",
+                    NavigationTarget = new NavigationTarget
+                    {
+                        Controller = "Home",
+                        Action = "Orders",
+                        MenuConnect = MenuConnect.Mvc
+                    },
+                    IsActive = true,
+                    Order = 2,
+                    OpenInNewTab = false,
+                    Icon = "fas fa-list"
                 }
 
             };

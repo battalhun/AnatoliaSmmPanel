@@ -218,7 +218,14 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
             var ticket = await _context.Tickets.FindAsync(request.Id);
             if (ticket == null) return Json(new { success = false, message = "Ticket not found." });
 
-            ticket.Status = request.Status;
+            ticket.Status = request.Status switch
+            {
+                0 => TicketStatusEnum.Pending,
+                1 => TicketStatusEnum.Answered,
+                2 => TicketStatusEnum.Closed,
+                _ => ticket.Status
+            };
+
             ticket.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
@@ -247,6 +254,29 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
             await _context.SaveChangesAsync();
 
             return Json(new { success = true, updated = tickets.Count });
+        }
+
+        [HttpPost("DeleteTicket")]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> DeleteTicket([FromBody] DeleteTicketRequest model)
+        {
+            var ticket = await _context.Tickets
+                .Include(t => t.Messages)
+                .FirstOrDefaultAsync(t => t.Id == model.Id);
+
+            if (ticket == null)
+                return Json(new { success = false, message = "Ticket not found." });
+
+            _context.TicketMessages.RemoveRange(ticket.Messages);
+            _context.Tickets.Remove(ticket);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+
+        public class DeleteTicketRequest
+        {
+            public int Id { get; set; }
         }
 
         // ── EXPORT TO CSV ───────────────────────────────────────────
@@ -348,7 +378,7 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
                 {
                     new TicketMessage
                     {
-                        UserId = int.Parse(currentUserId!),
+                        UserId = model.UserId, // Kullanıcı tarafından açılan ticket olduğu için UserId'yi kullanıyoruz
                         Message = model.Message,
                         IsAdmin = true,
                         CreatedAt = DateTime.UtcNow
@@ -373,7 +403,7 @@ namespace AnatoliaSmmPanel.Areas.Admin.Controllers
     public class ChangeTicketStatusRequest
     {
         public int Id { get; set; }
-        public TicketStatusEnum Status { get; set; }
+        public int Status { get; set; }
     }
 
     public class MassChangeTicketStatusRequest

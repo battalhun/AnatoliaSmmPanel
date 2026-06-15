@@ -241,30 +241,30 @@
         let allCategories = [];     // Kategori listesi
         let selectedService = null; // Seçili servis objesi
 
-        const categoryIcons = {
-            'Instagram':     'fab fa-instagram',
-            'Twitter':       'fab fa-twitter',
-            'TikTok':        'fab fa-tiktok',
-            'Youtube':       'fab fa-youtube',
-            'Facebook':      'fab fa-facebook-f',
-            'Telegram':      'fab fa-telegram-plane',
-            'Twitch':        'fab fa-twitch',
-            'Discord':       'fab fa-discord',
-            'Linkedin':      'fab fa-linkedin',
-            'SoundCloud':    'fab fa-soundcloud',
-            'Spotify':       'fab fa-spotify',
-            'Vk':            'fab fa-vk',
-            'Snapchat':      'fab fa-snapchat-ghost',
-            'Tumblr':        'fab fa-tumblr',
-            'Vimeo':         'fab fa-vimeo',
-            'Reddit':        'fab fa-reddit-square',
-            'Whatsapp':      'fab fa-whatsapp-square',
-            'Deezer':        'fab fa-deezer',
-            'Odnoklassniki': 'fab fa-odnoklassniki',
-            'Google':        'fab fa-google',
-            'Pinterest':     'fab fa-pinterest',
-            'Quora':         'fab fa-quora',
-            'Foursquare':    'fab fa-foursquare',
+              const categoryIcons = {
+            'instagram':     'fab fa-instagram',
+            'twitter':       'fab fa-twitter',
+            'tiktok':        'fab fa-tiktok',  
+            'youtube':       'fab fa-youtube',
+            'facebook':      'fab fa-facebook-f',
+            'telegram':      'fab fa-telegram-plane',
+            'twitch':        'fab fa-twitch',
+            'discord':       'fab fa-discord',
+            'linkedin':      'fab fa-linkedin',
+            'soundcloud':    'fab fa-soundcloud',
+            'spotify':       'fab fa-spotify',
+            'vk':            'fab fa-vk',
+            'snapchat':      'fab fa-snapchat-ghost',
+            'tumblr':        'fab fa-tumblr',
+            'vimeo':         'fab fa-vimeo',
+            'reddit':        'fab fa-reddit-square',
+            'whatsapp':      'fab fa-whatsapp',
+            'deezer':        'fab fa-deezer',
+            'odnoklassniki': 'fab fa-odnoklassniki',
+            'google':        'fab fa-google',
+            'pinterest':     'fab fa-pinterest',
+            'quora':         'fab fa-quora',
+            'foursquare':    'fab fa-foursquare',
         };
 
         // ── Servisleri DB'den Yükle ───────────────────────────────
@@ -287,13 +287,13 @@
         }
 
         // ── Kategori Swiper'ı Oluştur ─────────────────────────────
-        function buildCategorySwiper(categories) {
+              function buildCategorySwiper(categories) {
             const wrapper = document.getElementById('categorySwiperWrapper');
-            // Sadece dinamik slide'ları temizle (ilk "All" slide kalıcı)
             while (wrapper.children.length > 1) wrapper.removeChild(wrapper.lastChild);
 
             categories.forEach(cat => {
-                const icon = categoryIcons[cat.name] || 'fab fa-globe';
+                const iconKey = cat.name.toLowerCase();  // ← BURAYA EKLE
+                const icon = categoryIcons[iconKey] || 'fab fa-globe';
                 const slide = document.createElement('div');
                 slide.className = 'swiper-slide';
                 slide.innerHTML = `
@@ -304,7 +304,6 @@
                 wrapper.appendChild(slide);
             });
 
-            // Swiper yeniden başlat
             if (window.categorySwiper) {
                 window.categorySwiper.destroy(true, true);
             }

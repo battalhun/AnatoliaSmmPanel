@@ -3,30 +3,74 @@
 <h4 class="mb-4">General Settings</h4>
 
 <form method="post" asp-action="UpdateGeneral" asp-controller="Settings" enctype="multipart/form-data">
-    
+
     <!-- Favicon -->
     <div class="mb-4">
-        <label asp-for="FaviconFile" class="form-label"></label>
+        <label class="form-label">Favicon</label>
+
         <div class="row align-items-center g-3">
             <div class="col-md-10">
                 <input type="file"
                        asp-for="FaviconFile"
                        class="form-control"
                        accept=".ico,.png"
-                       onchange="previewFavicon(this)">
-                <div class="form-text">32 x 32px .ico recommended</div>
+                       onchange="previewImage(this, 'faviconPreview')">
+
+                <div class="form-text">32x32 .ico önerilir</div>
             </div>
+
             <div class="col-md-2 text-center">
                 <img id="faviconPreview"
-                     src="/favicon.ico?v=@DateTime.Now.Ticks"
-                     alt="Favicon"
-                     class="img-fluid rounded border bg-light"
-                     style="max-width:60px; min-height:60px; object-fit: contain;"
-                     onerror="this.style.display='none';">
+                     src="@(string.IsNullOrEmpty(Model.FaviconPath) ? "/favicon.ico" : $"{Model.FaviconPath}?v={DateTime.Now.Ticks}")"
+                     class="img-fluid border rounded bg-light"
+                     style="max-width:60px; height:60px; object-fit:contain;" />
             </div>
         </div>
     </div>
 
+    <!-- Site Logo -->
+    <div class="mb-4">
+        <label class="form-label">Site Logo</label>
+
+        <div class="row align-items-center g-3">
+            <div class="col-md-10">
+                <input type="file"
+                       asp-for="LogoFile"
+                       class="form-control"
+                       accept=".png,.svg,.jpg,.jpeg"
+                       onchange="previewImage(this, 'logoPreview')">
+            </div>
+
+            <div class="col-md-2 text-center">
+                <img id="logoPreview"
+                     src="@(string.IsNullOrEmpty(Model.LogoPath) ? "" : $"{Model.LogoPath}?v={DateTime.Now.Ticks}")"
+                     class="img-fluid border rounded bg-light"
+                     style="max-width:120px; height:60px; object-fit:contain; @(string.IsNullOrEmpty(Model.LogoPath) ? "display:none;" : "")" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Site Dar Logo -->
+    <div class="mb-4">
+        <label class="form-label">Dar Logo</label>
+
+        <div class="row align-items-center g-3">
+            <div class="col-md-10">
+                <input type="file"
+                       asp-for="SmallLogoFile"
+                       class="form-control"
+                       accept=".png,.svg,.jpg,.jpeg"
+                       onchange="previewImage(this, 'smallLogoPreview')">
+            </div>
+
+            <div class="col-md-2 text-center">
+                <img id="smallLogoPreview"
+                     src="@(string.IsNullOrEmpty(Model.SmallLogoPath) ? "" : $"{Model.SmallLogoPath}?v={DateTime.Now.Ticks}")"
+                     class="img-fluid border rounded bg-light"
+                     style="max-width:60px; height:60px; object-fit:contain; @(string.IsNullOrEmpty(Model.SmallLogoPath) ? "display:none;" : "")" />
+            </div>
+        </div>
+    </div>
     <hr>
 
     <!-- Timezone -->
@@ -116,16 +160,18 @@
 
 @section Scripts {
     <script>
-        function previewFavicon(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    var img = document.getElementById('faviconPreview');
-                    img.src = e.target.result;
-                    img.style.display = 'inline-block';
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
+        function previewImage(input, targetId) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                document.getElementById(targetId).src = e.target.result;
+                document.getElementById(targetId).style.display = "block";
+            };
+
+            reader.readAsDataURL(file);
         }
     </script>
 }

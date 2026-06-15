@@ -93,6 +93,20 @@ namespace AnatoliaSmmPanel.Services
             return JsonSerializer.Deserialize<SmmOrderStatusDto>(jsonResponse) ?? new SmmOrderStatusDto();
         }
 
+        // 5. Cancel Order (action=cancel, orders=<orderId1,orderId2,...>)
+        public async Task<List<SmmCancelOrderResponseDto>> AddCancelOrderAsync(string apiUrl, string apiKey, IEnumerable<string> externalOrderIds, HttpMethod? method = null)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                { "key", apiKey },
+                { "action", "cancel" },
+                { "orders", string.Join(",", externalOrderIds) }
+            };
+
+            var jsonResponse = await SendRequestAsync(apiUrl, parameters, method ?? HttpMethod.Post);
+            return JsonSerializer.Deserialize<List<SmmCancelOrderResponseDto>>(jsonResponse) ?? new List<SmmCancelOrderResponseDto>();
+        }
+
         // Sistemin SMM paneli olup olmadığını test eden metot
         public async Task<bool> IsValidSmmApiAsync(string apiUrl)
         {
@@ -100,10 +114,10 @@ namespace AnatoliaSmmPanel.Services
             {
                 // Sahte bir istek atıyoruz
                 var parameters = new Dictionary<string, string>
-        {
-            { "key", "test_ping_123" },
-            { "action", "balance" } // Sadece panellerin anlayacağı bir parametre
-        };
+                {
+                    { "key", "test_ping_123" },
+                    { "action", "balance" } // Sadece panellerin anlayacağı bir parametre
+                };
 
                 var content = new FormUrlEncodedContent(parameters);
 
